@@ -49,7 +49,7 @@ dependencies {
 
     // okhttp
     implementation 'com.squareup.okhttp3:okhttp:3.11.0'
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.10.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.11.0'
 
     // glide
     implementation "com.github.bumptech.glide:okhttp3-integration:$glide_version"
