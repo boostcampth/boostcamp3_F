@@ -1,4 +1,4 @@
-package com.boostcamp.travery
+package com.boostcamp.travery.mapservice
 
 import android.location.Location
 import com.boostcamp.travery.data.model.Route

@@ -1,4 +1,4 @@
-package com.boostcamp.travery
+package com.boostcamp.travery.mapservice
 
 import android.content.Context
 import android.content.Intent
@@ -20,8 +20,8 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
-import android.R.color
 import android.graphics.Color
+import com.boostcamp.travery.R
 import com.google.android.gms.maps.model.PolylineOptions
 
 
@@ -30,7 +30,6 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
     lateinit var myService: MapTrackingService
     var isService = false
     private lateinit var mMap: GoogleMap
-    val arrayPoints = ArrayList<LatLng>()
     private var myLocationMarker: Marker? = null
     private val polylineOptions: PolylineOptions = PolylineOptions()
 
@@ -59,7 +58,6 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     fun startService(v: View) {
-
         val serviceIntent = Intent(this, MapTrackingService::class.java)
         ContextCompat.startForegroundService(this, serviceIntent)
         bindService(serviceIntent, conn, Context.BIND_AUTO_CREATE)

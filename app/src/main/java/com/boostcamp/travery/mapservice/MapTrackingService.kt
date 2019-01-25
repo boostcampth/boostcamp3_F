@@ -1,4 +1,4 @@
-package com.boostcamp.travery
+package com.boostcamp.travery.mapservice
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -22,6 +22,7 @@ import com.boostcamp.travery.data.model.Route
 import android.widget.Toast
 import android.R
 import android.location.LocationListener
+import com.boostcamp.travery.main.MainActivity
 import com.tedpark.tedpermission.rx2.TedRx2Permission
 
 @SuppressLint("Registered")
@@ -34,7 +35,7 @@ class MapTrackingService : Service(), MapTrackingContract.Model {
     var isRunning = false
     private var count: Int = 0
     private var countThread: Thread? = null
-    private var mCallback:ICallback ?= null
+    private var mCallback: ICallback? = null
     private val mLocationManager: LocationManager by lazy { getSystemService(Context.LOCATION_SERVICE) as LocationManager }
     private val notification: NotificationCompat.Builder by lazy {
         val notificationIntent = Intent(this, MainActivity::class.java)
@@ -151,14 +152,12 @@ class MapTrackingService : Service(), MapTrackingContract.Model {
         return Service.START_NOT_STICKY
     }
 
-    private fun getLastKnownLocation():Location? {
+    private fun getLastKnownLocation(): Location? {
         val providers = mLocationManager.getProviders(true)
-        var bestLocation:Location? = null
-        for (provider in providers)
-        {
+        var bestLocation: Location? = null
+        for (provider in providers) {
             val l = mLocationManager.getLastKnownLocation(provider) ?: continue
-            if (bestLocation == null || l.accuracy < bestLocation.accuracy)
-            {
+            if (bestLocation == null || l.accuracy < bestLocation.accuracy) {
                 // Found best last known location: %s", l);
                 bestLocation = l
             }
@@ -209,10 +208,10 @@ class MapTrackingService : Service(), MapTrackingContract.Model {
     }
 
     interface ICallback {
-        fun sendData(location:Location)
+        fun sendData(location: Location)
     }
 
-    fun registerCallback(cb:ICallback) {
+    fun registerCallback(cb: ICallback) {
         mCallback = cb
     }
 

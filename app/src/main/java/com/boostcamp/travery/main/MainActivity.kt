@@ -13,6 +13,7 @@ import android.view.MenuItem
 import android.widget.Toast
 import com.boostcamp.travery.OnItemClickListener
 import com.boostcamp.travery.R
+import com.boostcamp.travery.mapservice.TrackingActivity
 import com.boostcamp.travery.data.model.Route
 import com.boostcamp.travery.main.adapter.RouteListAdapter
 import com.boostcamp.travery.dummy.RouteDummyData
@@ -31,6 +32,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setSupportActionBar(toolbar)
 
         fab.setOnClickListener { view ->
+
+            val intent = Intent(this@MainActivity, TrackingActivity::class.java)
+            startActivity(intent)
+
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()
         }
