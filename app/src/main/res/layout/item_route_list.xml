@@ -6,83 +6,83 @@
     <data>
 
         <variable
-                name="item"
-                type="com.boostcamp.travery.data.model.Route"/>
+            name="item"
+            type="com.boostcamp.travery.data.model.Route"/>
 
         <variable
-                name="listener"
-                type="com.boostcamp.travery.main.adapter.OnItemClickListener"/>
+            name="listener"
+            type="com.boostcamp.travery.OnItemClickListener"/>
     </data>
 
     <android.support.constraint.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="@{() -> listener.onItemClick(item)}"
-            android:padding="10dp">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="@{() -> listener.onItemClick(item)}"
+        android:padding="10dp">
 
         <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/iv_map"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
-                android:mapImage="@{item.mapImage}"
-                app:layout_constraintBottom_toBottomOf="@id/tv_hashTag"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/tv_date"
-                tools:src="@mipmap/ic_launcher"/>
+            android:id="@+id/iv_map"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:mapImage="@{item.mapImage}"
+            app:layout_constraintBottom_toBottomOf="@id/tv_hashTag"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tv_date"
+            tools:src="@mipmap/ic_launcher"/>
 
         <TextView
-                android:id="@+id/tv_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_marginTop="10dp"
-                android:date="@{item.endTime}"
-                android:textSize="13sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="오전 10:00 ~ 오후 10:00"/>
+            android:id="@+id/tv_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="10dp"
+            android:date="@{item.endTime}"
+            android:textSize="13sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="오전 10:00 ~ 오후 10:00"/>
         <!-- 바인딩 어댑터 정의 필요 -->
 
         <TextView
-                android:id="@+id/tv_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@{item.title}"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@+id/tv_hashTag"
-                app:layout_constraintStart_toStartOf="@id/tv_date"
-                app:layout_constraintTop_toBottomOf="@id/tv_date"
-                tools:text="커넥트재단 부스트캠프"/>
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{item.title}"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/tv_hashTag"
+            app:layout_constraintStart_toStartOf="@id/tv_date"
+            app:layout_constraintTop_toBottomOf="@id/tv_date"
+            tools:text="커넥트재단 부스트캠프"/>
 
         <TextView
-                android:id="@+id/tv_theme"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_marginStart="5dp"
-                android:background="@drawable/bg_theme"
-                android:gravity="center"
-                android:text="@{item.theme}"
-                android:textColor="@android:color/white"
-                android:textSize="13sp"
-                android:paddingStart="5dp"
-                android:paddingEnd="5dp"
-                app:layout_constraintBottom_toBottomOf="@id/tv_title"
-                app:layout_constraintStart_toEndOf="@id/tv_title"
-                app:layout_constraintTop_toTopOf="@id/tv_title"
-                tools:text="테마"/>
+            android:id="@+id/tv_theme"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginStart="5dp"
+            android:background="@drawable/bg_theme"
+            android:gravity="center"
+            android:text="@{item.theme}"
+            android:textColor="@android:color/white"
+            android:textSize="13sp"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            app:layout_constraintBottom_toBottomOf="@id/tv_title"
+            app:layout_constraintStart_toEndOf="@id/tv_title"
+            app:layout_constraintTop_toTopOf="@id/tv_title"
+            tools:text="테마"/>
 
         <TextView
-                android:id="@+id/tv_hashTag"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxLines="1"
-                android:layout_marginBottom="10dp"
-                android:text="@{item.body}"
-                android:textSize="13sp"
-                app:layout_constraintStart_toStartOf="@id/tv_title"
-                app:layout_constraintTop_toBottomOf="@id/tv_title"
-                tools:text="여기 해시태그 자리인데...ㅠㅠ"/>
+            android:id="@+id/tv_hashTag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:layout_marginBottom="10dp"
+            android:text="@{item.body}"
+            android:textSize="13sp"
+            app:layout_constraintStart_toStartOf="@id/tv_title"
+            app:layout_constraintTop_toBottomOf="@id/tv_title"
+            tools:text="여기 해시태그 자리인데...ㅠㅠ"/>
 
     </android.support.constraint.ConstraintLayout>
 </layout>
