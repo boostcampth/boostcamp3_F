@@ -8,14 +8,12 @@ import java.util.*
 
 @Entity(
     tableName = "activity",
-    foreignKeys = arrayOf(
-        ForeignKey(
-            entity = Route::class,
-            parentColumns = arrayOf("seq"),
-            childColumns = arrayOf("route_code"),
-            onDelete = ForeignKey.SET_NULL
-        )
-    )
+    foreignKeys = [ForeignKey(
+        entity = Route::class,
+        parentColumns = arrayOf("seq"),
+        childColumns = arrayOf("route_code"),
+        onDelete = ForeignKey.SET_NULL
+    )]
 )
 data class Activity(
     @ColumnInfo(name = "title") var title: String?,

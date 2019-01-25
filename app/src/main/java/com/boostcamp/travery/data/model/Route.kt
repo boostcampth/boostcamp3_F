@@ -16,4 +16,8 @@ data class Route(
     @ColumnInfo(name = "map_image") var mapImage: String?
 ) {
     @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "seq") var seq: Int? = null
+
+    override fun toString(): String {
+        return "title: $title, theme: $theme"
+    }
 }
