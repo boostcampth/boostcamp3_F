@@ -10,9 +10,9 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import com.boostcamp.travery.OnItemClickListener
 import com.boostcamp.travery.R
 import com.boostcamp.travery.data.model.Route
-import com.boostcamp.travery.main.adapter.OnItemClickListener
 import com.boostcamp.travery.main.adapter.RouteListAdapter
 import com.boostcamp.travery.main.data.DummyData
 import kotlinx.android.synthetic.main.activity_main.*
@@ -107,7 +107,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return true
     }
 
-    override fun onItemClick(item: Route) {
-        Toast.makeText(baseContext, item.toString(), Toast.LENGTH_SHORT).show()
+    override fun onItemClick(item: Any) {
+        if (item is Route) {
+            Toast.makeText(baseContext, item.toString(), Toast.LENGTH_SHORT).show()
+        }
     }
 }

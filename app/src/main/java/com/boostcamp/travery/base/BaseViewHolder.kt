@@ -1,4 +1,4 @@
-package com.boostcamp.travery.main.viewholder
+package com.boostcamp.travery.base
 
 import android.databinding.ViewDataBinding
 import android.support.v7.widget.RecyclerView
