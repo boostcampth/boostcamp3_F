@@ -7,7 +7,7 @@ import io.reactivex.Flowable
 @Dao
 interface RouteDao {
     @Insert
-    fun insertRoute(route: Route)
+    fun insertRoute(route: Route): Long
 
     @Update
     fun updateRoute(route: Route)
