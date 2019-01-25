@@ -28,7 +28,7 @@
             app:layout_constraintBottom_toBottomOf="@id/tv_hashTag"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/tv_date"
-            tools:src="@mipmap/ic_launcher"/>
+            tools:src="@mipmap/ic_launcher" />
 
         <TextView
             android:id="@+id/tv_date"
