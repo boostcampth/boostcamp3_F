@@ -18,7 +18,6 @@ import java.util.*
     )
 )
 data class Activity(
-    @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "seq") var seq: Int,
     @ColumnInfo(name = "title") var title: String?,
     @ColumnInfo(name = "body") var body: String?,
     @ColumnInfo(name = "date") var date: Date?,
@@ -28,4 +27,6 @@ data class Activity(
     @ColumnInfo(name = "latitude") var latitude: Long,
     @ColumnInfo(name = "longitude") var longitude: Long,
     @ColumnInfo(name = "route_code") var routeCode: Int?
-)
+){
+    @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "seq") var seq: Int?=null
+}
