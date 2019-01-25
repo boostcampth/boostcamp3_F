@@ -1,9 +1,9 @@
-package com.boostcamp.travery.main.data
+package com.boostcamp.travery.dummy
 
 import com.boostcamp.travery.data.model.Route
 import java.util.*
 
-class DummyData {
+class RouteDummyData {
     companion object {
         fun getData(): List<Route> {
             val data = ArrayList<Route>()
@@ -15,8 +15,8 @@ class DummyData {
                         "부스트 캠프 안드로이드조",
                         "여기 해시태그 자리가 아니었나?",
                         "부스트캠프",
-                        System.currentTimeMillis() - 1000 * i,
-                        System.currentTimeMillis(),
+                        System.currentTimeMillis() - 10000 * i,
+                            System.currentTimeMillis(),
                         100,
                         "",
                         ""

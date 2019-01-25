@@ -1,5 +1,6 @@
 package com.boostcamp.travery.main
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.design.widget.Snackbar
@@ -14,7 +15,8 @@ import com.boostcamp.travery.OnItemClickListener
 import com.boostcamp.travery.R
 import com.boostcamp.travery.data.model.Route
 import com.boostcamp.travery.main.adapter.RouteListAdapter
-import com.boostcamp.travery.main.data.DummyData
+import com.boostcamp.travery.dummy.RouteDummyData
+import com.boostcamp.travery.search.SearchResultActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.content_main.*
@@ -43,7 +45,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         nav_view.setNavigationItemSelectedListener(this)
 
-        adapter.setItems(DummyData.getData())
+        adapter.setItems(RouteDummyData.getData())
 
         initRecyclerView()
     }
@@ -87,7 +89,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 // Handle the camera action
             }
             R.id.nav_gallery -> {
-
+                startActivity(Intent(this, SearchResultActivity::class.java))
             }
             R.id.nav_slideshow -> {
 
