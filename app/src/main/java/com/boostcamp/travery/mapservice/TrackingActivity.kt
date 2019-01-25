@@ -50,7 +50,6 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
         val serviceIntent = Intent(this, MapTrackingService::class.java)
         bindService(serviceIntent, conn, Context.BIND_AUTO_CREATE)
 
-        // Add a marker in Sydney and move the camera
     }
 
     override fun onDestroy() {
@@ -105,15 +104,17 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
 
             if (myLocationMarker == null) {
                 val location = myService.getLastLocation()
+                //더미 위치
                 var lat = -34.0
                 var lng = 151.0
                 if (location != null) {
                     lat = location.latitude
                     lng = location.longitude
                 }
-                val sydney = LatLng(lat, lng)
-                myLocationMarker = mMap.addMarker(MarkerOptions().position(sydney))
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 15f))
+
+                val myLocation = LatLng(lat, lng)
+                myLocationMarker = mMap.addMarker(MarkerOptions().position(myLocation))
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 15f))
             }
 
             //서비스가 돌고 있을 때
