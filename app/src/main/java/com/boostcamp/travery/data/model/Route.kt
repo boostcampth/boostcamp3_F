@@ -6,7 +6,6 @@ import android.arch.persistence.room.PrimaryKey
 
 @Entity(tableName = "route")
 data class Route(
-    @PrimaryKey @ColumnInfo(name = "seq") var seq: Int,
     @ColumnInfo(name = "title") var title: String?,
     @ColumnInfo(name = "body") var body: String?,
     @ColumnInfo(name = "theme") var theme: String?,
@@ -15,4 +14,6 @@ data class Route(
     @ColumnInfo(name = "distance") var distance: Long,
     @ColumnInfo(name = "coordinate") var coordinate: String?,
     @ColumnInfo(name = "map_image") var mapImage: String?
-)
+) {
+    @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "seq") var seq: Int? = null
+}
