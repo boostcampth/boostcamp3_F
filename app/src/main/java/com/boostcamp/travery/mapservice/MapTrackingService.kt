@@ -9,7 +9,6 @@ import android.location.Location
 import android.os.IBinder
 import android.support.v4.app.NotificationCompat
 
-
 import android.os.Bundle
 import android.location.LocationManager
 import android.util.Log
@@ -23,17 +22,19 @@ import android.widget.Toast
 import android.R
 import android.location.LocationListener
 import com.boostcamp.travery.main.MainActivity
+import com.google.android.gms.maps.model.LatLng
 import com.tedpark.tedpermission.rx2.TedRx2Permission
 
 @SuppressLint("Registered")
 class MapTrackingService : Service(), MapTrackingContract.Model {
+    private val locationList:ArrayList<LatLng> = ArrayList()
     private val TAG = "MyLocationService"
-    private val LOCATION_INTERVAL: Long = 1000
+    private val LOCATION_INTERVAL: Long = 2200
     private val LOCATION_DISTANCE = 1f
     private var exLocation: Location? = null
     private var totalDistance = 0f
     var isRunning = false
-    private var count: Int = 0
+    private var second: Int = 0
     private var countThread: Thread? = null
     private var mCallback: ICallback? = null
     private val mLocationManager: LocationManager by lazy { getSystemService(Context.LOCATION_SERVICE) as LocationManager }
@@ -70,11 +71,12 @@ class MapTrackingService : Service(), MapTrackingContract.Model {
             val formatted = format.format(location.time)
             Log.d(TAG, "onLocationChanged: $formatted")*/
 
-            //mLastLocation.set(location)
+            //mLastLocation.set(location)]
+            val locate = LatLng(location.latitude, location.longitude)
             exLocation = location
-
             //if (mCallback != null) {
-            mCallback?.sendData(location)
+            locationList.add(locate)
+            mCallback?.sendData(locate)
             //}
         }
 
@@ -99,7 +101,7 @@ class MapTrackingService : Service(), MapTrackingContract.Model {
         TedRx2Permission.with(this)
                 .setRationaleTitle("dd")
                 .setRationaleMessage("dd") // "we need permission for read contact and find your location"
-                .setPermissions(Manifest.permission.READ_CONTACTS, Manifest.permission.ACCESS_FINE_LOCATION)
+                .setPermissions(Manifest.permission.ACCESS_FINE_LOCATION)
                 .request()
                 .subscribe({ tedPermissionResult ->
                     if (tedPermissionResult.isGranted) {
@@ -162,6 +164,9 @@ class MapTrackingService : Service(), MapTrackingContract.Model {
                 bestLocation = l
             }
         }
+        if(isRunning && bestLocation != null){
+            locationList.add(LatLng(bestLocation.latitude, bestLocation.longitude))
+        }
         return bestLocation
     }
 
@@ -191,7 +196,7 @@ class MapTrackingService : Service(), MapTrackingContract.Model {
     inner class Counter : Runnable {
 
         override fun run() {
-            count = 0
+            second = 0
             while (true) {
                 if (!isRunning) {
                     break
@@ -202,13 +207,13 @@ class MapTrackingService : Service(), MapTrackingContract.Model {
                 } catch (e: InterruptedException) {
                     e.printStackTrace()
                 }
-                count++
+                second++
             }
         }
     }
 
     interface ICallback {
-        fun sendData(location: Location)
+        fun sendData(location: LatLng)
     }
 
     fun registerCallback(cb: ICallback) {
@@ -216,7 +221,7 @@ class MapTrackingService : Service(), MapTrackingContract.Model {
     }
 
     override fun getTotalSecond(): Int {
-        return count
+        return second
     }
 
     override fun getFinishData(): Route {
@@ -226,6 +231,10 @@ class MapTrackingService : Service(), MapTrackingContract.Model {
     override fun getLastLocation(): Location? {
 
         return getLastKnownLocation()
+    }
+
+    override fun getLocationList(): ArrayList<LatLng> {
+        return locationList
     }
 
     override fun onBind(intent: Intent): IBinder? {

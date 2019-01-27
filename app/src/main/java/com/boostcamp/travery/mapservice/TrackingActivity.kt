@@ -17,12 +17,9 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
 import android.graphics.Color
 import com.boostcamp.travery.R
-import com.google.android.gms.maps.model.PolylineOptions
+import com.google.android.gms.maps.model.*
 
 
 class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -31,6 +28,7 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
     var isService = false
     private lateinit var mMap: GoogleMap
     private var myLocationMarker: Marker? = null
+    private var polyline: Polyline? = null
     private val polylineOptions: PolylineOptions = PolylineOptions()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,8 +42,9 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-        polylineOptions.color(Color.RED)
-        polylineOptions.width(5f)
+        polylineOptions.color(Color.BLUE)
+                .geodesic(true)
+                .width(10f)
 
         val serviceIntent = Intent(this, MapTrackingService::class.java)
         bindService(serviceIntent, conn, Context.BIND_AUTO_CREATE)
@@ -60,12 +59,18 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
         val serviceIntent = Intent(this, MapTrackingService::class.java)
         ContextCompat.startForegroundService(this, serviceIntent)
         bindService(serviceIntent, conn, Context.BIND_AUTO_CREATE)
+        btn_stop.visibility = View.VISIBLE
+        img_midMarker.visibility = View.GONE
+        btn_play.visibility = View.GONE
     }
 
     fun stopService(v: View) {
         val serviceIntent = Intent(this, MapTrackingService::class.java)
         unbindService(conn)
         stopService(serviceIntent)
+        btn_stop.visibility = View.GONE
+        img_midMarker.visibility = View.VISIBLE
+        btn_play.visibility = View.VISIBLE
     }
 
     fun getCount(v: View) {
@@ -79,13 +84,13 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
     private var conn: ServiceConnection = object : ServiceConnection {
 
         private val mCallback = object : MapTrackingService.ICallback {
-            override fun sendData(location: Location) {
-                val locate = LatLng(location.latitude, location.longitude)
-                myLocationMarker?.position = locate
+            override fun sendData(location: LatLng) {
+                myLocationMarker?.position = location
                 //arrayPoints.add(locate)
-                polylineOptions.add(locate)
-                mMap.addPolyline(polylineOptions)
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(locate, 15f))
+                polylineOptions.add(location)
+                polyline?.remove()
+                polyline = mMap.addPolyline(polylineOptions)
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 15f))
             }
             /* 서비스에서 데이터를 받아 메소드 호출 또는 핸들러로 전달 */
         }
@@ -121,6 +126,8 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
             if (isService) {
                 val counter = Thread(Counter())
                 counter.start()
+                polylineOptions.addAll(myService.getLocationList())
+                polyline = mMap.addPolyline(polylineOptions)
             } else {//서비스는 돌지 않고 바인드만 했을 때 바인드를 끊는다.
                 unbindService(this)
             }
