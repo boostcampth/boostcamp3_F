@@ -18,9 +18,9 @@ class ActivitySearchAdapter(private var listener: OnItemClickListener) : BaseAda
             R.layout.item_activity_list,
             parent,
             false
-        ).also {
-            it.listener = listener
-            return ActivityViewHolder(it)
+        ).apply {
+            listener = this@ActivitySearchAdapter.listener
+            return ActivityViewHolder(this)
         }
     }
 
