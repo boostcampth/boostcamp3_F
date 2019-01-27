@@ -20,14 +20,14 @@
         android:onClick="@{() -> listener.onItemClick(item)}"
         android:padding="10dp">
 
-        <de.hdodenhof.circleimageview.CircleImageView
+        <com.boostcamp.travery.custom.CircleImageView
             android:id="@+id/iv_map"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
             android:mapImage="@{item.mapImage}"
-            app:layout_constraintBottom_toBottomOf="@id/tv_hashTag"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/tv_date"
+            app:layout_constraintTop_toTopOf="parent"
             tools:src="@mipmap/ic_launcher" />
 
         <TextView
@@ -37,10 +37,10 @@
             android:layout_marginStart="5dp"
             android:layout_marginTop="10dp"
             android:textSize="13sp"
-            app:startTime="@{item.startTime}"
             app:endTime="@{item.endTime}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:startTime="@{item.startTime}"
             tools:text="오전 10:00 ~ 오후 10:00" />
 
         <TextView
@@ -65,7 +65,7 @@
             android:paddingEnd="5dp"
             android:text="@{item.theme}"
             android:textColor="@android:color/white"
-            android:textSize="13sp"
+            android:textSize="10sp"
             app:layout_constraintBottom_toBottomOf="@id/tv_title"
             app:layout_constraintStart_toEndOf="@id/tv_title"
             app:layout_constraintTop_toTopOf="@id/tv_title"
@@ -79,6 +79,7 @@
             android:maxLines="1"
             android:text="@{item.body}"
             android:textSize="13sp"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_map"
             app:layout_constraintStart_toStartOf="@id/tv_title"
             app:layout_constraintTop_toBottomOf="@id/tv_title"
             tools:text="여기 해시태그 자리인데...ㅠㅠ" />

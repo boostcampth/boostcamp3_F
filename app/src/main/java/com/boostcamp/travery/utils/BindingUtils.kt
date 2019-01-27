@@ -6,8 +6,8 @@ import android.os.Build
 import android.support.annotation.RequiresApi
 import android.widget.TextView
 import com.boostcamp.travery.R
+import com.boostcamp.travery.custom.CircleImageView
 import com.bumptech.glide.Glide
-import de.hdodenhof.circleimageview.CircleImageView
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -21,7 +21,7 @@ object BindingUtils {
                 .load(path)
                 .into(circleImageView)
         } else {
-            circleImageView.setImageDrawable(circleImageView.context.getDrawable(R.mipmap.ic_launcher))
+            circleImageView.setImageDrawable(circleImageView.context.getDrawable(R.mipmap.ic_launcher_round))
         }
     }
 
