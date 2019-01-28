@@ -13,6 +13,10 @@ object DateUtils {
         }
     }
 
+    fun getDateToString(date: Long = System.currentTimeMillis()): String {
+        return SimpleDateFormat(DATE_PATTERN, Locale.getDefault()).format(Date(date)).toString()
+    }
+
     fun getTermDay(fromMillis: Long = System.currentTimeMillis(), toMillis: Long): Int {
         val oneDay = 1000 * 60 * 24L
         return ((fromMillis - toMillis) / oneDay).toInt()
