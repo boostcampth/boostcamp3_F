@@ -33,14 +33,15 @@ class MapTrackingService : Service(), MapTrackingContract.Model {
     private val mFusedLocationClient: FusedLocationProviderClient by lazy { LocationServices.getFusedLocationProviderClient(this) }
     private val locationRequest: LocationRequest by lazy {
         LocationRequest()
-        .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-        .setInterval(UPDATE_INTERVAL_MS)
-        .setFastestInterval(FASTEST_UPDATE_INTERVAL_MS) }
-    private val GPS_ENABLE_REQUEST_CODE = 2001
-    private val UPDATE_INTERVAL_MS:Long = 2500  // 1초
-    private val FASTEST_UPDATE_INTERVAL_MS:Long = 1500 //
+                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                .setInterval(UPDATE_INTERVAL_MS)
+                .setFastestInterval(FASTEST_UPDATE_INTERVAL_MS)
+    }
 
-    private val locationList:ArrayList<LatLng> = ArrayList()
+    private val UPDATE_INTERVAL_MS: Long = 2500  // 1초
+    private val FASTEST_UPDATE_INTERVAL_MS: Long = 1500 //
+
+    private val locationList: ArrayList<LatLng> = ArrayList()
     private val TAG = "MyLocationService"
 
     private var exLocation: Location? = null
@@ -69,12 +70,11 @@ class MapTrackingService : Service(), MapTrackingContract.Model {
             get() = this@MapTrackingService
     }
 
-    private var locationCallback: LocationCallback = object:LocationCallback() {
-        override fun onLocationResult(locationResult:LocationResult) {
+    private var locationCallback: LocationCallback = object : LocationCallback() {
+        override fun onLocationResult(locationResult: LocationResult) {
             super.onLocationResult(locationResult)
             val nowLocationList = locationResult.locations
-            if (nowLocationList.size > 0)
-            {
+            if (nowLocationList.size > 0) {
                 val location = nowLocationList.last()
                 //location = locationList.get(0);
                 //currentPosition = LatLng(location.getLatitude(), location.getLongitude())
@@ -82,7 +82,7 @@ class MapTrackingService : Service(), MapTrackingContract.Model {
 
                 if (exLocation != null) {
                     val dis = location.distanceTo(exLocation)
-                    if(dis >= 1 && dis <7){
+                    if (dis >= 1 && dis < 7) {
                         totalDistance += location.distanceTo(exLocation)
                         val locate = LatLng(location.latitude, location.longitude)
                         locationList.add(locate)
@@ -91,7 +91,7 @@ class MapTrackingService : Service(), MapTrackingContract.Model {
                     exLocation = location
 
                     Log.d(TAG, "onLocationResult: ${totalDistance}")
-                }else{
+                } else {
                     exLocation = location
                 }
                 //Log.d(TAG, "onLocationChanged: ${location.time}")
@@ -168,7 +168,7 @@ class MapTrackingService : Service(), MapTrackingContract.Model {
                 bestLocation = l
             }
         }
-        if(isRunning && bestLocation != null){
+        if (isRunning && bestLocation != null) {
             locationList.add(LatLng(bestLocation.latitude, bestLocation.longitude))
         }
         return bestLocation
@@ -181,7 +181,7 @@ class MapTrackingService : Service(), MapTrackingContract.Model {
         isRunning = false
         if (mFusedLocationClient != null) {
             Log.d(TAG, "onStop : call stopLocationUpdates");
-            mFusedLocationClient.removeLocationUpdates(locationCallback);
+            mFusedLocationClient.removeLocationUpdates(locationCallback)
         }
 
     }

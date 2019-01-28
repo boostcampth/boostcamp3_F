@@ -1,5 +1,7 @@
 package com.boostcamp.travery.mapservice
 
+import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
@@ -18,18 +20,56 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import android.graphics.Color
+import android.os.Looper
+import android.util.Log
 import com.boostcamp.travery.R
+import com.google.android.gms.location.*
 import com.google.android.gms.maps.model.*
+import com.tedpark.tedpermission.rx2.TedRx2Permission
 
 
 class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
+    private val mFusedLocationClient: FusedLocationProviderClient by lazy {
+        LocationServices.getFusedLocationProviderClient(
+                this
+        )
+    }
+    private val locationRequest: LocationRequest by lazy {
+        LocationRequest()
+                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                .setInterval(UPDATE_INTERVAL_MS)
+                .setFastestInterval(FASTEST_UPDATE_INTERVAL_MS)
+    }
+    private val GPS_ENABLE_REQUEST_CODE = 2001
+    private val UPDATE_INTERVAL_MS: Long = 2500  // 1초
+    private val FASTEST_UPDATE_INTERVAL_MS: Long = 1500 //
 
     lateinit var myService: MapTrackingService
     var isService = false
     private lateinit var mMap: GoogleMap
     private var myLocationMarker: Marker? = null
     private var polyline: Polyline? = null
+    private var lastLocation = LatLng(37.56, 126.97)
     private val polylineOptions: PolylineOptions = PolylineOptions()
+
+    private var locationCallback: LocationCallback = object : LocationCallback() {
+        override fun onLocationResult(locationResult: LocationResult) {
+            super.onLocationResult(locationResult)
+            val nowLocationList = locationResult.locations
+            if (nowLocationList.size > 0) {
+                val location = nowLocationList.last()
+                //location = locationList.get(0);
+                //currentPosition = LatLng(location.getLatitude(), location.getLongitude())
+                Log.d("TrackingActivity", "onLocationResult : " + LatLng(location.latitude, location.longitude))
+
+                val locate = LatLng(location.latitude, location.longitude)
+                myLocationMarker?.position = locate
+                lastLocation = locate
+                Log.d("TrackingActivity", "onLocationResult: ${locate}")
+
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,44 +78,48 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
         val mapFragment = supportFragmentManager
                 .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+
+        val builder = LocationSettingsRequest.Builder()
+        builder.addLocationRequest(locationRequest)
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
+
         polylineOptions.color(Color.BLUE)
                 .geodesic(true)
                 .width(10f)
 
         val serviceIntent = Intent(this, MapTrackingService::class.java)
         bindService(serviceIntent, conn, Context.BIND_AUTO_CREATE)
-
     }
 
     override fun onDestroy() {
         super.onDestroy()
+        stopGPS()
     }
 
     fun startService(v: View) {
+        stopGPS()
         val serviceIntent = Intent(this, MapTrackingService::class.java)
         ContextCompat.startForegroundService(this, serviceIntent)
         bindService(serviceIntent, conn, Context.BIND_AUTO_CREATE)
+        tv_text.visibility = View.VISIBLE
     }
 
     fun stopService(v: View) {
         val serviceIntent = Intent(this, MapTrackingService::class.java)
         unbindService(conn)
         stopService(serviceIntent)
-        btn_stop.visibility = View.GONE
+        btn_stop.visibility = View.INVISIBLE
         img_midMarker.visibility = View.VISIBLE
         btn_play.visibility = View.VISIBLE
+        tv_text.visibility = View.GONE
+        startGPS()
     }
 
-    fun getCount(v: View) {
-        Toast.makeText(
-                applicationContext,
-                "받아온 데이터 : " + myService.getTotalSecond(),
-                Toast.LENGTH_LONG
-        ).show()
+    fun gotoMyLocation(v: View) {
+        mMap.animateCamera(CameraUpdateFactory.newLatLng(lastLocation))
     }
 
     private var conn: ServiceConnection = object : ServiceConnection {
@@ -107,8 +151,8 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
             if (myLocationMarker == null) {
                 val location = myService.getLastLocation()
                 //더미 위치
-                var lat = -34.0
-                var lng = 151.0
+                var lat = 37.56
+                var lng = 126.97
                 if (location != null) {
                     lat = location.latitude
                     lng = location.longitude
@@ -128,9 +172,10 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
 
 
                 btn_stop.visibility = View.VISIBLE
-                img_midMarker.visibility = View.GONE
-                btn_play.visibility = View.GONE
+                img_midMarker.visibility = View.INVISIBLE
+                btn_play.visibility = View.INVISIBLE
             } else {//서비스는 돌지 않고 바인드만 했을 때 바인드를 끊는다.
+                startGPS()
                 unbindService(this)
             }
         }
@@ -170,5 +215,28 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
         min %= 60
 
         return "${String.format("%02d", hour)}:${String.format("%02d", min)}:${String.format("%02d", sec)}"
+    }
+
+    @SuppressLint("CheckResult")
+    fun startGPS() {
+
+        try {
+            mFusedLocationClient.requestLocationUpdates(
+                    locationRequest,
+                    locationCallback,
+                    Looper.myLooper()
+            )
+
+        } catch (ex: java.lang.SecurityException) {
+            //Log.i(TAG, "fail to request location update, ignore", ex)
+        } catch (ex: IllegalArgumentException) {
+            //Log.d(TAG, "network provider does not exist, " + ex.message)
+        }
+    }
+
+    private fun stopGPS() {
+
+        mFusedLocationClient.removeLocationUpdates(locationCallback)
+
     }
 }
