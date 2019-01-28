@@ -1,7 +1,9 @@
 package com.boostcamp.travery.main
 
+import android.Manifest
 import android.content.Intent
 import android.os.Bundle
+import android.os.Looper
 import android.support.design.widget.NavigationView
 import android.support.design.widget.Snackbar
 import android.support.v4.view.GravityCompat
@@ -20,17 +22,24 @@ import com.boostcamp.travery.main.adapter.RouteListAdapter
 import com.boostcamp.travery.main.viewholder.GroupItem
 import com.boostcamp.travery.mapservice.TrackingActivity
 import com.boostcamp.travery.search.SearchResultActivity
+import com.tedpark.tedpermission.rx2.TedRx2Permission
 import com.boostcamp.travery.utils.DateUtils
 import io.reactivex.Flowable
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.content_main.*
+import android.content.DialogInterface
+import android.support.v7.app.AlertDialog
+import android.location.LocationManager
+import android.content.Context
+
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,
         OnItemClickListener {
     private val adapter = RouteListAdapter(this)
     private val compositeDisposable = CompositeDisposable()
+    private val GPS_ENABLE_REQUEST_CODE = 2001
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,12 +47,32 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setSupportActionBar(toolbar)
 
         fab.setOnClickListener { view ->
+            TedRx2Permission.with(this)
+                    .setRationaleTitle("Notice")
+                    .setRationaleMessage("we need permission for find your location") // "we need permission for read contact and find your location"
+                    .setPermissions(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
+                    .request()
+                    .subscribe({ tedPermissionResult ->
+                        if (tedPermissionResult.isGranted) {
+                            if (!checkLocationServicesStatus()) {
+                                showDialogForLocationServiceSetting()
+                            } else {
+                                val intent = Intent(this@MainActivity, TrackingActivity::class.java)
+                                startActivity(intent)
+                            }
+                        } else {
+                            Toast.makeText(
+                                    this,
+                                    "Permission Denied\n" + tedPermissionResult.getDeniedPermissions().toString(),
+                                    Toast.LENGTH_SHORT
+                            )
+                                    .show()
+                        }
+                    }, { })
 
-            val intent = Intent(this@MainActivity, TrackingActivity::class.java)
-            startActivity(intent)
 
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
+            //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+            //    .setAction("Action", null).show()
         }
 
         val toggle = ActionBarDrawerToggle(
@@ -144,6 +173,40 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onItemClick(item: Any) {
         if (item is Route) {
             Toast.makeText(baseContext, item.toString(), Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun checkLocationServicesStatus(): Boolean {
+        val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+    }
+
+    private fun showDialogForLocationServiceSetting() {
+
+        val builder = AlertDialog.Builder(this@MainActivity)
+        builder.setTitle("위치 서비스 비활성화")
+        builder.setMessage("앱을 사용하기 위해서는 위치 서비스가 필요합니다.\n" + "위치 설정을 수정하실래요?")
+        builder.setCancelable(true)
+        builder.setPositiveButton("설정") { _, _ ->
+            val callGPSSettingIntent = Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+            startActivityForResult(callGPSSettingIntent, GPS_ENABLE_REQUEST_CODE)
+        }
+        builder.setNegativeButton("취소") { dialog, _ -> dialog.cancel() }
+        builder.create().show()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        when (requestCode) {
+
+            GPS_ENABLE_REQUEST_CODE ->
+                //사용자가 GPS 활성 시켰는지 검사
+                if (checkLocationServicesStatus()) {
+                    val intent = Intent(this@MainActivity, TrackingActivity::class.java)
+                    startActivity(intent)
+                }
         }
     }
 }

@@ -9,7 +9,6 @@ import android.location.Location
 import android.os.IBinder
 import android.support.v4.app.NotificationCompat
 
-
 import android.os.Bundle
 import android.location.LocationManager
 import android.util.Log
@@ -22,18 +21,33 @@ import com.boostcamp.travery.data.model.Route
 import android.widget.Toast
 import android.R
 import android.location.LocationListener
+import android.os.Looper
 import com.boostcamp.travery.main.MainActivity
+import com.google.android.gms.location.*
+import com.google.android.gms.maps.model.LatLng
 import com.tedpark.tedpermission.rx2.TedRx2Permission
+
 
 @SuppressLint("Registered")
 class MapTrackingService : Service(), MapTrackingContract.Model {
+    private val mFusedLocationClient: FusedLocationProviderClient by lazy { LocationServices.getFusedLocationProviderClient(this) }
+    private val locationRequest: LocationRequest by lazy {
+        LocationRequest()
+                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                .setInterval(UPDATE_INTERVAL_MS)
+                .setFastestInterval(FASTEST_UPDATE_INTERVAL_MS)
+    }
+
+    private val UPDATE_INTERVAL_MS: Long = 2500  // 1초
+    private val FASTEST_UPDATE_INTERVAL_MS: Long = 1500 //
+
+    private val locationList: ArrayList<LatLng> = ArrayList()
     private val TAG = "MyLocationService"
-    private val LOCATION_INTERVAL: Long = 1000
-    private val LOCATION_DISTANCE = 1f
+
     private var exLocation: Location? = null
     private var totalDistance = 0f
     var isRunning = false
-    private var count: Int = 0
+    private var second: Int = 0
     private var countThread: Thread? = null
     private var mCallback: ICallback? = null
     private val mLocationManager: LocationManager by lazy { getSystemService(Context.LOCATION_SERVICE) as LocationManager }
@@ -56,38 +70,41 @@ class MapTrackingService : Service(), MapTrackingContract.Model {
             get() = this@MapTrackingService
     }
 
-    private val gpsLocationListener: LocationListener = object : LocationListener {
-        override fun onLocationChanged(location: Location) {
-            Log.d(TAG, "onLocationChanged: $location")
-            if (exLocation != null) {
-                totalDistance += location.distanceTo(exLocation)
-                Log.d(TAG, "onLocationChanged: ${totalDistance}")
+    private var locationCallback: LocationCallback = object : LocationCallback() {
+        override fun onLocationResult(locationResult: LocationResult) {
+            super.onLocationResult(locationResult)
+            val nowLocationList = locationResult.locations
+            if (nowLocationList.size > 0) {
+                val location = nowLocationList.last()
+                //location = locationList.get(0);
+                //currentPosition = LatLng(location.getLatitude(), location.getLongitude())
+                Log.d(TAG, "onLocationResult : " + LatLng(location.latitude, location.longitude))
+
+                if (exLocation != null) {
+                    val dis = location.distanceTo(exLocation)
+                    if (dis >= 1 && dis < 7) {
+                        totalDistance += location.distanceTo(exLocation)
+                        val locate = LatLng(location.latitude, location.longitude)
+                        locationList.add(locate)
+                        mCallback?.sendData(locate)
+                    }
+                    exLocation = location
+
+                    Log.d(TAG, "onLocationResult: ${totalDistance}")
+                } else {
+                    exLocation = location
+                }
+                //Log.d(TAG, "onLocationChanged: ${location.time}")
+
+                //시간
+                /*val format = SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.KOREA)
+                val formatted = format.format(location.time)
+                Log.d(TAG, "onLocationChanged: $formatted")*/
+
+                //mLastLocation.set(location)]
+                //if (mCallback != null) {
+
             }
-            //Log.d(TAG, "onLocationChanged: ${location.time}")
-
-            //시간
-            /*val format = SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.KOREA)
-            val formatted = format.format(location.time)
-            Log.d(TAG, "onLocationChanged: $formatted")*/
-
-            //mLastLocation.set(location)
-            exLocation = location
-
-            //if (mCallback != null) {
-            mCallback?.sendData(location)
-            //}
-        }
-
-        override fun onProviderDisabled(provider: String) {
-            Log.d(TAG, "onProviderDisabled: $provider")
-        }
-
-        override fun onProviderEnabled(provider: String) {
-            Log.d(TAG, "onProviderEnabled: $provider")
-        }
-
-        override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {
-            Log.d(TAG, "onStatusChanged: $provider")
         }
     }
 
@@ -96,27 +113,19 @@ class MapTrackingService : Service(), MapTrackingContract.Model {
 
         Log.e(TAG, "onCreate")
 
+        val builder = LocationSettingsRequest.Builder()
+        builder.addLocationRequest(locationRequest)
+
         TedRx2Permission.with(this)
-                .setRationaleTitle("dd")
-                .setRationaleMessage("dd") // "we need permission for read contact and find your location"
-                .setPermissions(Manifest.permission.READ_CONTACTS, Manifest.permission.ACCESS_FINE_LOCATION)
+                .setRationaleTitle("Notice")
+                .setRationaleMessage("we need permission for find your location") // "we need permission for read contact and find your location"
+                .setPermissions(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
                 .request()
                 .subscribe({ tedPermissionResult ->
                     if (tedPermissionResult.isGranted) {
-                        //Log.d(TAG, "onLocationChanged: ${getLastKnownLocation()}")
                         try {
-                            mLocationManager.requestLocationUpdates(
-                                    LocationManager.GPS_PROVIDER,
-                                    LOCATION_INTERVAL,
-                                    LOCATION_DISTANCE,
-                                    gpsLocationListener
-                            )
-                            mLocationManager.requestLocationUpdates(
-                                    LocationManager.NETWORK_PROVIDER,
-                                    LOCATION_INTERVAL,
-                                    LOCATION_DISTANCE,
-                                    gpsLocationListener
-                            )
+                            mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper())
+
                         } catch (ex: java.lang.SecurityException) {
                             Log.i(TAG, "fail to request location update, ignore", ex)
                         } catch (ex: IllegalArgumentException) {
@@ -136,9 +145,6 @@ class MapTrackingService : Service(), MapTrackingContract.Model {
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
 
         startForeground(1, notification.build())
-        //mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-        //val location = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-        //Log.d("lolo", location.toString())
 
         isRunning = true
 
@@ -162,6 +168,9 @@ class MapTrackingService : Service(), MapTrackingContract.Model {
                 bestLocation = l
             }
         }
+        if (isRunning && bestLocation != null) {
+            locationList.add(LatLng(bestLocation.latitude, bestLocation.longitude))
+        }
         return bestLocation
     }
 
@@ -170,20 +179,9 @@ class MapTrackingService : Service(), MapTrackingContract.Model {
         super.onDestroy()
         countThread = null
         isRunning = false
-        try {
-            if (ActivityCompat.checkSelfPermission(
-                            this,
-                            android.Manifest.permission.ACCESS_FINE_LOCATION
-                    ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                            this,
-                            android.Manifest.permission.ACCESS_COARSE_LOCATION
-                    ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                return
-            }
-            mLocationManager.removeUpdates(gpsLocationListener)
-        } catch (ex: Exception) {
-            Log.i(TAG, "fail to remove location listener, ignore", ex)
+        if (mFusedLocationClient != null) {
+            Log.d(TAG, "onStop : call stopLocationUpdates");
+            mFusedLocationClient.removeLocationUpdates(locationCallback)
         }
 
     }
@@ -191,7 +189,7 @@ class MapTrackingService : Service(), MapTrackingContract.Model {
     inner class Counter : Runnable {
 
         override fun run() {
-            count = 0
+            second = 0
             while (true) {
                 if (!isRunning) {
                     break
@@ -202,13 +200,13 @@ class MapTrackingService : Service(), MapTrackingContract.Model {
                 } catch (e: InterruptedException) {
                     e.printStackTrace()
                 }
-                count++
+                second++
             }
         }
     }
 
     interface ICallback {
-        fun sendData(location: Location)
+        fun sendData(location: LatLng)
     }
 
     fun registerCallback(cb: ICallback) {
@@ -216,7 +214,7 @@ class MapTrackingService : Service(), MapTrackingContract.Model {
     }
 
     override fun getTotalSecond(): Int {
-        return count
+        return second
     }
 
     override fun getFinishData(): Route {
@@ -226,6 +224,10 @@ class MapTrackingService : Service(), MapTrackingContract.Model {
     override fun getLastLocation(): Location? {
 
         return getLastKnownLocation()
+    }
+
+    override fun getLocationList(): ArrayList<LatLng> {
+        return locationList
     }
 
     override fun onBind(intent: Intent): IBinder? {
