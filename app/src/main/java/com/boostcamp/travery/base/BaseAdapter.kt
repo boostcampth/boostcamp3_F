@@ -1,8 +1,8 @@
 package com.boostcamp.travery.base
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 
-abstract class BaseAdapter<T> : RecyclerView.Adapter<BaseViewHolder>() {
+abstract class BaseAdapter<T> : androidx.recyclerview.widget.RecyclerView.Adapter<BaseViewHolder>() {
     protected val data = ArrayList<T>()
 
     override fun getItemCount() = data.size

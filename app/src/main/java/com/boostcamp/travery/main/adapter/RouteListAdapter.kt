@@ -1,6 +1,6 @@
 package com.boostcamp.travery.main.adapter
 
-import android.databinding.DataBindingUtil
+import androidx.databinding.DataBindingUtil
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.boostcamp.travery.OnItemClickListener
