@@ -14,7 +14,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import com.boostcamp.travery.OnItemClickListener
-import com.boostcamp.travery.R
 import com.boostcamp.travery.data.model.Route
 import com.boostcamp.travery.dummy.RouteDummyData
 import com.boostcamp.travery.main.adapter.RouteListAdapter
@@ -31,6 +30,11 @@ import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.content_main.*
+import android.content.DialogInterface
+import androidx.appcompat.app.AlertDialog
+import android.location.LocationManager
+import android.content.Context
+import com.boostcamp.travery.R
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,
@@ -46,27 +50,27 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         fab.setOnClickListener { view ->
             TedRx2Permission.with(this)
-                .setRationaleTitle("Notice")
-                .setRationaleMessage("we need permission for find your location") // "we need permission for read contact and find your location"
-                .setPermissions(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
-                .request()
-                .subscribe({ tedPermissionResult ->
-                    if (tedPermissionResult.isGranted) {
-                        if (!checkLocationServicesStatus()) {
-                            showDialogForLocationServiceSetting()
+                    .setRationaleTitle(getString(R.string.permission_title))
+                    .setRationaleMessage(getString(R.string.permission_message)) // "we need permission for read contact and find your location"
+                    .setPermissions(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
+                    .request()
+                    .subscribe({ tedPermissionResult ->
+                        if (tedPermissionResult.isGranted) {
+                            if (!checkLocationServicesStatus()) {
+                                showDialogForLocationServiceSetting()
+                            } else {
+                                val intent = Intent(this@MainActivity, TrackingActivity::class.java)
+                                startActivity(intent)
+                            }
                         } else {
-                            val intent = Intent(this@MainActivity, TrackingActivity::class.java)
-                            startActivity(intent)
+                            Toast.makeText(
+                                    this,
+                                    "Permission Denied\n" + tedPermissionResult.getDeniedPermissions().toString(),
+                                    Toast.LENGTH_SHORT
+                            )
+                                    .show()
                         }
-                    } else {
-                        Toast.makeText(
-                            this,
-                            "Permission Denied\n" + tedPermissionResult.getDeniedPermissions().toString(),
-                            Toast.LENGTH_SHORT
-                        )
-                            .show()
-                    }
-                }, { })
+                    }, { })
 
 
             //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
@@ -187,8 +191,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private fun showDialogForLocationServiceSetting() {
 
         val builder = AlertDialog.Builder(this@MainActivity)
-        builder.setTitle("위치 서비스 비활성화")
-        builder.setMessage("앱을 사용하기 위해서는 위치 서비스가 필요합니다.\n" + "위치 설정을 수정하실래요?")
+        builder.setTitle(getString(R.string.permission_dialog_gps_title))
+        builder.setMessage(getString(R.string.permission_dialog_gps_description))
         builder.setCancelable(true)
         builder.setPositiveButton("설정") { _, _ ->
             val callGPSSettingIntent = Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS)

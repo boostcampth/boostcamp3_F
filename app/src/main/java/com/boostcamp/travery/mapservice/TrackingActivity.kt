@@ -40,9 +40,9 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
                 .setInterval(UPDATE_INTERVAL_MS)
                 .setFastestInterval(FASTEST_UPDATE_INTERVAL_MS)
     }
-    private val GPS_ENABLE_REQUEST_CODE = 2001
-    private val UPDATE_INTERVAL_MS: Long = 2500  // 1초
-    private val FASTEST_UPDATE_INTERVAL_MS: Long = 1500 //
+
+    private val UPDATE_INTERVAL_MS: Long = 2500
+    private val FASTEST_UPDATE_INTERVAL_MS: Long = 1500
 
     lateinit var myService: MapTrackingService
     var isService = false
@@ -87,7 +87,7 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap = googleMap
 
         polylineOptions.color(Color.BLUE)
-                .geodesic(true)
+                //.geodesic(true)
                 .width(10f)
 
         val serviceIntent = Intent(this, MapTrackingService::class.java)
@@ -125,9 +125,10 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
     private var conn: ServiceConnection = object : ServiceConnection {
 
         private val mCallback = object : MapTrackingService.ICallback {
-            override fun sendData(location: LatLng) {
+            override fun sendData(location: LatLng, accuracy: Float) {
                 myLocationMarker?.position = location
                 //arrayPoints.add(locate)
+                tv_acc.text = accuracy.toString()
                 polylineOptions.add(location)
                 polyline?.remove()
                 polyline = mMap.addPolyline(polylineOptions)
@@ -150,7 +151,7 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
 
             if (myLocationMarker == null) {
                 val location = myService.getLastLocation()
-                //더미 위치
+                //서울 위치
                 var lat = 37.56
                 var lng = 126.97
                 if (location != null) {

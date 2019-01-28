@@ -1,6 +1,5 @@
 package com.boostcamp.travery.mapservice
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.app.Service
@@ -9,41 +8,45 @@ import android.location.Location
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 
-import android.os.Bundle
 import android.location.LocationManager
 import android.util.Log
 import android.content.Context
-import android.content.pm.PackageManager
 import android.os.Binder
-import androidx.core.app.ActivityCompat
 import com.boostcamp.travery.MyApplication.Companion.CHANNEL_ID
 import com.boostcamp.travery.data.model.Route
-import android.widget.Toast
-import android.R
-import android.location.LocationListener
 import android.os.Looper
 import com.boostcamp.travery.main.MainActivity
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.model.LatLng
-import com.tedpark.tedpermission.rx2.TedRx2Permission
-
+import com.boostcamp.travery.R
 
 @SuppressLint("Registered")
 class MapTrackingService : Service(), MapTrackingContract.Model {
-    private val mFusedLocationClient: FusedLocationProviderClient by lazy { LocationServices.getFusedLocationProviderClient(this) }
+
+    private val mFusedLocationClient: FusedLocationProviderClient by lazy {
+        LocationServices.getFusedLocationProviderClient(
+            this
+        )
+    }
+
     private val locationRequest: LocationRequest by lazy {
         LocationRequest()
-                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                .setInterval(UPDATE_INTERVAL_MS)
-                .setFastestInterval(FASTEST_UPDATE_INTERVAL_MS)
+            .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+            .setInterval(UPDATE_INTERVAL_MS)
+            .setFastestInterval(FASTEST_UPDATE_INTERVAL_MS)
     }
 
     private val UPDATE_INTERVAL_MS: Long = 2500  // 1초
     private val FASTEST_UPDATE_INTERVAL_MS: Long = 1500 //
+    private var lostLocationCnt = 0
 
     private val locationList: ArrayList<LatLng> = ArrayList()
+    private val timeList: ArrayList<Long> = ArrayList()
+    private var canSuggest = true
+    private val suggestList: ArrayList<LatLng> = ArrayList()
     private val TAG = "MyLocationService"
 
+    private var startTime:Int ?= null
     private var exLocation: Location? = null
     private var totalDistance = 0f
     var isRunning = false
@@ -54,14 +57,14 @@ class MapTrackingService : Service(), MapTrackingContract.Model {
     private val notification: NotificationCompat.Builder by lazy {
         val notificationIntent = Intent(this, MainActivity::class.java)
         val pendingIntent = PendingIntent.getActivity(
-                this,
-                0, notificationIntent, 0
+            this,
+            0, notificationIntent, 0
         )
         NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle("Example Service")
-                .setContentText("활동 기록 중 입니다.")
-                .setSmallIcon(R.drawable.btn_star)
-                .setContentIntent(pendingIntent)
+            .setContentTitle(getString(R.string.service_title))
+            .setContentText(getString(R.string.service_message))
+            .setSmallIcon(R.drawable.ic_play_circle_filled_black_60dp)
+            .setContentIntent(pendingIntent)
     }
     private val mBinder = LocalBinder()
 
@@ -78,19 +81,31 @@ class MapTrackingService : Service(), MapTrackingContract.Model {
                 val location = nowLocationList.last()
                 //location = locationList.get(0);
                 //currentPosition = LatLng(location.getLatitude(), location.getLongitude())
-                Log.d(TAG, "onLocationResult : " + LatLng(location.latitude, location.longitude))
+                Log.d(TAG, "onLocationResult : " + location.accuracy)
 
                 if (exLocation != null) {
                     val dis = location.distanceTo(exLocation)
-                    if (dis >= 1 && dis < 7) {
+                    //이동거리가 1m 이상 10m 이하이고 오차범위가 10m 미만일 때
+                    //실내에서는 12m~30m정도의 오차 발생
+                    //야외에서는 3m~11m정도의 오차 발생
+                    if (dis >= 1 && dis <10 && location.accuracy < 9.5) {
                         totalDistance += location.distanceTo(exLocation)
                         val locate = LatLng(location.latitude, location.longitude)
                         locationList.add(locate)
-                        mCallback?.sendData(locate)
-                    }
-                    exLocation = location
+                        timeList.add(location.time)
+                        mCallback?.sendData(locate, location.accuracy)
+                        exLocation = location
 
-                    Log.d(TAG, "onLocationResult: ${totalDistance}")
+                        if(lostLocationCnt > 60 && canSuggest){
+                            suggestList.add(locate)
+                        }
+                        canSuggest = true
+                        lostLocationCnt=0
+                    }else{
+                        lostLocationCnt++
+                    }
+
+                    //Log.d(TAG, "onLocationResult: ${totalDistance}")
                 } else {
                     exLocation = location
                 }
@@ -116,31 +131,17 @@ class MapTrackingService : Service(), MapTrackingContract.Model {
         val builder = LocationSettingsRequest.Builder()
         builder.addLocationRequest(locationRequest)
 
-        TedRx2Permission.with(this)
-                .setRationaleTitle("Notice")
-                .setRationaleMessage("we need permission for find your location") // "we need permission for read contact and find your location"
-                .setPermissions(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
-                .request()
-                .subscribe({ tedPermissionResult ->
-                    if (tedPermissionResult.isGranted) {
-                        try {
-                            mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper())
 
-                        } catch (ex: java.lang.SecurityException) {
-                            Log.i(TAG, "fail to request location update, ignore", ex)
-                        } catch (ex: IllegalArgumentException) {
-                            Log.d(TAG, "network provider does not exist, " + ex.message)
-                        }
-                    } else {
-                        Toast.makeText(
-                                this,
-                                "Permission Denied\n" + tedPermissionResult.getDeniedPermissions().toString(),
-                                Toast.LENGTH_SHORT
-                        )
-                                .show()
-                    }
-                }, { })
+        try {
+            mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper())
+
+        } catch (ex: java.lang.SecurityException) {
+            Log.i(TAG, "fail to request location update, ignore", ex)
+        } catch (ex: IllegalArgumentException) {
+            Log.d(TAG, "network provider does not exist, " + ex.message)
+        }
     }
+
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
 
@@ -152,12 +153,13 @@ class MapTrackingService : Service(), MapTrackingContract.Model {
             countThread = Thread(Counter())
             countThread!!.start()
         }
-        //do heavy work on a background thread
-        //stopSelf();
+
+        startTime = System.currentTimeMillis().toInt()
 
         return Service.START_NOT_STICKY
     }
 
+    @SuppressLint("MissingPermission")
     private fun getLastKnownLocation(): Location? {
         val providers = mLocationManager.getProviders(true)
         var bestLocation: Location? = null
@@ -170,6 +172,7 @@ class MapTrackingService : Service(), MapTrackingContract.Model {
         }
         if (isRunning && bestLocation != null) {
             locationList.add(LatLng(bestLocation.latitude, bestLocation.longitude))
+            timeList.add(bestLocation.time)
         }
         return bestLocation
     }
@@ -187,7 +190,6 @@ class MapTrackingService : Service(), MapTrackingContract.Model {
     }
 
     inner class Counter : Runnable {
-
         override fun run() {
             second = 0
             while (true) {
@@ -206,7 +208,7 @@ class MapTrackingService : Service(), MapTrackingContract.Model {
     }
 
     interface ICallback {
-        fun sendData(location: LatLng)
+        fun sendData(location: LatLng, accuracy: Float)
     }
 
     fun registerCallback(cb: ICallback) {
