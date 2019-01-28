@@ -59,9 +59,6 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
         val serviceIntent = Intent(this, MapTrackingService::class.java)
         ContextCompat.startForegroundService(this, serviceIntent)
         bindService(serviceIntent, conn, Context.BIND_AUTO_CREATE)
-        btn_stop.visibility = View.VISIBLE
-        img_midMarker.visibility = View.GONE
-        btn_play.visibility = View.GONE
     }
 
     fun stopService(v: View) {
@@ -90,7 +87,7 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
                 polylineOptions.add(location)
                 polyline?.remove()
                 polyline = mMap.addPolyline(polylineOptions)
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 15f))
+                mMap.animateCamera(CameraUpdateFactory.newLatLng(location))
             }
             /* 서비스에서 데이터를 받아 메소드 호출 또는 핸들러로 전달 */
         }
@@ -128,6 +125,11 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
                 counter.start()
                 polylineOptions.addAll(myService.getLocationList())
                 polyline = mMap.addPolyline(polylineOptions)
+
+
+                btn_stop.visibility = View.VISIBLE
+                img_midMarker.visibility = View.GONE
+                btn_play.visibility = View.GONE
             } else {//서비스는 돌지 않고 바인드만 했을 때 바인드를 끊는다.
                 unbindService(this)
             }
