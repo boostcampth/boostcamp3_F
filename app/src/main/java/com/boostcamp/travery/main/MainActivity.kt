@@ -8,23 +8,29 @@ import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import com.boostcamp.travery.OnItemClickListener
 import com.boostcamp.travery.R
-import com.boostcamp.travery.mapservice.TrackingActivity
 import com.boostcamp.travery.data.model.Route
-import com.boostcamp.travery.main.adapter.RouteListAdapter
 import com.boostcamp.travery.dummy.RouteDummyData
+import com.boostcamp.travery.main.adapter.RouteListAdapter
+import com.boostcamp.travery.main.viewholder.GroupItem
+import com.boostcamp.travery.mapservice.TrackingActivity
 import com.boostcamp.travery.search.SearchResultActivity
+import com.boostcamp.travery.utils.DateUtils
+import io.reactivex.Flowable
+import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.content_main.*
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,
-    OnItemClickListener {
+        OnItemClickListener {
     private val adapter = RouteListAdapter(this)
+    private val compositeDisposable = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,20 +43,41 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             startActivity(intent)
 
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
+                    .setAction("Action", null).show()
         }
 
         val toggle = ActionBarDrawerToggle(
-            this, drawer_layout, toolbar,
-            R.string.navigation_drawer_open,
-            R.string.navigation_drawer_close
+                this, drawer_layout, toolbar,
+                R.string.navigation_drawer_open,
+                R.string.navigation_drawer_close
         )
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
 
         nav_view.setNavigationItemSelectedListener(this)
 
-        adapter.setItems(RouteDummyData.getData())
+        Flowable.just(RouteDummyData.getData())
+                .map { list ->
+                    val ret = ArrayList<Any>()
+                    var partition = -1
+
+                    list.forEach { route ->
+                        if (partition != DateUtils.getTermDay(toMillis = route.endTime)) {
+                            ret.add(GroupItem("${DateUtils.getDate(route.endTime)[2]}"))
+                        }
+                        partition = DateUtils.getTermDay(toMillis = route.endTime)
+                        ret.add(route)
+                    }
+
+                    ret
+                }.subscribe(
+                        {
+                            adapter.setItems(it)
+                        },
+                        {
+                            Log.e("TAG", "List load error", it)
+                        }
+                ).also { compositeDisposable.add(it) }
 
         initRecyclerView()
     }
