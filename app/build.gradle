@@ -23,6 +23,10 @@ android {
         enabled true
     }
 
+    androidExtensions {
+        experimental = true
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -83,4 +87,7 @@ dependencies {
 
     //tedpermission
     implementation 'gun0912.ted:tedpermission-rx2:2.2.2'
+
+    // AndroidX snapping
+    implementation 'com.github.rubensousa:gravitysnaphelper:2.0'
 }

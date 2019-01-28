@@ -1,17 +1,20 @@
 package com.boostcamp.travery.data.model
 
+import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import kotlinx.android.parcel.Parcelize
 import java.util.*
 
+@Parcelize
 @Entity(
     tableName = "activity",
     foreignKeys = [ForeignKey(
         entity = Route::class,
-        parentColumns = arrayOf("seq"),
-        childColumns = arrayOf("route_code"),
+        parentColumns = ["seq"],
+        childColumns = ["route_code"],
         onDelete = ForeignKey.SET_NULL
     )]
 )
@@ -24,7 +27,9 @@ data class Activity(
     @ColumnInfo(name = "sub_image") var subImage: String?,
     @ColumnInfo(name = "latitude") var latitude: Long,
     @ColumnInfo(name = "longitude") var longitude: Long,
-    @ColumnInfo(name = "route_code") var routeCode: Int?
-) {
-    @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "seq") var seq: Int? = null
+    @ColumnInfo(name = "route_code", index = true) var routeCode: Int?
+) : Parcelable {
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "seq")
+    var seq: Int? = null
 }
