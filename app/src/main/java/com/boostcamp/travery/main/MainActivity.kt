@@ -33,6 +33,7 @@ import android.content.DialogInterface
 import androidx.appcompat.app.AlertDialog
 import android.location.LocationManager
 import android.content.Context
+import com.boostcamp.travery.routedetail.RouteDetailActivity
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,
@@ -172,7 +173,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onItemClick(item: Any) {
         if (item is Route) {
-            Toast.makeText(baseContext, item.toString(), Toast.LENGTH_SHORT).show()
+            var intent=Intent(this,RouteDetailActivity::class.java)
+            intent.putExtra("route",item)
+            startActivity(intent)
         }
     }
 
