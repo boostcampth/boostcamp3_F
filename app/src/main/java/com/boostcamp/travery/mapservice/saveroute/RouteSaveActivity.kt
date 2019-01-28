@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import com.boostcamp.travery.R
 import com.boostcamp.travery.utils.DateUtils
 import kotlinx.android.synthetic.main.activity_route_save.*
@@ -18,7 +19,8 @@ class RouteSaveActivity : AppCompatActivity(), AdapterView.OnItemSelectedListene
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_route_save)
-        setSupportActionBar(toolbar.findViewById(R.id.toolBar))
+        setSupportActionBar(toolbar as Toolbar)
+        title = ""
 
         initView()
     }
