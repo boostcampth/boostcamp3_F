@@ -14,7 +14,7 @@
             type="com.boostcamp.travery.OnItemClickListener"/>
     </data>
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="@{() -> listener.onItemClick(item)}"
@@ -65,5 +65,5 @@
             app:layout_constraintTop_toBottomOf="@id/tv_title"
             tools:text="#강남 #부캠중 #날씨굳"/>
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

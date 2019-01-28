@@ -7,7 +7,7 @@ import android.app.Service
 import android.content.Intent
 import android.location.Location
 import android.os.IBinder
-import android.support.v4.app.NotificationCompat
+import androidx.core.app.NotificationCompat
 
 import android.os.Bundle
 import android.location.LocationManager
@@ -15,7 +15,7 @@ import android.util.Log
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Binder
-import android.support.v4.app.ActivityCompat
+import androidx.core.app.ActivityCompat
 import com.boostcamp.travery.MyApplication.Companion.CHANNEL_ID
 import com.boostcamp.travery.data.model.Route
 import android.widget.Toast

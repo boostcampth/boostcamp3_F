@@ -1,6 +1,6 @@
 package com.boostcamp.travery.data.local
 
-import android.arch.persistence.room.*
+import androidx.room.*
 import com.boostcamp.travery.data.model.Route
 import io.reactivex.Flowable
 

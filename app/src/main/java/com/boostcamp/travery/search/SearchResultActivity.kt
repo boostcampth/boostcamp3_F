@@ -1,8 +1,8 @@
 package com.boostcamp.travery.search
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.widget.Toast
 import com.boostcamp.travery.OnItemClickListener
 import com.boostcamp.travery.R
@@ -26,7 +26,7 @@ class SearchResultActivity : AppCompatActivity(), OnItemClickListener {
     private fun initRecyclerView() {
         recyclerView.apply {
             setHasFixedSize(true)
-            layoutManager = LinearLayoutManager(this@SearchResultActivity)
+            layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this@SearchResultActivity)
             adapter = this@SearchResultActivity.adapter
         }
     }

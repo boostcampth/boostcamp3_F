@@ -1,9 +1,9 @@
 package com.boostcamp.travery.utils
 
 import android.annotation.SuppressLint
-import android.databinding.BindingAdapter
+import androidx.databinding.BindingAdapter
 import android.os.Build
-import android.support.annotation.RequiresApi
+import androidx.annotation.RequiresApi
 import android.widget.TextView
 import com.boostcamp.travery.R
 import com.boostcamp.travery.custom.CircleImageView
