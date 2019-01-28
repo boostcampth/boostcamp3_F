@@ -37,7 +37,7 @@ import com.boostcamp.travery.routedetail.RouteDetailActivity
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,
-        OnItemClickListener {
+    OnItemClickListener {
     private val adapter = RouteListAdapter(this)
     private val compositeDisposable = CompositeDisposable()
     private val GPS_ENABLE_REQUEST_CODE = 2001
@@ -49,27 +49,27 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         fab.setOnClickListener { view ->
             TedRx2Permission.with(this)
-                    .setRationaleTitle("Notice")
-                    .setRationaleMessage("we need permission for find your location") // "we need permission for read contact and find your location"
-                    .setPermissions(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
-                    .request()
-                    .subscribe({ tedPermissionResult ->
-                        if (tedPermissionResult.isGranted) {
-                            if (!checkLocationServicesStatus()) {
-                                showDialogForLocationServiceSetting()
-                            } else {
-                                val intent = Intent(this@MainActivity, TrackingActivity::class.java)
-                                startActivity(intent)
-                            }
+                .setRationaleTitle("Notice")
+                .setRationaleMessage("we need permission for find your location") // "we need permission for read contact and find your location"
+                .setPermissions(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
+                .request()
+                .subscribe({ tedPermissionResult ->
+                    if (tedPermissionResult.isGranted) {
+                        if (!checkLocationServicesStatus()) {
+                            showDialogForLocationServiceSetting()
                         } else {
-                            Toast.makeText(
-                                    this,
-                                    "Permission Denied\n" + tedPermissionResult.getDeniedPermissions().toString(),
-                                    Toast.LENGTH_SHORT
-                            )
-                                    .show()
+                            val intent = Intent(this@MainActivity, TrackingActivity::class.java)
+                            startActivity(intent)
                         }
-                    }, { })
+                    } else {
+                        Toast.makeText(
+                            this,
+                            "Permission Denied\n" + tedPermissionResult.getDeniedPermissions().toString(),
+                            Toast.LENGTH_SHORT
+                        )
+                            .show()
+                    }
+                }, { })
 
 
             //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
@@ -77,9 +77,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
 
         val toggle = ActionBarDrawerToggle(
-                this, drawer_layout, toolbar,
-                R.string.navigation_drawer_open,
-                R.string.navigation_drawer_close
+            this, drawer_layout, toolbar,
+            R.string.navigation_drawer_open,
+            R.string.navigation_drawer_close
         )
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
@@ -87,27 +87,27 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         nav_view.setNavigationItemSelectedListener(this)
 
         Flowable.just(RouteDummyData.getData())
-                .map { list ->
-                    val ret = ArrayList<Any>()
-                    var partition = -1
+            .map { list ->
+                val ret = ArrayList<Any>()
+                var partition = -1
 
-                    list.forEach { route ->
-                        if (partition != DateUtils.getTermDay(toMillis = route.endTime)) {
-                            ret.add(GroupItem("${DateUtils.getDate(route.endTime)[2]}"))
-                        }
-                        partition = DateUtils.getTermDay(toMillis = route.endTime)
-                        ret.add(route)
+                list.forEach { route ->
+                    if (partition != DateUtils.getTermDay(toMillis = route.endTime)) {
+                        ret.add(GroupItem("${DateUtils.getDate(route.endTime)[2]}"))
                     }
+                    partition = DateUtils.getTermDay(toMillis = route.endTime)
+                    ret.add(route)
+                }
 
-                    ret
-                }.subscribe(
-                        {
-                            adapter.setItems(it)
-                        },
-                        {
-                            Log.e("TAG", "List load error", it)
-                        }
-                ).also { compositeDisposable.add(it) }
+                ret
+            }.subscribe(
+                {
+                    adapter.setItems(it)
+                },
+                {
+                    Log.e("TAG", "List load error", it)
+                }
+            ).also { compositeDisposable.add(it) }
 
         initRecyclerView()
     }
@@ -173,8 +173,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onItemClick(item: Any) {
         if (item is Route) {
-            var intent=Intent(this,RouteDetailActivity::class.java)
-            intent.putExtra("route",item)
+            var intent = Intent(this, RouteDetailActivity::class.java)
+            intent.putExtra("route", item)
             startActivity(intent)
         }
     }
@@ -182,7 +182,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private fun checkLocationServicesStatus(): Boolean {
         val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
-        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
+            LocationManager.NETWORK_PROVIDER
+        )
     }
 
     private fun showDialogForLocationServiceSetting() {

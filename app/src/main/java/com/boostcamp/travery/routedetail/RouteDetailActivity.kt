@@ -28,11 +28,11 @@ class RouteDetailActivity : AppCompatActivity() {
         leftDataList.addAll(activityList)
         leftDataList.add(null)
         leftDataList.add(null)
-        iniView()
+        initView()
     }
 
 
-    private fun iniView() {
+    private fun initView() {
         rv_activity_list.layoutManager = LinearLayoutManager(this)
         GravitySnapHelper(Gravity.TOP).attachToRecyclerView(rv_activity_list)
         rv_activity_list.adapter = ActivityListAdapter(topDataList)

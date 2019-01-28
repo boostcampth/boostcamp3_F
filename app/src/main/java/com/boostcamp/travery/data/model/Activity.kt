@@ -27,7 +27,9 @@ data class Activity(
     @ColumnInfo(name = "sub_image") var subImage: String?,
     @ColumnInfo(name = "latitude") var latitude: Long,
     @ColumnInfo(name = "longitude") var longitude: Long,
-    @ColumnInfo(name = "route_code",index = true) var routeCode: Int?
+    @ColumnInfo(name = "route_code", index = true) var routeCode: Int?
 ) : Parcelable {
-    @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "seq") var seq: Int? = null
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "seq")
+    var seq: Int? = null
 }
