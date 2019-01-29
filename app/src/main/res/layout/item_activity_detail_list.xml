@@ -11,83 +11,83 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="90dp"
-        android:padding="10dp">
+            android:layout_width="match_parent"
+            android:layout_height="90dp"
+            android:paddingStart="8dp" android:paddingTop="10dp" android:paddingBottom="10dp" android:paddingEnd="8dp">
 
         <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:id="@+id/linearLayout"
-            >
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:id="@+id/linearLayout"
+        >
 
             <ImageView
-                android:layout_width="30dp"
-                android:layout_height="match_parent"
-                android:id="@+id/iv_tens"
-                android:layout_weight="1"
-                android:src="@drawable/zero"
-                android:layout_gravity="center_vertical"/>
+                    android:layout_width="30dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/iv_tens"
+                    android:layout_weight="1"
+                    android:src="@drawable/zero"
+                    android:layout_gravity="center_vertical"/>
 
             <ImageView
-                android:layout_width="30dp"
-                android:layout_height="match_parent"
-                android:id="@+id/iv_units"
-                android:layout_weight="1"
-                android:src="@drawable/one"
-                android:layout_gravity="center_vertical"/>
+                    android:layout_width="30dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/iv_units"
+                    android:layout_weight="1"
+                    android:src="@drawable/one"
+                    android:layout_gravity="center_vertical"/>
 
         </LinearLayout>
 
         <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/linearLayout"
-            android:layout_marginStart="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:gravity="center_vertical">
-
-            <TextView
-                android:id="@+id/tv_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:date="@{activity.date}"
-                android:textSize="13sp"
-                android:text="2019.01.25 13:50"
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
                 app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginTop="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/linearLayout"
-                android:layout_marginStart="8dp"/>
+                android:layout_marginStart="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:gravity="center_vertical">
 
             <TextView
-                android:id="@+id/tv_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@{activity.title}"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="@id/tv_date"
-                app:layout_constraintTop_toBottomOf="@id/tv_date"
-                tools:text="커넥트재단 부스트캠프"/>
+                    android:id="@+id/tv_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:date="@{activity.date}"
+                    android:textSize="13sp"
+                    android:text="2019.01.25 13:50"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintStart_toEndOf="@+id/linearLayout"
+                    android:layout_marginStart="8dp"/>
 
             <TextView
-                android:id="@+id/tv_hashTag"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxLines="1"
-                android:text="@{activity.hashTag}"
-                android:textSize="13sp"
-                app:layout_constraintStart_toStartOf="@id/tv_title"
-                app:layout_constraintTop_toBottomOf="@id/tv_title"
-                tools:text="#강남 #부캠중 #날씨굳"/>
+                    android:id="@+id/tv_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{activity.title}"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="@id/tv_date"
+                    app:layout_constraintTop_toBottomOf="@id/tv_date"
+                    tools:text="커넥트재단 부스트캠프"/>
+
+            <TextView
+                    android:id="@+id/tv_hashTag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:text="@{activity.hashTag}"
+                    android:textSize="13sp"
+                    app:layout_constraintStart_toStartOf="@id/tv_title"
+                    app:layout_constraintTop_toBottomOf="@id/tv_title"
+                    tools:text="#강남 #부캠중 #날씨굳"/>
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

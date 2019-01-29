@@ -63,9 +63,12 @@ class ActivityLeftListAdapter(var dataList: List<Activity?>) :
         }
     }
 
+    //활동 아이템을 위한 뷰홀더
     class ActivityViewHolder(var binding: ItemActivityDetailLeftlistBinding) : RecyclerView.ViewHolder(binding.root)
 
+    //끝점 아이템을 표시하기 위한 뷰홀더
     class EndViewHolder(var binding: ItemActivityDetailLeftendBinding) : RecyclerView.ViewHolder(binding.root)
 
+    //리사이클러뷰 아이템을 끝까지 스크롤 하기위해 마지막에 추가하는 뷰홀더
     class EmptyViewHolder(itemView: View):RecyclerView.ViewHolder(itemView){}
 }

@@ -90,5 +90,5 @@ dependencies {
     implementation 'gun0912.ted:tedpermission-rx2:2.2.2'
 
     // AndroidX snapping
-    implementation 'com.github.rubensousa:gravitysnaphelper:2.0'
+    implementation 'com.github.takusemba:multisnaprecyclerview:1.2.0'
 }
