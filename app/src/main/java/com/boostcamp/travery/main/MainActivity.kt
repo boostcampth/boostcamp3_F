@@ -14,7 +14,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import com.boostcamp.travery.OnItemClickListener
-import com.boostcamp.travery.R
 import com.boostcamp.travery.data.model.Route
 import com.boostcamp.travery.dummy.RouteDummyData
 import com.boostcamp.travery.main.adapter.RouteListAdapter
@@ -31,6 +30,7 @@ import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.content_main.*
+import com.boostcamp.travery.R
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,
@@ -44,10 +44,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
-        fab.setOnClickListener { view ->
+        fab.setOnClickListener {
             TedRx2Permission.with(this)
-                .setRationaleTitle("Notice")
-                .setRationaleMessage("we need permission for find your location") // "we need permission for read contact and find your location"
+                .setRationaleTitle(getString(R.string.permission_title))
+                .setRationaleMessage(getString(R.string.permission_message)) // "we need permission for read contact and find your location"
                 .setPermissions(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
                 .request()
                 .subscribe({ tedPermissionResult ->
@@ -61,16 +61,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     } else {
                         Toast.makeText(
                             this,
-                            "Permission Denied\n" + tedPermissionResult.getDeniedPermissions().toString(),
+                            "Permission Denied\n" + tedPermissionResult.deniedPermissions.toString(),
                             Toast.LENGTH_SHORT
                         )
                             .show()
                     }
                 }, { })
 
-
-            //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-            //    .setAction("Action", null).show()
         }
 
         val toggle = ActionBarDrawerToggle(
@@ -187,14 +184,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private fun showDialogForLocationServiceSetting() {
 
         val builder = AlertDialog.Builder(this@MainActivity)
-        builder.setTitle("위치 서비스 비활성화")
-        builder.setMessage("앱을 사용하기 위해서는 위치 서비스가 필요합니다.\n" + "위치 설정을 수정하실래요?")
+        builder.setTitle(getString(R.string.permission_dialog_gps_title))
+        builder.setMessage(getString(R.string.permission_dialog_gps_description))
         builder.setCancelable(true)
-        builder.setPositiveButton("설정") { _, _ ->
+        builder.setPositiveButton(getString(R.string.all_setting)) { _, _ ->
             val callGPSSettingIntent = Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS)
             startActivityForResult(callGPSSettingIntent, GPS_ENABLE_REQUEST_CODE)
         }
-        builder.setNegativeButton("취소") { dialog, _ -> dialog.cancel() }
+        builder.setNegativeButton(getString(R.string.all_cancel)) { dialog, _ -> dialog.cancel() }
         builder.create().show()
     }
 
