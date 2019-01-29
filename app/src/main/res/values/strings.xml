@@ -7,7 +7,7 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
-    <string name="string_et_route_add_hint">제목을 입력하세요(30자 이내)</string>
+    <string name="string_et_route_add_hint">제목을 입력하세요(20자 이내)</string>
     <string name="string_et_route_add_content_hint">현재 코스를 한줄로 표현해주세요</string>
     <string name="string_et_route_add_theme">테마를 선택해주세요</string>
     <string name="string_tv_route_add">테마</string>
