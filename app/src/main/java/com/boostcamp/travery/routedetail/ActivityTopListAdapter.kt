@@ -51,6 +51,7 @@ class ActivityListAdapter(var dataList: List<Activity?>) : RecyclerView.Adapter<
             holder.binding.ivTens.setImageResource(tens.toImage())
             holder.binding.ivUnits.setImageResource(units.toImage())
             holder.binding.activity = dataList[position]
+            holder.binding.executePendingBindings()
         }
     }
 
