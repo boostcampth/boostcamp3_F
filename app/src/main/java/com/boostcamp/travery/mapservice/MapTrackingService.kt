@@ -5,35 +5,34 @@ import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
 import android.location.Location
-import android.os.IBinder
 import androidx.core.app.NotificationCompat
 
 import android.location.LocationManager
 import android.util.Log
 import android.content.Context
-import android.os.Binder
 import com.boostcamp.travery.data.model.Route
-import android.os.Looper
 import com.boostcamp.travery.main.MainActivity
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.model.LatLng
 import com.boostcamp.travery.R
 import java.util.*
+import android.os.*
+
 
 @SuppressLint("Registered")
-class MapTrackingService : Service(), MapTrackingContract.Model {
+class MapTrackingService : Service() {
 
     private val mFusedLocationClient: FusedLocationProviderClient by lazy {
         LocationServices.getFusedLocationProviderClient(
-            this
+                this
         )
     }
 
     private val locationRequest: LocationRequest by lazy {
         LocationRequest()
-            .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-            .setInterval(UPDATE_INTERVAL_MS)
-            .setFastestInterval(FASTEST_UPDATE_INTERVAL_MS)
+                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                .setInterval(UPDATE_INTERVAL_MS)
+                .setFastestInterval(FASTEST_UPDATE_INTERVAL_MS)
     }
 
     private val UPDATE_INTERVAL_MS: Long = 2500  // 1초
@@ -56,14 +55,14 @@ class MapTrackingService : Service(), MapTrackingContract.Model {
     private val notification: NotificationCompat.Builder by lazy {
         val notificationIntent = Intent(this, MainActivity::class.java)
         val pendingIntent = PendingIntent.getActivity(
-            this,
-            0, notificationIntent, 0
+                this,
+                0, notificationIntent, 0
         )
         NotificationCompat.Builder(this, getString(R.string.notification_channel_id))
-            .setContentTitle(getString(R.string.service_title))
-            .setContentText(getString(R.string.service_message))
-            .setSmallIcon(R.drawable.ic_play_circle_filled_black_60dp)
-            .setContentIntent(pendingIntent)
+                .setContentTitle(getString(R.string.service_title))
+                .setContentText(getString(R.string.service_message))
+                .setSmallIcon(R.drawable.ic_play_circle_filled_black_60dp)
+                .setContentIntent(pendingIntent)
     }
     private val mBinder = LocalBinder()
 
@@ -94,7 +93,7 @@ class MapTrackingService : Service(), MapTrackingContract.Model {
                         val locate = LatLng(location.latitude, location.longitude)
                         locationList.add(locate)
                         timeList.add(location.time)
-                        mCallback?.sendData(locate, location.accuracy)
+                        mCallback?.sendLocation(locate, location.accuracy)
                         exLocation = location
 
                         if (lostLocationCnt > 60 && canSuggest) {
@@ -182,38 +181,34 @@ class MapTrackingService : Service(), MapTrackingContract.Model {
         isRunning = false
         secondTimer.cancel()
         mFusedLocationClient.removeLocationUpdates(locationCallback)
-
-
     }
 
     inner class SecondTimer : TimerTask() {
         override fun run() {
             second++
+            mCallback?.sendSecond(second)
         }
     }
 
     interface ICallback {
-        fun sendData(location: LatLng, accuracy: Float)
+        fun sendLocation(location: LatLng, accuracy: Float)
+        fun sendSecond(second: Int)
     }
 
     fun registerCallback(cb: ICallback) {
         mCallback = cb
     }
 
-    override fun getTotalSecond(): Int {
-        return second
-    }
-
-    override fun getFinishData(): Route {
+    fun getFinishData(): Route {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun getLastLocation(): Location? {
+    fun getLastLocation(): Location? {
 
         return getLastKnownLocation()
     }
 
-    override fun getLocationList(): ArrayList<LatLng> {
+    fun getLocationList(): ArrayList<LatLng> {
         return locationList
     }
 
