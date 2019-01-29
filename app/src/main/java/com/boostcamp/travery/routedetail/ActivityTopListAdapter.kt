@@ -9,7 +9,7 @@ import com.boostcamp.travery.databinding.ItemActivityDetailListBinding
 import com.boostcamp.travery.databinding.ItemActivityEmptyBinding
 import com.boostcamp.travery.utils.toImage
 
-class ActivityListAdapter(var dataList: List<Activity?>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class ActivityTopListAdapter(var dataList: List<Activity?>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
         const val TYPE_ACTIVITY = 0
@@ -19,19 +19,19 @@ class ActivityListAdapter(var dataList: List<Activity?>) : RecyclerView.Adapter<
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         if (viewType == TYPE_ACTIVITY) {
             return ActivityViewHolder(
-                ItemActivityDetailListBinding.inflate(
-                    LayoutInflater.from(parent.context),
-                    parent,
-                    false
-                )
+                    ItemActivityDetailListBinding.inflate(
+                            LayoutInflater.from(parent.context),
+                            parent,
+                            false
+                    )
             )
         } else {
             return ActivityEmptyViewHolder(
-                ItemActivityEmptyBinding.inflate(
-                    LayoutInflater.from(parent.context),
-                    parent,
-                    false
-                )
+                    ItemActivityEmptyBinding.inflate(
+                            LayoutInflater.from(parent.context),
+                            parent,
+                            false
+                    )
             )
         }
     }
@@ -51,6 +51,7 @@ class ActivityListAdapter(var dataList: List<Activity?>) : RecyclerView.Adapter<
             holder.binding.ivTens.setImageResource(tens.toImage())
             holder.binding.ivUnits.setImageResource(units.toImage())
             holder.binding.activity = dataList[position]
+            holder.binding.executePendingBindings()
         }
     }
 
@@ -63,8 +64,10 @@ class ActivityListAdapter(var dataList: List<Activity?>) : RecyclerView.Adapter<
     }
 
 
+    //기록된 활동들에 대한 뷰홀더
     class ActivityViewHolder(var binding: ItemActivityDetailListBinding) : RecyclerView.ViewHolder(binding.root)
 
+    //시작점과 끝점 아이템을 위한 뷰홀더
     class ActivityEmptyViewHolder(var binding: ItemActivityEmptyBinding) : RecyclerView.ViewHolder(binding.root)
 
 

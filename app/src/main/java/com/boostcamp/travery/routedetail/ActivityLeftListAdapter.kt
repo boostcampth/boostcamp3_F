@@ -12,7 +12,7 @@ import com.boostcamp.travery.utils.toImage
 
 
 class ActivityLeftListAdapter(var dataList: List<Activity?>) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+        RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
         const val TYPE_ACTIVITY = 0
@@ -23,22 +23,22 @@ class ActivityLeftListAdapter(var dataList: List<Activity?>) :
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             TYPE_ACTIVITY -> ActivityViewHolder(
-                ItemActivityDetailLeftlistBinding.inflate(
-                    LayoutInflater.from(parent.context),
-                    parent,
-                    false
-                )
+                    ItemActivityDetailLeftlistBinding.inflate(
+                            LayoutInflater.from(parent.context),
+                            parent,
+                            false
+                    )
             )
             TYPE_ENDPOINT -> EndViewHolder(
-                ItemActivityDetailLeftendBinding.inflate(
-                    LayoutInflater.from(parent.context),
-                    parent,
-                    false
-                )
+                    ItemActivityDetailLeftendBinding.inflate(
+                            LayoutInflater.from(parent.context),
+                            parent,
+                            false
+                    )
             )
-            else ->{
+            else -> {
                 val view = LinearLayout(parent.context)
-                view.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT)
+                view.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT)
                 EmptyViewHolder(view)
             }
         }
@@ -63,9 +63,12 @@ class ActivityLeftListAdapter(var dataList: List<Activity?>) :
         }
     }
 
+    //활동 아이템을 위한 뷰홀더
     class ActivityViewHolder(var binding: ItemActivityDetailLeftlistBinding) : RecyclerView.ViewHolder(binding.root)
 
+    //끝점 아이템을 표시하기 위한 뷰홀더
     class EndViewHolder(var binding: ItemActivityDetailLeftendBinding) : RecyclerView.ViewHolder(binding.root)
 
-    class EmptyViewHolder(itemView: View):RecyclerView.ViewHolder(itemView){}
+    //리사이클러뷰 아이템을 끝까지 스크롤 하기위해 마지막에 추가하는 뷰홀더
+    class EmptyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {}
 }
