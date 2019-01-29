@@ -30,10 +30,6 @@ import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.content_main.*
-import android.content.DialogInterface
-import androidx.appcompat.app.AlertDialog
-import android.location.LocationManager
-import android.content.Context
 import com.boostcamp.travery.R
 
 
@@ -194,11 +190,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         builder.setTitle(getString(R.string.permission_dialog_gps_title))
         builder.setMessage(getString(R.string.permission_dialog_gps_description))
         builder.setCancelable(true)
-        builder.setPositiveButton("설정") { _, _ ->
+        builder.setPositiveButton(getString(R.string.all_setting)) { _, _ ->
             val callGPSSettingIntent = Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS)
             startActivityForResult(callGPSSettingIntent, GPS_ENABLE_REQUEST_CODE)
         }
-        builder.setNegativeButton("취소") { dialog, _ -> dialog.cancel() }
+        builder.setNegativeButton(getString(R.string.all_cancel)) { dialog, _ -> dialog.cancel() }
         builder.create().show()
     }
 
