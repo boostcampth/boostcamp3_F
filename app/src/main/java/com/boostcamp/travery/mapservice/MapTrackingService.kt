@@ -199,7 +199,11 @@ class MapTrackingService : Service() {
         mCallback = cb
     }
 
-    fun getFinishData(): Route {
+    fun getStartTime(): Long {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    fun getEndTime(): Long {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

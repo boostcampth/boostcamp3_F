@@ -14,6 +14,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import android.graphics.Color
 import android.os.*
+import com.boostcamp.travery.Constants
 import com.boostcamp.travery.R
 import com.google.android.gms.maps.model.*
 import java.lang.ref.WeakReference
@@ -21,12 +22,11 @@ import java.lang.ref.WeakReference
 
 class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
 
-    lateinit var myService: MapTrackingService
+    lateinit var mapService: MapTrackingService
     var isService = false
     private lateinit var mMap: GoogleMap
-    private var myLocationMarker: Marker? = null
+    private lateinit var myLocationMarker: Marker
     private var polyline: Polyline? = null
-    private var lastLocation = LatLng(37.56, 126.97)
     private val polylineOptions: PolylineOptions = PolylineOptions()
     private var secondForView = 0
     private val viewHandler = ViewChangeHandler(this)
@@ -36,14 +36,14 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tracking)
 
-        val mapFragment = supportFragmentManager
-                .findFragmentById(R.id.map) as SupportMapFragment
+        val mapFragment = map_trackingActivity as SupportMapFragment
         mapFragment.getMapAsync(this)
 
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
+        myLocationMarker = mMap.addMarker(MarkerOptions().position(LatLng(37.56, 126.97)))
 
         polylineOptions.color(Color.BLUE)
                 //.geodesic(true)
@@ -64,6 +64,13 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     fun stopService(v: View) {
+        /*val intent = Intent(this@TrackingActivity, TrackingActivity::class.java)
+        val EXTRA_ROUTE_END_TIME = "ROUTE_END_TIME"
+        val EXTRA_ROUTE_DISTANCE = "ROUTE_DISTANCE"
+        val EXTRA_ROUTE_COORDINATE = "ROUTE_COORDINATE"
+        intent.putExtra(Constants.EXTRA_ROUTE_START_TIME, mapService.getStartTime())
+        startActivity(intent)*/
+
         stopRecordView()
         doUnbindService()
         val serviceIntent = Intent(this, MapTrackingService::class.java)
@@ -71,7 +78,7 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     fun gotoMyLocation(v: View) {
-        mMap.animateCamera(CameraUpdateFactory.newLatLng(lastLocation))
+        mMap.animateCamera(CameraUpdateFactory.newLatLng(myLocationMarker.position))
     }
 
     private class ViewChangeHandler(activity: TrackingActivity) : Handler() {
@@ -90,7 +97,7 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
 
         private val mCallback = object : MapTrackingService.ICallback {
             override fun sendLocation(location: LatLng, accuracy: Float) {
-                myLocationMarker?.position = location
+                myLocationMarker.position = location
                 //arrayPoints.add(locate)
                 tv_acc.text = accuracy.toString()
                 polylineOptions.add(location)
@@ -114,21 +121,16 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
             // 서비스와 연결되었을 때 호출되는 메서드
             // 서비스 객체를 전역변수로 저장
             val mb = service as MapTrackingService.LocalBinder
-            myService = mb.service // 서비스가 제공하는 메소드 호출하여
-            myService.registerCallback(mCallback)
+            mapService = mb.service // 서비스가 제공하는 메소드 호출하여
+            mapService.registerCallback(mCallback)
             // 서비스쪽 객체를 전달받을수 있슴
-            isService = myService.isRunning
+            isService = mapService.isRunning
 
-            if (myLocationMarker == null) {
-                val location = myService.getLastLocation()
-                //서울 위치
-                var lat = 37.56
-                var lng = 126.97
-                if (location != null) {
-                    lat = location.latitude
-                    lng = location.longitude
-                }
-
+            val location = mapService.getLastLocation()
+            //서울 위치
+            if (location != null) {
+                val lat = location.latitude
+                val lng = location.longitude
                 val myLocation = LatLng(lat, lng)
                 myLocationMarker = mMap.addMarker(MarkerOptions().position(myLocation))
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 15f))
@@ -136,7 +138,7 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
 
             //서비스가 돌고 있을 때
             if (isService) {
-                polylineOptions.addAll(myService.getLocationList())
+                polylineOptions.addAll(mapService.getLocationList())
                 polyline = mMap.addPolyline(polylineOptions)
                 startRecordView()
             }
@@ -173,8 +175,10 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun doBindService() {
-        bindService(Intent(this, MapTrackingService::class.java),
-                mapTrackingServiceConnection, Context.BIND_AUTO_CREATE)
+        bindService(
+                Intent(this, MapTrackingService::class.java),
+                mapTrackingServiceConnection, Context.BIND_AUTO_CREATE
+        )
         isBound = true
     }
 

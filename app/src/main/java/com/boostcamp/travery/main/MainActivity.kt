@@ -44,33 +44,30 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
-        fab.setOnClickListener { view ->
+        fab.setOnClickListener {
             TedRx2Permission.with(this)
-                    .setRationaleTitle(getString(R.string.permission_title))
-                    .setRationaleMessage(getString(R.string.permission_message)) // "we need permission for read contact and find your location"
-                    .setPermissions(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
-                    .request()
-                    .subscribe({ tedPermissionResult ->
-                        if (tedPermissionResult.isGranted) {
-                            if (!checkLocationServicesStatus()) {
-                                showDialogForLocationServiceSetting()
-                            } else {
-                                val intent = Intent(this@MainActivity, TrackingActivity::class.java)
-                                startActivity(intent)
-                            }
+                .setRationaleTitle(getString(R.string.permission_title))
+                .setRationaleMessage(getString(R.string.permission_message)) // "we need permission for read contact and find your location"
+                .setPermissions(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
+                .request()
+                .subscribe({ tedPermissionResult ->
+                    if (tedPermissionResult.isGranted) {
+                        if (!checkLocationServicesStatus()) {
+                            showDialogForLocationServiceSetting()
                         } else {
-                            Toast.makeText(
-                                    this,
-                                    "Permission Denied\n" + tedPermissionResult.getDeniedPermissions().toString(),
-                                    Toast.LENGTH_SHORT
-                            )
-                                    .show()
+                            val intent = Intent(this@MainActivity, TrackingActivity::class.java)
+                            startActivity(intent)
                         }
-                    }, { })
+                    } else {
+                        Toast.makeText(
+                            this,
+                            "Permission Denied\n" + tedPermissionResult.deniedPermissions.toString(),
+                            Toast.LENGTH_SHORT
+                        )
+                            .show()
+                    }
+                }, { })
 
-
-            //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-            //    .setAction("Action", null).show()
         }
 
         val toggle = ActionBarDrawerToggle(
