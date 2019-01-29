@@ -7,6 +7,9 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
+    <string name="notification_channel_id">TraveryServiceChannel</string>
+    <string name="notification_channel_name">Travery Service Channel</string>
+
     <string name="permission_title">Notice</string>
     <string name="permission_message">we need permission for find your location</string>
 

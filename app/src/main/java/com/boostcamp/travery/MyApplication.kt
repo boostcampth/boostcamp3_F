@@ -17,17 +17,13 @@ class MyApplication : Application() {
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val serviceChannel = NotificationChannel(
-                CHANNEL_ID,
-                "Travery Service Channel",
+                    getString(R.string.notification_channel_id),
+                getString(R.string.notification_channel_name),
                 NotificationManager.IMPORTANCE_DEFAULT
             )
 
             val manager = getSystemService(NotificationManager::class.java)
             manager!!.createNotificationChannel(serviceChannel)
         }
-    }
-
-    companion object {
-        const val CHANNEL_ID = "TraveryServiceChannel"
     }
 }

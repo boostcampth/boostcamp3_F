@@ -12,13 +12,13 @@ import android.location.LocationManager
 import android.util.Log
 import android.content.Context
 import android.os.Binder
-import com.boostcamp.travery.MyApplication.Companion.CHANNEL_ID
 import com.boostcamp.travery.data.model.Route
 import android.os.Looper
 import com.boostcamp.travery.main.MainActivity
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.model.LatLng
 import com.boostcamp.travery.R
+import java.util.*
 
 @SuppressLint("Registered")
 class MapTrackingService : Service(), MapTrackingContract.Model {
@@ -46,12 +46,11 @@ class MapTrackingService : Service(), MapTrackingContract.Model {
     private val suggestList: ArrayList<LatLng> = ArrayList()
     private val TAG = "MyLocationService"
 
-    private var startTime:Int ?= null
+    private var startTime: Int? = null
     private var exLocation: Location? = null
     private var totalDistance = 0f
     var isRunning = false
     private var second: Int = 0
-    private var countThread: Thread? = null
     private var mCallback: ICallback? = null
     private val mLocationManager: LocationManager by lazy { getSystemService(Context.LOCATION_SERVICE) as LocationManager }
     private val notification: NotificationCompat.Builder by lazy {
@@ -60,13 +59,15 @@ class MapTrackingService : Service(), MapTrackingContract.Model {
             this,
             0, notificationIntent, 0
         )
-        NotificationCompat.Builder(this, CHANNEL_ID)
+        NotificationCompat.Builder(this, getString(R.string.notification_channel_id))
             .setContentTitle(getString(R.string.service_title))
             .setContentText(getString(R.string.service_message))
             .setSmallIcon(R.drawable.ic_play_circle_filled_black_60dp)
             .setContentIntent(pendingIntent)
     }
     private val mBinder = LocalBinder()
+
+    lateinit var secondTimer: Timer
 
     internal inner class LocalBinder : Binder() {
         val service: MapTrackingService
@@ -88,7 +89,7 @@ class MapTrackingService : Service(), MapTrackingContract.Model {
                     //이동거리가 1m 이상 10m 이하이고 오차범위가 10m 미만일 때
                     //실내에서는 12m~30m정도의 오차 발생
                     //야외에서는 3m~11m정도의 오차 발생
-                    if (dis >= 1 && dis <10 && location.accuracy < 9.5) {
+                    if (dis >= 1 && dis < 10 && location.accuracy < 9.5) {
                         totalDistance += location.distanceTo(exLocation)
                         val locate = LatLng(location.latitude, location.longitude)
                         locationList.add(locate)
@@ -96,12 +97,12 @@ class MapTrackingService : Service(), MapTrackingContract.Model {
                         mCallback?.sendData(locate, location.accuracy)
                         exLocation = location
 
-                        if(lostLocationCnt > 60 && canSuggest){
+                        if (lostLocationCnt > 60 && canSuggest) {
                             suggestList.add(locate)
                         }
                         canSuggest = true
-                        lostLocationCnt=0
-                    }else{
+                        lostLocationCnt = 0
+                    } else {
                         lostLocationCnt++
                     }
 
@@ -131,6 +132,7 @@ class MapTrackingService : Service(), MapTrackingContract.Model {
         val builder = LocationSettingsRequest.Builder()
         builder.addLocationRequest(locationRequest)
 
+        secondTimer = Timer()
 
         try {
             mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper())
@@ -149,10 +151,7 @@ class MapTrackingService : Service(), MapTrackingContract.Model {
 
         isRunning = true
 
-        if (countThread == null) {
-            countThread = Thread(Counter())
-            countThread!!.start()
-        }
+        secondTimer.schedule(SecondTimer(), 1000, 1000)
 
         startTime = System.currentTimeMillis().toInt()
 
@@ -164,10 +163,10 @@ class MapTrackingService : Service(), MapTrackingContract.Model {
         val providers = mLocationManager.getProviders(true)
         var bestLocation: Location? = null
         for (provider in providers) {
-            val l = mLocationManager.getLastKnownLocation(provider) ?: continue
-            if (bestLocation == null || l.accuracy < bestLocation.accuracy) {
+            val mLocation = mLocationManager.getLastKnownLocation(provider) ?: continue
+            if (bestLocation == null || mLocation.accuracy < bestLocation.accuracy) {
                 // Found best last known location: %s", l);
-                bestLocation = l
+                bestLocation = mLocation
             }
         }
         if (isRunning && bestLocation != null) {
@@ -180,30 +179,16 @@ class MapTrackingService : Service(), MapTrackingContract.Model {
     override fun onDestroy() {
         Log.e(TAG, "onDestroy")
         super.onDestroy()
-        countThread = null
         isRunning = false
-        if (mFusedLocationClient != null) {
-            Log.d(TAG, "onStop : call stopLocationUpdates");
-            mFusedLocationClient.removeLocationUpdates(locationCallback)
-        }
+        secondTimer.cancel()
+        mFusedLocationClient.removeLocationUpdates(locationCallback)
+
 
     }
 
-    inner class Counter : Runnable {
+    inner class SecondTimer : TimerTask() {
         override fun run() {
-            second = 0
-            while (true) {
-                if (!isRunning) {
-                    break
-                }
-
-                try {
-                    Thread.sleep(1000)
-                } catch (e: InterruptedException) {
-                    e.printStackTrace()
-                }
-                second++
-            }
+            second++
         }
     }
 
