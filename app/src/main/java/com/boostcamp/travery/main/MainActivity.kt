@@ -1,19 +1,18 @@
 package com.boostcamp.travery.main
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
+import android.location.LocationManager
 import android.os.Bundle
-import android.os.Looper
-import com.google.android.material.navigation.NavigationView
-import com.google.android.material.snackbar.Snackbar
-import androidx.core.view.GravityCompat
-import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GravityCompat
 import com.boostcamp.travery.OnItemClickListener
 import com.boostcamp.travery.R
 import com.boostcamp.travery.data.model.Route
@@ -21,19 +20,17 @@ import com.boostcamp.travery.dummy.RouteDummyData
 import com.boostcamp.travery.main.adapter.RouteListAdapter
 import com.boostcamp.travery.main.viewholder.GroupItem
 import com.boostcamp.travery.mapservice.TrackingActivity
+import com.boostcamp.travery.mapservice.saveroute.RouteSaveActivity
+import com.boostcamp.travery.routedetail.RouteDetailActivity
 import com.boostcamp.travery.search.SearchResultActivity
-import com.tedpark.tedpermission.rx2.TedRx2Permission
 import com.boostcamp.travery.utils.DateUtils
+import com.google.android.material.navigation.NavigationView
+import com.tedpark.tedpermission.rx2.TedRx2Permission
 import io.reactivex.Flowable
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.content_main.*
-import android.content.DialogInterface
-import androidx.appcompat.app.AlertDialog
-import android.location.LocationManager
-import android.content.Context
-import com.boostcamp.travery.routedetail.RouteDetailActivity
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,
@@ -148,7 +145,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // Handle navigation view item clicks here.
         when (item.itemId) {
             R.id.nav_camera -> {
-                // Handle the camera action
+                startActivity(Intent(this, RouteSaveActivity::class.java))
             }
             R.id.nav_gallery -> {
                 startActivity(Intent(this, SearchResultActivity::class.java))

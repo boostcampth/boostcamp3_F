@@ -4,7 +4,10 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.*
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.EditText
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.boostcamp.travery.R
 import com.boostcamp.travery.utils.DateUtils
@@ -24,9 +27,9 @@ class RouteSaveActivity : AppCompatActivity(), AdapterView.OnItemSelectedListene
         tv_date_cur.text = DateUtils.getDateToString()
 
         ArrayAdapter.createFromResource(
-                this,
-                R.array.theme_array,
-                android.R.layout.simple_spinner_item
+            this,
+            R.array.theme_array,
+            android.R.layout.simple_spinner_item
         ).also {
             it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             spinner_theme.adapter = it
@@ -42,6 +45,32 @@ class RouteSaveActivity : AppCompatActivity(), AdapterView.OnItemSelectedListene
             isFocusable = check
             isClickable = check
         }
+    }
+
+    private fun saveRouteToDatabase() {
+        val imageFilePath = requestStaticMap() // 비동기 호출 예상
+
+        // DB 저장 코드
+//        with(intent) {
+//            Thread(Runnable {
+//                DataBase.getDataBase(this@RouteSaveActivity)
+//                        .daoRoute()
+//                        .insertRoute(Route(
+//                                et_title.text.toString(),
+//                                et_content.text.toString(),
+//                                et_selected_theme.text.toString(),
+//                                getLongExtra(Constants.EXTRA_ROUTE_START_TIME, System.currentTimeMillis()),
+//                                getLongExtra(Constants.EXTRA_ROUTE_END_TIME, System.currentTimeMillis()),
+//                                getLongExtra(Constants.EXTRA_ROUTE_DISTANCE, 0L),
+//                                getStringExtra(Constants.EXTRA_ROUTE_COORDINATE),
+//                                imageFilePath))
+//            }).start()
+//        }
+    }
+
+    private fun requestStaticMap(): String {
+        // 스태틱맵을 요청하여 이미지 파일 저장 후 저장 경로 리턴
+        return ""
     }
 
     override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -69,7 +98,7 @@ class RouteSaveActivity : AppCompatActivity(), AdapterView.OnItemSelectedListene
 
     override fun onOptionsItemSelected(item: MenuItem?) = when (item?.itemId) {
         R.id.menu_route_save -> {
-            Toast.makeText(this, resources.getText(R.string.string_save_menu), Toast.LENGTH_SHORT).show()
+            saveRouteToDatabase()
             true
         }
 
