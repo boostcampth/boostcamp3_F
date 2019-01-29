@@ -1,11 +1,14 @@
 <resources>
+    <string name="action_settings">Settings</string>
     <string name="app_name">Travery</string>
+    <string name="all_setting">설정</string>
+    <string name="all_cancel">취소</string>
+
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Android Studio</string>
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
-    <string name="action_settings">Settings</string>
 
     <string name="notification_channel_id">TraveryServiceChannel</string>
     <string name="notification_channel_name">Travery Service Channel</string>
@@ -14,14 +17,10 @@
     <string name="permission_message">we need permission for find your location</string>
 
     <string name="permission_dialog_gps_title">위치 서비스 비활성화</string>
-    <string name="permission_dialog_gps_description">앱을 사용하기 위해서는 위치 서비스가 필요합니다.\n" + "위치 설정을 수정하실래요?</string>
+    <string name="permission_dialog_gps_description">앱을 사용하기 위해서는 위치 서비스가 필요합니다.\n위치 설정을 수정하실래요?</string>
 
     <string name="service_title">Example Service</string>
     <string name="service_message">활동 기록 중 입니다.</string>
-
-    <string name="all_setting">설정</string>
-    <string name="all_cancel">취소</string>
-
 
     <string name="string_et_route_add_hint">제목을 입력하세요(20자 이내)</string>
     <string name="string_et_route_add_content_hint">현재 코스를 한줄로 표현해주세요</string>
