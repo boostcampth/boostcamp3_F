@@ -6,4 +6,20 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
+
+    <string name="string_et_route_add_hint">제목을 입력하세요(20자 이내)</string>
+    <string name="string_et_route_add_content_hint">현재 코스를 한줄로 표현해주세요</string>
+    <string name="string_et_route_add_theme">테마를 선택해주세요</string>
+    <string name="string_tv_route_add">테마</string>
+    <string name="string_tv_date">날짜</string>
+    <string name="string_save_menu">저장</string>
+    <string name="string_input_theme">직접 입력</string>
+
+    <string-array name="theme_array">
+        <item>데이트코스</item>
+        <item>산책</item>
+        <item>반려동물 산책코스</item>
+        <item>관광지</item>
+        <item>직접 입력</item>
+    </string-array>
 </resources>

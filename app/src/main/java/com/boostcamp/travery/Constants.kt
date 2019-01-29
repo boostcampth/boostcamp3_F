@@ -1,0 +1,8 @@
+package com.boostcamp.travery
+
+object Constants {
+    val EXTRA_ROUTE_START_TIME = "ROUTE_START_TIME"
+    val EXTRA_ROUTE_END_TIME = "ROUTE_END_TIME"
+    val EXTRA_ROUTE_DISTANCE = "ROUTE_DISTANCE"
+    val EXTRA_ROUTE_COORDINATE = "ROUTE_COORDINATE"
+}
