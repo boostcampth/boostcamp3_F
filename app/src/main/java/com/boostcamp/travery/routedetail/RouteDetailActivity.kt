@@ -17,7 +17,7 @@ class RouteDetailActivity : FragmentActivity(),OnMapReadyCallback {
 
     private var topDataList = ArrayList<Activity?>()
     private var leftDataList = ArrayList<Activity?>()
-    private var map:GoogleMap?=null
+    private lateinit var map:GoogleMap
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_routedetail)
@@ -57,7 +57,7 @@ class RouteDetailActivity : FragmentActivity(),OnMapReadyCallback {
      * @param 구글 맵
      *
      */
-    override fun onMapReady(googleMap: GoogleMap?) {
+    override fun onMapReady(googleMap: GoogleMap) {
         map=googleMap
 
 
