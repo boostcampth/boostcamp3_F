@@ -13,11 +13,11 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import kotlinx.android.synthetic.main.activity_routedetail.*
 
 
-class RouteDetailActivity : FragmentActivity(),OnMapReadyCallback {
+class RouteDetailActivity : FragmentActivity(), OnMapReadyCallback {
 
     private var topDataList = ArrayList<Activity?>()
     private var leftDataList = ArrayList<Activity?>()
-    private lateinit var map:GoogleMap
+    private lateinit var map: GoogleMap
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_routedetail)
@@ -58,7 +58,7 @@ class RouteDetailActivity : FragmentActivity(),OnMapReadyCallback {
      *
      */
     override fun onMapReady(googleMap: GoogleMap) {
-        map=googleMap
+        map = googleMap
 
 
     }

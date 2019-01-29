@@ -5,34 +5,34 @@
         xmlns:tools="http://schemas.android.com/tools">
 
 
-<LinearLayout
-    android:orientation="horizontal"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    app:layout_constraintBottom_toBottomOf="parent"
-    android:id="@+id/linearLayout"
-    android:paddingLeft="8dp"
-    android:paddingRight="8dp"
-    android:layout_marginBottom="20dp"
-    android:layout_marginTop="20dp">
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <ImageView
-        android:layout_width="30dp"
-        android:layout_height="50dp"
-        android:id="@+id/iv_tens"
-        android:layout_weight="1"
-        android:src="@android:color/holo_blue_dark"
-        android:layout_gravity="center_vertical"/>
+        <ImageView
+            android:id="@+id/iv_tens"
+            android:layout_width="30dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:src="@android:color/holo_blue_dark"/>
 
-    <ImageView
-        android:layout_width="30dp"
-        android:layout_height="50dp"
-        android:id="@+id/iv_units"
-        android:layout_weight="1"
-        android:src="@android:color/holo_blue_dark"
-        android:layout_gravity="center_vertical"/>
+        <ImageView
+            android:id="@+id/iv_units"
+            android:layout_width="30dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:src="@android:color/holo_blue_dark"/>
 
-</LinearLayout>
+    </LinearLayout>
 </layout>

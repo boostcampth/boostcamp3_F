@@ -19,19 +19,19 @@ class ActivityTopListAdapter(var dataList: List<Activity?>) : RecyclerView.Adapt
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         if (viewType == TYPE_ACTIVITY) {
             return ActivityViewHolder(
-                ItemActivityDetailListBinding.inflate(
-                    LayoutInflater.from(parent.context),
-                    parent,
-                    false
-                )
+                    ItemActivityDetailListBinding.inflate(
+                            LayoutInflater.from(parent.context),
+                            parent,
+                            false
+                    )
             )
         } else {
             return ActivityEmptyViewHolder(
-                ItemActivityEmptyBinding.inflate(
-                    LayoutInflater.from(parent.context),
-                    parent,
-                    false
-                )
+                    ItemActivityEmptyBinding.inflate(
+                            LayoutInflater.from(parent.context),
+                            parent,
+                            false
+                    )
             )
         }
     }
