@@ -14,13 +14,13 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import com.boostcamp.travery.OnItemClickListener
-import com.boostcamp.travery.data.model.Route
-import com.boostcamp.travery.dummy.RouteDummyData
-import com.boostcamp.travery.main.adapter.RouteListAdapter
+import com.boostcamp.travery.data.model.Course
+import com.boostcamp.travery.dummy.CourseDummyData
+import com.boostcamp.travery.main.adapter.CourseListAdapter
 import com.boostcamp.travery.main.viewholder.GroupItem
 import com.boostcamp.travery.mapservice.TrackingActivity
-import com.boostcamp.travery.mapservice.saveroute.RouteSaveActivity
-import com.boostcamp.travery.routedetail.RouteDetailActivity
+import com.boostcamp.travery.mapservice.savecourse.CourseSaveActivity
+import com.boostcamp.travery.coursedetail.CourseDetailActivity
 import com.boostcamp.travery.search.SearchResultActivity
 import com.boostcamp.travery.utils.DateUtils
 import com.google.android.material.navigation.NavigationView
@@ -35,7 +35,7 @@ import com.boostcamp.travery.R
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,
     OnItemClickListener {
-    private val adapter = RouteListAdapter(this)
+    private val adapter = CourseListAdapter(this)
     private val compositeDisposable = CompositeDisposable()
     private val GPS_ENABLE_REQUEST_CODE = 2001
 
@@ -80,17 +80,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         nav_view.setNavigationItemSelectedListener(this)
 
-        Flowable.just(RouteDummyData.getData())
+        Flowable.just(CourseDummyData.getData())
             .map { list ->
                 val ret = ArrayList<Any>()
                 var partition = -1
 
-                list.forEach { route ->
-                    if (partition != DateUtils.getTermDay(toMillis = route.endTime)) {
-                        ret.add(GroupItem("${DateUtils.getDate(route.endTime)[2]}"))
+                list.forEach { course ->
+                    if (partition != DateUtils.getTermDay(toMillis = course.endTime)) {
+                        ret.add(GroupItem("${DateUtils.getDate(course.endTime)[2]}"))
                     }
-                    partition = DateUtils.getTermDay(toMillis = route.endTime)
-                    ret.add(route)
+                    partition = DateUtils.getTermDay(toMillis = course.endTime)
+                    ret.add(course)
                 }
 
                 ret
@@ -107,7 +107,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun initRecyclerView() {
-        rv_route_list.apply {
+        rv_course_list.apply {
             setHasFixedSize(true)
             layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this@MainActivity)
             adapter = this@MainActivity.adapter
@@ -142,7 +142,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // Handle navigation view item clicks here.
         when (item.itemId) {
             R.id.nav_camera -> {
-                startActivity(Intent(this, RouteSaveActivity::class.java))
+                startActivity(Intent(this, CourseSaveActivity::class.java))
             }
             R.id.nav_gallery -> {
                 startActivity(Intent(this, SearchResultActivity::class.java))
@@ -166,9 +166,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun onItemClick(item: Any) {
-        if (item is Route) {
-            var intent = Intent(this, RouteDetailActivity::class.java)
-            intent.putExtra("route", item)
+        if (item is Course) {
+            var intent = Intent(this, CourseDetailActivity::class.java)
+            intent.putExtra("course", item)
             startActivity(intent)
         }
     }

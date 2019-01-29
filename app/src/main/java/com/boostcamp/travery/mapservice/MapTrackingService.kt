@@ -10,7 +10,6 @@ import androidx.core.app.NotificationCompat
 import android.location.LocationManager
 import android.util.Log
 import android.content.Context
-import com.boostcamp.travery.data.model.Route
 import com.boostcamp.travery.main.MainActivity
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.model.LatLng

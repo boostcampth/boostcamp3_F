@@ -1,4 +1,4 @@
-package com.boostcamp.travery.mapservice.saveroute
+package com.boostcamp.travery.mapservice.savecourse
 
 import android.os.Bundle
 import android.view.Menu
@@ -12,13 +12,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.boostcamp.travery.R
 import com.boostcamp.travery.utils.DateUtils
-import kotlinx.android.synthetic.main.activity_route_save.*
+import kotlinx.android.synthetic.main.activity_course_save.*
 
-class RouteSaveActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
+class CourseSaveActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_route_save)
+        setContentView(R.layout.activity_course_save)
         setSupportActionBar(toolbar as Toolbar)
         title = ""
 
@@ -49,15 +49,15 @@ class RouteSaveActivity : AppCompatActivity(), AdapterView.OnItemSelectedListene
         }
     }
 
-    private fun saveRouteToDatabase() {
+    private fun saveCourseToDatabase() {
         val imageFilePath = requestStaticMap() // 비동기 호출 예상
 
         // DB 저장 코드
 //        with(intent) {
 //            Thread(Runnable {
-//                DataBase.getDataBase(this@RouteSaveActivity)
-//                        .daoRoute()
-//                        .insertRoute(Route(
+//                DataBase.getDataBase(this@CourseSaveActivity)
+//                        .daoCourse()
+//                        .insertCourse(Course(
 //                                et_title.text.toString(),
 //                                et_content.text.toString(),
 //                                et_selected_theme.text.toString(),
@@ -94,13 +94,13 @@ class RouteSaveActivity : AppCompatActivity(), AdapterView.OnItemSelectedListene
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.activity_route_add_menu, menu)
+        menuInflater.inflate(R.menu.activity_course_add_menu, menu)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem?) = when (item?.itemId) {
-        R.id.menu_route_save -> {
-            saveRouteToDatabase()
+        R.id.menu_course_save -> {
+            saveCourseToDatabase()
             true
         }
 

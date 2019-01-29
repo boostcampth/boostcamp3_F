@@ -31,19 +31,19 @@
 
     <com.takusemba.multisnaprecyclerview.MultiSnapRecyclerView
 
-        android:id="@+id/rv_activity_leftlist"
+        android:id="@+id/rv_useraction_leftlist"
         android:layout_width="66dp"
         android:layout_height="0dp"
         android:background="@android:color/background_light"
         android:isScrollContainer="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rv_activity_toplist"
+        app:layout_constraintTop_toBottomOf="@+id/rv_useraction_toplist"
         app:msrv_gravity="start"
         app:msrv_snap_count="1"/>
 
     <com.takusemba.multisnaprecyclerview.MultiSnapRecyclerView
-        android:id="@+id/rv_activity_toplist"
+        android:id="@+id/rv_useraction_toplist"
         android:layout_width="0dp"
         android:layout_height="100dp"
         android:background="@android:color/background_light"

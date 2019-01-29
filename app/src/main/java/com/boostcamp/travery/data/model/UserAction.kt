@@ -10,15 +10,15 @@ import java.util.*
 
 @Parcelize
 @Entity(
-    tableName = "activity",
+    tableName = "useraction",
     foreignKeys = [ForeignKey(
-        entity = Route::class,
-        parentColumns = ["seq"],
-        childColumns = ["route_code"],
+        entity = Course::class,
+        parentColumns = ["start_time"],
+        childColumns = ["course_code"],
         onDelete = ForeignKey.SET_NULL
     )]
 )
-data class Activity(
+data class UserAction(
     @ColumnInfo(name = "title") var title: String?,
     @ColumnInfo(name = "body") var body: String?,
     @ColumnInfo(name = "date") var date: Date?,
@@ -27,7 +27,7 @@ data class Activity(
     @ColumnInfo(name = "sub_image") var subImage: String?,
     @ColumnInfo(name = "latitude") var latitude: Long,
     @ColumnInfo(name = "longitude") var longitude: Long,
-    @ColumnInfo(name = "route_code", index = true) var routeCode: Int?
+    @ColumnInfo(name = "course_code", index = true) var courseCode: Int?
 ) : Parcelable {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "seq")

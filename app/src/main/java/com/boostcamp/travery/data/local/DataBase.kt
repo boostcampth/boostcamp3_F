@@ -5,13 +5,13 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import android.content.Context
-import com.boostcamp.travery.data.model.Activity
-import com.boostcamp.travery.data.model.Route
+import com.boostcamp.travery.data.model.Course
+import com.boostcamp.travery.data.model.UserAction
 
 /**
- * room database route 테이블과 activity 테이블을 가짐.
+ * room database course 테이블과 useraction 테이블을 가짐.
  */
-@Database(entities = [Route::class, Activity::class], version = 1)
+@Database(entities = [Course::class, UserAction::class], version = 1)
 @TypeConverters(Converters::class)
 abstract class DataBase : RoomDatabase() {
     companion object {
@@ -25,6 +25,6 @@ abstract class DataBase : RoomDatabase() {
         }
     }
 
-    abstract fun daoActivity(): ActivityDao
-    abstract fun daoRoute(): RouteDao
+    abstract fun daoUserAction(): UserActionDao
+    abstract fun daoCourse(): CourseDao
 }
