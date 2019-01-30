@@ -43,6 +43,7 @@ dependencies {
     def room_compiler_version = '2.0.0-beta01'
     def retrofit2_version = "2.4.0"
     def glide_version = "4.8.0"
+    def lifecycle_version = "2.0.0"
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
@@ -95,4 +96,7 @@ dependencies {
 
     // AndroidX snapping
     implementation 'com.github.takusemba:multisnaprecyclerview:1.2.0'
+
+    // ViewModel and LiveData
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
 }
