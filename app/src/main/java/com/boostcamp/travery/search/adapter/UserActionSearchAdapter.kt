@@ -1,26 +1,26 @@
 package com.boostcamp.travery.search.adapter
 
-import androidx.databinding.DataBindingUtil
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import com.boostcamp.travery.OnItemClickListener
 import com.boostcamp.travery.R
 import com.boostcamp.travery.base.BaseAdapter
 import com.boostcamp.travery.base.BaseViewHolder
-import com.boostcamp.travery.data.model.Activity
-import com.boostcamp.travery.databinding.ItemActivityListBinding
-import com.boostcamp.travery.search.viewholder.ActivityViewHolder
+import com.boostcamp.travery.data.model.UserAction
+import com.boostcamp.travery.databinding.ItemUseractionListBinding
+import com.boostcamp.travery.search.viewholder.UserActionViewHolder
 
-class ActivitySearchAdapter(private var listener: OnItemClickListener) : BaseAdapter<Activity>() {
+class UserActionSearchAdapter(private var listener: OnItemClickListener) : BaseAdapter<UserAction>() {
     override fun onCreateViewHolder(parent: ViewGroup, position: Int): BaseViewHolder {
-        DataBindingUtil.inflate<ItemActivityListBinding>(
+        DataBindingUtil.inflate<ItemUseractionListBinding>(
             LayoutInflater.from(parent.context),
-            R.layout.item_activity_list,
+            R.layout.item_useraction_list,
             parent,
             false
         ).apply {
-            listener = this@ActivitySearchAdapter.listener
-            return ActivityViewHolder(this)
+            listener = this@UserActionSearchAdapter.listener
+            return UserActionViewHolder(this)
         }
     }
 

@@ -16,7 +16,7 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme.NoActionBar">
-        <activity android:name=".mapservice.saveroute.RouteSaveActivity">
+        <activity android:name=".mapservice.savecourse.CourseSaveActivity">
         </activity>
 
         <meta-data
@@ -39,7 +39,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".routedetail.RouteDetailActivity"/>
+        <activity android:name=".coursedetail.CourseDetailActivity"/>
 
         <service android:name=".mapservice.MapTrackingService"/>
     </application>

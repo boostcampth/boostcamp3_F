@@ -7,13 +7,13 @@ import com.boostcamp.travery.OnItemClickListener
 import com.boostcamp.travery.R
 import com.boostcamp.travery.base.BaseAdapter
 import com.boostcamp.travery.base.BaseViewHolder
-import com.boostcamp.travery.databinding.ItemRouteListBinding
-import com.boostcamp.travery.databinding.ItemRouteListGroupBinding
+import com.boostcamp.travery.databinding.ItemCourseListBinding
+import com.boostcamp.travery.databinding.ItemCourseListGroupBinding
 import com.boostcamp.travery.main.viewholder.GroupItem
 import com.boostcamp.travery.main.viewholder.GroupViewHolder
-import com.boostcamp.travery.main.viewholder.RouteViewHolder
+import com.boostcamp.travery.main.viewholder.CourseViewHolder
 
-class RouteListAdapter(private var listener: OnItemClickListener) : BaseAdapter<Any>() {
+class CourseListAdapter(private var listener: OnItemClickListener) : BaseAdapter<Any>() {
 
     companion object {
         private const val VIEW_TYPE_GROUP = 1
@@ -23,22 +23,22 @@ class RouteListAdapter(private var listener: OnItemClickListener) : BaseAdapter<
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         return when (viewType) {
             VIEW_TYPE_GROUP -> {
-                val binding = DataBindingUtil.inflate<ItemRouteListGroupBinding>(
+                val binding = DataBindingUtil.inflate<ItemCourseListGroupBinding>(
                         LayoutInflater.from(parent.context),
-                        R.layout.item_route_list_group,
+                        R.layout.item_course_list_group,
                         parent,
                         false)
                 GroupViewHolder(binding)
             }
 
             else -> {
-                val binding = DataBindingUtil.inflate<ItemRouteListBinding>(
+                val binding = DataBindingUtil.inflate<ItemCourseListBinding>(
                         LayoutInflater.from(parent.context),
-                        R.layout.item_route_list,
+                        R.layout.item_course_list,
                         parent,
                         false)
-                binding.listener = this@RouteListAdapter.listener
-                RouteViewHolder(binding)
+                binding.listener = this@CourseListAdapter.listener
+                CourseViewHolder(binding)
             }
         }
     }

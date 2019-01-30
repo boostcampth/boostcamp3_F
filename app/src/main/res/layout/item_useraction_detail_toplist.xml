@@ -6,8 +6,8 @@
     <data>
 
         <variable
-            name="activity"
-            type="com.boostcamp.travery.data.model.Activity"/>
+            name="userAction"
+            type="com.boostcamp.travery.data.model.UserAction"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -63,7 +63,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:date="@{activity.date}"
+                android:date="@{userAction.date}"
                 android:text="2019.01.25 13:50"
                 android:textSize="13sp"
                 app:layout_constraintStart_toEndOf="@+id/linearLayout"
@@ -73,7 +73,7 @@
                 android:id="@+id/tv_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{activity.title}"
+                android:text="@{userAction.title}"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="@id/tv_date"
@@ -85,7 +85,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxLines="1"
-                android:text="@{activity.hashTag}"
+                android:text="@{userAction.hashTag}"
                 android:textSize="13sp"
                 app:layout_constraintStart_toStartOf="@id/tv_title"
                 app:layout_constraintTop_toBottomOf="@id/tv_title"
