@@ -1,4 +1,4 @@
-package com.boostcamp.travery.data.local
+package com.boostcamp.travery.data.local.db.dao
 
 import androidx.room.*
 import com.boostcamp.travery.data.model.Course

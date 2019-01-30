@@ -1,4 +1,4 @@
-package com.boostcamp.travery.data.local
+package com.boostcamp.travery.data.local.db
 
 import androidx.room.TypeConverter
 import java.util.*

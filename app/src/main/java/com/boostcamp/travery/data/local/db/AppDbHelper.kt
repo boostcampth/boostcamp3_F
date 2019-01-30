@@ -1,7 +1,6 @@
 package com.boostcamp.travery.data.local.db
 
 import android.content.Context
-import com.boostcamp.travery.data.local.AppDatabase
 import com.boostcamp.travery.data.model.Course
 import com.boostcamp.travery.data.model.UserAction
 import io.reactivex.Flowable

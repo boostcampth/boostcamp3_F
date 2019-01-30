@@ -1,10 +1,12 @@
-package com.boostcamp.travery.data.local
+package com.boostcamp.travery.data.local.db
 
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import android.content.Context
+import com.boostcamp.travery.data.local.db.dao.CourseDao
+import com.boostcamp.travery.data.local.db.dao.UserActionDao
 import com.boostcamp.travery.data.model.Course
 import com.boostcamp.travery.data.model.UserAction
 
