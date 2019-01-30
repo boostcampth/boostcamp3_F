@@ -13,15 +13,15 @@ import com.boostcamp.travery.data.model.UserAction
  */
 @Database(entities = [Course::class, UserAction::class], version = 1)
 @TypeConverters(Converters::class)
-abstract class DataBase : RoomDatabase() {
+abstract class AppDatabase : RoomDatabase() {
     companion object {
-        private var INSTANCE: DataBase? = null
-        fun getDataBase(context: Context): DataBase {
+        private var INSTANCE: AppDatabase? = null
+        fun getInstance(context: Context): AppDatabase {
             if (INSTANCE == null) {
-                INSTANCE = Room.databaseBuilder(context, DataBase::class.java, "travery")
+                INSTANCE = Room.databaseBuilder(context, AppDatabase::class.java, "travery")
                     .build()
             }
-            return INSTANCE as DataBase
+            return INSTANCE as AppDatabase
         }
     }
 
