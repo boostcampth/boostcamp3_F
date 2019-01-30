@@ -1,20 +1,22 @@
 package com.boostcamp.travery.mapservice.savecourse
 
+import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.EditText
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.databinding.DataBindingUtil.setContentView
 import com.boostcamp.travery.R
+import com.boostcamp.travery.base.BaseActivity
+import com.boostcamp.travery.main.MainActivity
 import com.boostcamp.travery.utils.DateUtils
 import kotlinx.android.synthetic.main.activity_course_save.*
 
-class CourseSaveActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
+class CourseSaveActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

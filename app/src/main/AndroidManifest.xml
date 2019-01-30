@@ -40,6 +40,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".coursedetail.CourseDetailActivity"/>
+        <activity android:name=".base.BaseActivity"/>
 
         <service android:name=".mapservice.MapTrackingService"/>
     </application>
