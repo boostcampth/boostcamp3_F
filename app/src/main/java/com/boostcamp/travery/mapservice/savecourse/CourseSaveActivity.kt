@@ -57,7 +57,7 @@ class CourseSaveActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
         // DB 저장 코드
 //        with(intent) {
 //            Thread(Runnable {
-//                DataBase.getDataBase(this@CourseSaveActivity)
+//                AppDatabase.getDataBase(this@CourseSaveActivity)
 //                        .daoCourse()
 //                        .insertCourse(Course(
 //                                et_title.text.toString(),
