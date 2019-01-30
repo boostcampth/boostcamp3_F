@@ -15,14 +15,14 @@ class UserActionLeftListAdapter(var dataList: List<UserAction?>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
-        const val TYPE_ACTIVITY = 0
+        const val TYPE_ACTION = 0
         const val TYPE_ENDPOINT = 1
         const val TYPE_EMPTY_ACTIVITY = 2
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
-            TYPE_ACTIVITY -> ActivityViewHolder(
+            TYPE_ACTION -> ActivityViewHolder(
                 ItemUseractionDetailLeftlistBinding.inflate(
                     LayoutInflater.from(parent.context),
                     parent,
@@ -60,7 +60,7 @@ class UserActionLeftListAdapter(var dataList: List<UserAction?>) :
 
     override fun getItemViewType(position: Int): Int {
         return when {
-            dataList[position] != null -> TYPE_ACTIVITY
+            dataList[position] != null -> TYPE_ACTION
             position != dataList.size - 1 -> TYPE_ENDPOINT
             else -> TYPE_EMPTY_ACTIVITY
         }

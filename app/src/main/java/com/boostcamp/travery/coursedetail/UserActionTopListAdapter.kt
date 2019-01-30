@@ -12,26 +12,26 @@ import com.boostcamp.travery.utils.toImage
 class UserActionTopListAdapter(var dataList: List<UserAction?>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
-        const val TYPE_ACTIVITY = 0
+        const val TYPE_ACTION = 0
         const val TYPE_EMPTY_ACTIVITY = 1
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        if (viewType == TYPE_ACTIVITY) {
+        if (viewType == TYPE_ACTION) {
             return ActivityViewHolder(
-                    com.boostcamp.travery.databinding.ItemUseractionDetailToplistBinding.inflate(
-                            LayoutInflater.from(parent.context),
-                            parent,
-                            false
-                    )
+                ItemUseractionDetailToplistBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                )
             )
         } else {
             return ActivityEmptyViewHolder(
                 ItemUseractionEmptyBinding.inflate(
-                            LayoutInflater.from(parent.context),
-                            parent,
-                            false
-                    )
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                )
             )
         }
     }
@@ -60,7 +60,7 @@ class UserActionTopListAdapter(var dataList: List<UserAction?>) : RecyclerView.A
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (dataList[position] != null) TYPE_ACTIVITY else TYPE_EMPTY_ACTIVITY
+        return if (dataList[position] != null) TYPE_ACTION else TYPE_EMPTY_ACTIVITY
     }
 
 
