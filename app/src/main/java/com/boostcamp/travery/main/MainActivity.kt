@@ -31,9 +31,10 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import com.boostcamp.travery.R
+import com.boostcamp.travery.base.BaseActivity
 
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,
+class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener,
     OnItemClickListener {
     private val adapter = CourseListAdapter(this)
     private val compositeDisposable = CompositeDisposable()
@@ -59,15 +60,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                             startActivity(intent)
                         }
                     } else {
-                        Toast.makeText(
-                            this,
-                            "Permission Denied\n" + tedPermissionResult.deniedPermissions.toString(),
-                            Toast.LENGTH_SHORT
-                        )
-                            .show()
+                        "Permission Denied\n" + tedPermissionResult.deniedPermissions.toString().toast()
                     }
                 }, { })
-
         }
 
         val toggle = ActionBarDrawerToggle(
