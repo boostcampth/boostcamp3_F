@@ -1,10 +1,12 @@
-package com.boostcamp.travery.data.local
+package com.boostcamp.travery.data.local.db
 
+import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import android.content.Context
+import com.boostcamp.travery.data.local.db.dao.CourseDao
+import com.boostcamp.travery.data.local.db.dao.UserActionDao
 import com.boostcamp.travery.data.model.Course
 import com.boostcamp.travery.data.model.UserAction
 
@@ -13,18 +15,19 @@ import com.boostcamp.travery.data.model.UserAction
  */
 @Database(entities = [Course::class, UserAction::class], version = 1)
 @TypeConverters(Converters::class)
-abstract class DataBase : RoomDatabase() {
+abstract class AppDatabase : RoomDatabase() {
     companion object {
-        private var INSTANCE: DataBase? = null
-        fun getDataBase(context: Context): DataBase {
-            if (INSTANCE == null) {
-                INSTANCE = Room.databaseBuilder(context, DataBase::class.java, "travery")
+        private var appDatabase: AppDatabase? = null
+        fun getInstance(context: Context): AppDatabase {
+            if (appDatabase == null) {
+                appDatabase = Room.databaseBuilder(context, AppDatabase::class.java, "travery")
                     .build()
             }
-            return INSTANCE as DataBase
+            return appDatabase as AppDatabase
         }
     }
 
     abstract fun daoUserAction(): UserActionDao
+
     abstract fun daoCourse(): CourseDao
 }
