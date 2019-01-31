@@ -12,6 +12,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.ViewModelProviders
+import com.boostcamp.travery.Constants
 import com.boostcamp.travery.R
 import com.boostcamp.travery.base.BaseActivity
 import com.boostcamp.travery.coursedetail.CourseDetailActivity
@@ -125,7 +126,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), NavigationView.OnNavig
     override fun onItemClick(item: Any) {
         if (item is Course) {
             startActivity(Intent(this, CourseDetailActivity::class.java).apply {
-                putExtra("course", item)
+                putExtra(Constants.EXTRA_COURSE, item)
             })
         }
     }
