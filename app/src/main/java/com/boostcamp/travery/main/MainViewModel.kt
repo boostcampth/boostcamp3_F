@@ -4,12 +4,7 @@ import android.app.Application
 import android.util.Log
 import com.boostcamp.travery.OnItemClickListener
 import com.boostcamp.travery.base.BaseViewModel
-import com.boostcamp.travery.data.AppDataManager
-import com.boostcamp.travery.data.local.db.AppDbHelper
-import com.boostcamp.travery.data.local.prefs.PreferHelper
 import com.boostcamp.travery.data.model.Course
-import com.boostcamp.travery.data.remote.ApiHelper
-import com.boostcamp.travery.dummy.CourseDummyData
 import com.boostcamp.travery.main.adapter.CourseListAdapter
 import com.boostcamp.travery.main.viewholder.GroupItem
 import com.boostcamp.travery.utils.DateUtils
