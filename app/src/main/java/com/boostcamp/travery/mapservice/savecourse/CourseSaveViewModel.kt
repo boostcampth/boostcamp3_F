@@ -2,12 +2,23 @@ package com.boostcamp.travery.mapservice.savecourse
 
 import android.app.Application
 import android.os.Bundle
+import android.os.Parcelable
 import android.util.Log
 import android.view.View
 import com.boostcamp.travery.base.BaseViewModel
 import android.widget.AdapterView
 import androidx.databinding.ObservableField
 import com.boostcamp.travery.Constants
+import com.boostcamp.travery.data.AppDataManager
+import com.boostcamp.travery.data.local.db.AppDatabase_Impl
+import com.boostcamp.travery.data.local.db.AppDbHelper
+import com.boostcamp.travery.data.local.db.DbHelper
+import com.boostcamp.travery.data.model.Course
+import com.google.android.gms.maps.model.LatLng
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
+import org.json.JSONArray
+import org.json.JSONObject
 
 
 class CourseSaveViewModel(application: Application) : BaseViewModel(application) {
@@ -20,6 +31,25 @@ class CourseSaveViewModel(application: Application) : BaseViewModel(application)
 
     val theme = ObservableField<String>("")
 
+    private fun makeCoordinateJson(locationList: ArrayList<LatLng>, timeList: ArrayList<String>) {
+
+        val coordinates = JSONObject()
+        val coordinateItem = JSONArray()
+        val colms = JSONObject()
+        for (i in 0..(locationList.size - 1)) {
+            val coordinate = JSONObject()
+            coordinate.put("lat", locationList[i].latitude)
+            coordinate.put("lng", locationList[i].longitude)
+            coordinate.put("time", timeList[i])
+            coordinateItem.put(coordinate)
+        }
+        colms.put("name", timeList[0])
+        coordinates.put("colms", colms)
+        coordinates.put("coordinate", coordinateItem)
+
+        Log.d("lolot", coordinates.toString())
+    }
+
     fun onSelectItem(parent: AdapterView<*>, view: View, pos: Int, id: Long) {
         theme.set(parent.selectedItem.toString())
     }
@@ -27,10 +57,33 @@ class CourseSaveViewModel(application: Application) : BaseViewModel(application)
     fun saveCourseToDatabase(bundle: Bundle?) {
         val imageFilePath = requestStaticMap() // 비동기 호출 예상
 
-        /*Log.d("lolote", bundle?.getLong(Constants.EXTRA_ROUTE_START_TIME, System.currentTimeMillis()).toString())
+        /*Log.d("lolote", )
         Log.d("lolote", bundle?.getLong(Constants.EXTRA_ROUTE_END_TIME, System.currentTimeMillis()).toString())
         Log.d("lolote", bundle?.getLong(Constants.EXTRA_ROUTE_DISTANCE, 0L).toString())
         Log.d("lolote", bundle?.getString(Constants.EXTRA_ROUTE_COORDINATE, "").toString())*/
+
+        bundle?.let {
+            makeCoordinateJson(
+                it.getParcelableArrayList<LatLng>(Constants.EXTRA_ROUTE_LOCATION_LIST)!!,
+                it.getStringArrayList(Constants.EXTRA_ROUTE_TIME_LIST)!!
+            )
+            //it.getParcelableArrayList<LatLng>(Constants.EXTRA_ROUTE_LOCATION_LIST)
+            /*val mCourse = it.getParcelable<Course>(Constants.EXTRA_ROUTE)
+            AppDataManager(AppDbHelper.getInstance(getApplication())).saveCourse(
+                Course(
+                    title,
+                    body,
+                    theme.get(),
+                    mCourse!!.startTime,
+                    mCourse.endTime,
+                    mCourse.distance,
+                    mCourse.coordinate,
+                    mCourse.mapImage
+                )
+            ).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe()*/
+        }
 
         // DB 저장 코드
 //        with(intent) {

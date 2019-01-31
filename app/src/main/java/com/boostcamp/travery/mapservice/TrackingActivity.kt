@@ -17,6 +17,7 @@ import android.os.*
 import android.util.Log
 import com.boostcamp.travery.Constants
 import com.boostcamp.travery.R
+import com.boostcamp.travery.data.model.Course
 import com.boostcamp.travery.mapservice.savecourse.CourseSaveActivity
 import com.google.android.gms.maps.model.*
 import java.lang.ref.WeakReference
@@ -71,16 +72,29 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
         val EXTRA_ROUTE_DISTANCE = "ROUTE_DISTANCE"
         val EXTRA_ROUTE_COORDINATE = "ROUTE_COORDINATE"*/
         val saveIntent = Intent(this@TrackingActivity, CourseSaveActivity::class.java)
-        saveIntent.putExtra(Constants.EXTRA_ROUTE_START_TIME, mapService.getStartTime())
-        saveIntent.putExtra(Constants.EXTRA_ROUTE_END_TIME, mapService.getEndTime())
-        saveIntent.putExtra(Constants.EXTRA_ROUTE_DISTANCE, mapService.getTotalDistance())
-        saveIntent.putExtra(Constants.EXTRA_ROUTE_COORDINATE, mapService.getStartTime())
+        saveIntent.putParcelableArrayListExtra(Constants.EXTRA_ROUTE_LOCATION_LIST, mapService.getLocationList())
+        saveIntent.putExtra(Constants.EXTRA_ROUTE_TIME_LIST, mapService.getTimeList())
+        saveIntent.putExtra(
+            Constants.EXTRA_ROUTE,
+            Course(
+                "",
+                "",
+                "",
+                mapService.getStartTime(),
+                mapService.getEndTime(),
+                mapService.getTotalDistance(),
+                mapService.getStartTime().toString(),
+                mapService.getStartTime().toString()
+            )
+        )
         startActivity(saveIntent)
 
         stopRecordView()
         doUnbindService()
         val serviceIntent = Intent(this, MapTrackingService::class.java)
         stopService(serviceIntent)
+
+        finish()
     }
 
     fun gotoMyLocation(v: View) {
