@@ -61,7 +61,6 @@ object BindingUtils {
     @JvmStatic
     @BindingAdapter("bind:visibility")
     fun setVisibility(view: View, value: Boolean) {
-        Log.d("lolott", value.toString())
         if (value) {
             view.requestFocus()
             view.visibility = View.VISIBLE

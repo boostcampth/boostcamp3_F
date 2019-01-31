@@ -203,7 +203,6 @@ class MapTrackingService : Service() {
     }
 
     fun getEndTime(): Long {
-        Log.d("lolott", startTime?.plus(second).toString())
         return (startTime ?: 0+second.toLong())
     }
 

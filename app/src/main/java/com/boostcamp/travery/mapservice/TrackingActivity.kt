@@ -70,8 +70,6 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
         val EXTRA_ROUTE_END_TIME = "ROUTE_END_TIME"
         val EXTRA_ROUTE_DISTANCE = "ROUTE_DISTANCE"
         val EXTRA_ROUTE_COORDINATE = "ROUTE_COORDINATE"*/
-        Log.d("lolot", mapService.getStartTime().toString())
-        Log.d("lolot", mapService.getEndTime().toString())
         val saveIntent = Intent(this@TrackingActivity, CourseSaveActivity::class.java)
         saveIntent.putExtra(Constants.EXTRA_ROUTE_START_TIME, mapService.getStartTime())
         saveIntent.putExtra(Constants.EXTRA_ROUTE_END_TIME, mapService.getEndTime())

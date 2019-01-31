@@ -22,16 +22,15 @@ class CourseSaveViewModel(application: Application) : BaseViewModel(application)
 
     fun onSelectItem(parent: AdapterView<*>, view: View, pos: Int, id: Long) {
         theme.set(parent.selectedItem.toString())
-        Log.d("lolote", theme.get())
     }
 
     fun saveCourseToDatabase(bundle: Bundle?) {
         val imageFilePath = requestStaticMap() // 비동기 호출 예상
 
-        Log.d("lolote", bundle?.getLong(Constants.EXTRA_ROUTE_START_TIME, System.currentTimeMillis()).toString())
+        /*Log.d("lolote", bundle?.getLong(Constants.EXTRA_ROUTE_START_TIME, System.currentTimeMillis()).toString())
         Log.d("lolote", bundle?.getLong(Constants.EXTRA_ROUTE_END_TIME, System.currentTimeMillis()).toString())
         Log.d("lolote", bundle?.getLong(Constants.EXTRA_ROUTE_DISTANCE, 0L).toString())
-        Log.d("lolote", bundle?.getString(Constants.EXTRA_ROUTE_COORDINATE, "").toString())
+        Log.d("lolote", bundle?.getString(Constants.EXTRA_ROUTE_COORDINATE, "").toString())*/
 
         // DB 저장 코드
 //        with(intent) {
