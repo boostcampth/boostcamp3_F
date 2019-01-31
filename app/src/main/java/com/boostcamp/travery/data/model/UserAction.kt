@@ -27,7 +27,7 @@ data class UserAction(
     @ColumnInfo(name = "sub_image") var subImage: String?,
     @ColumnInfo(name = "latitude") var latitude: Long,
     @ColumnInfo(name = "longitude") var longitude: Long,
-    @ColumnInfo(name = "course_code", index = true) var courseCode: Int?
+    @ColumnInfo(name = "course_code", index = true) var courseCode: Long?
 ) : Parcelable {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "seq")
