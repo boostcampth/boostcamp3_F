@@ -16,6 +16,7 @@ import android.graphics.Color
 import android.os.*
 import com.boostcamp.travery.Constants
 import com.boostcamp.travery.R
+import com.boostcamp.travery.mapservice.saveroute.CourseSaveActivity
 import com.google.android.gms.maps.model.*
 import java.lang.ref.WeakReference
 
@@ -46,7 +47,7 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
         myLocationMarker = mMap.addMarker(MarkerOptions().position(LatLng(37.56, 126.97)))
 
         polylineOptions.color(Color.BLUE)
-                //.geodesic(true)
+                .geodesic(true)
                 .width(10f)
 
         doBindService()
@@ -64,12 +65,13 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     fun stopService(v: View) {
-        /*val intent = Intent(this@TrackingActivity, TrackingActivity::class.java)
+        /*
         val EXTRA_ROUTE_END_TIME = "ROUTE_END_TIME"
         val EXTRA_ROUTE_DISTANCE = "ROUTE_DISTANCE"
-        val EXTRA_ROUTE_COORDINATE = "ROUTE_COORDINATE"
+        val EXTRA_ROUTE_COORDINATE = "ROUTE_COORDINATE"*/
+        val intent = Intent(this@TrackingActivity, CourseSaveActivity::class.java)
         intent.putExtra(Constants.EXTRA_ROUTE_START_TIME, mapService.getStartTime())
-        startActivity(intent)*/
+        startActivity(intent)
 
         stopRecordView()
         doUnbindService()

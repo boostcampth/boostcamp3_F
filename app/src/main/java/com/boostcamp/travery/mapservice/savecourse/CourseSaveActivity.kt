@@ -6,13 +6,20 @@ import android.os.Handler
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.*
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.EditText
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.databinding.DataBindingUtil.setContentView
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProviders
 import com.boostcamp.travery.R
 import com.boostcamp.travery.base.BaseActivity
 import com.boostcamp.travery.main.MainActivity
+import com.boostcamp.travery.databinding.ActivityCourseSaveBinding
+import com.boostcamp.travery.databinding.ItemCourseListGroupBinding
 import com.boostcamp.travery.utils.DateUtils
 import kotlinx.android.synthetic.main.activity_course_save.*
 
@@ -20,9 +27,20 @@ class CourseSaveActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_course_save)
+
+
+        val binding = DataBindingUtil.setContentView<ActivityCourseSaveBinding>(this, R.layout.activity_course_save)
         setSupportActionBar(toolbar as Toolbar)
         title = ""
+        binding.savevm = ViewModelProviders.of(this).get(CourseSaveViewModel::class.java)
+        binding.setLifecycleOwner(this)
+
+        //binding = DataBindingUtil.setContentView(this, R.layout.activity_course_save)
+        //viewmodel = ViewModelProviders.of(this).get(CourseSaveViewModel::class.java)
+        //binding.savevm = viewmodel
+        //binding.setLifecycleOwner(this)
+
+        //setContentView(R.layout.activity_course_save)
 
         initView()
     }
@@ -51,32 +69,6 @@ class CourseSaveActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
         }
     }
 
-    private fun saveCourseToDatabase() {
-        val imageFilePath = requestStaticMap() // 비동기 호출 예상
-
-        // DB 저장 코드
-//        with(intent) {
-//            Thread(Runnable {
-//                AppDatabase.getDataBase(this@CourseSaveActivity)
-//                        .daoCourse()
-//                        .insertCourse(Course(
-//                                et_title.text.toString(),
-//                                et_content.text.toString(),
-//                                et_selected_theme.text.toString(),
-//                                getLongExtra(Constants.EXTRA_ROUTE_START_TIME, System.currentTimeMillis()),
-//                                getLongExtra(Constants.EXTRA_ROUTE_END_TIME, System.currentTimeMillis()),
-//                                getLongExtra(Constants.EXTRA_ROUTE_DISTANCE, 0L),
-//                                getStringExtra(Constants.EXTRA_ROUTE_COORDINATE),
-//                                imageFilePath))
-//            }).start()
-//        }
-    }
-
-    private fun requestStaticMap(): String {
-        // 스태틱맵을 요청하여 이미지 파일 저장 후 저장 경로 리턴
-        return ""
-    }
-
     override fun onNothingSelected(parent: AdapterView<*>?) {
         // Do-nothing
     }
@@ -102,7 +94,9 @@ class CourseSaveActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
 
     override fun onOptionsItemSelected(item: MenuItem?) = when (item?.itemId) {
         R.id.menu_course_save -> {
-            saveCourseToDatabase()
+            //saveCourseToDatabase()
+            //binding.savevm?.save()
+            //viewmodel.save()
             true
         }
 

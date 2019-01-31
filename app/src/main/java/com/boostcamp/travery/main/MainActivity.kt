@@ -19,7 +19,7 @@ import com.boostcamp.travery.dummy.CourseDummyData
 import com.boostcamp.travery.main.adapter.CourseListAdapter
 import com.boostcamp.travery.main.viewholder.GroupItem
 import com.boostcamp.travery.mapservice.TrackingActivity
-import com.boostcamp.travery.mapservice.savecourse.CourseSaveActivity
+import com.boostcamp.travery.mapservice.saveroute.CourseSaveActivity
 import com.boostcamp.travery.coursedetail.CourseDetailActivity
 import com.boostcamp.travery.search.SearchResultActivity
 import com.boostcamp.travery.utils.DateUtils
