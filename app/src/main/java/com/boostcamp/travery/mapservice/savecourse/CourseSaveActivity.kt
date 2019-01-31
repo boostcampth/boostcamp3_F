@@ -19,6 +19,8 @@ class CourseSaveActivity : BaseActivity<ActivityCourseSaveBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        setContentView(viewDataBinding.root)
+
         setSupportActionBar(toolbar as Toolbar)
         title = ""
         viewDataBinding.savevm = ViewModelProviders.of(this).get(CourseSaveViewModel::class.java)

@@ -21,20 +21,15 @@ abstract class BaseActivity<T: ViewDataBinding> : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewDataBinding = DataBindingUtil.setContentView(this, layoutResourceId)
+        viewDataBinding = DataBindingUtil.inflate(layoutInflater, layoutResourceId, null, false)
     }
 
-    // usage : "토스트".toast
-    fun Any.toast(duration: Int = Toast.LENGTH_SHORT) {
-        Toast.makeText(baseContext, this.toString(), duration).show()
-    }
-
-    fun progressOn(message: String?) {
+    fun onProgress(message: String?) {
         if (this.isFinishing) {
             return
         }
         if (progressDialog?.isShowing == true) {
-            progressSet(message)
+            setProgress(message)
         } else {
             progressDialog = AppCompatDialog(this)
                     .apply {
@@ -53,14 +48,14 @@ abstract class BaseActivity<T: ViewDataBinding> : AppCompatActivity() {
         }
     }
 
-    private fun progressSet(message: String?) {
+    private fun setProgress(message: String?) {
         if (progressDialog?.isShowing != false) {
             return
         }
         tv_pregress_message.text = message ?: " "
     }
 
-    fun progressOff() {
+    fun offProgress() {
         if (progressDialog?.isShowing != false) {
             progressDialog?.dismiss()
         }

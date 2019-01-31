@@ -3,12 +3,13 @@ package com.boostcamp.travery.data.local.db.dao
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy.IGNORE
 import androidx.room.Query
 import com.boostcamp.travery.data.model.Course
 
 @Dao
 interface CourseDao {
-    @Insert
+    @Insert(onConflict = IGNORE)
     fun insert(course: Course)
 
     @Delete

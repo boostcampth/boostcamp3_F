@@ -2,22 +2,41 @@ package com.boostcamp.travery.search
 
 import android.os.Bundle
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.boostcamp.travery.OnItemClickListener
 import com.boostcamp.travery.R
+import com.boostcamp.travery.base.BaseActivity
+import com.boostcamp.travery.data.local.db.AppDbHelper
 import com.boostcamp.travery.data.model.UserAction
-import com.boostcamp.travery.dummy.UserActionDummyData
+import com.boostcamp.travery.databinding.ActivitySearchResultBinding
 import com.boostcamp.travery.search.adapter.UserActionSearchAdapter
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_search_result.*
 
-class SearchResultActivity : AppCompatActivity(), OnItemClickListener {
+class SearchResultActivity : BaseActivity<ActivitySearchResultBinding>(), OnItemClickListener {
     private val adapter = UserActionSearchAdapter(this)
+
+    override val layoutResourceId: Int
+        get() = R.layout.activity_search_result
+
+    // 뷰모델로 분리 필요
+    private val db = AppDbHelper.getInstance(this)
+    private val compositeDisposable = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_search_result)
+        setContentView(viewDataBinding.root)
 
-        adapter.setItems(UserActionDummyData.getData())
+        db.getAllUserAction()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    adapter.setItems(it)
+                }.also {
+                    compositeDisposable.add(it)
+                }
 
         initRecyclerView()
     }
@@ -25,7 +44,7 @@ class SearchResultActivity : AppCompatActivity(), OnItemClickListener {
     private fun initRecyclerView() {
         recyclerView.apply {
             setHasFixedSize(true)
-            layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this@SearchResultActivity)
+            layoutManager = LinearLayoutManager(this@SearchResultActivity)
             adapter = this@SearchResultActivity.adapter
         }
     }
@@ -34,5 +53,10 @@ class SearchResultActivity : AppCompatActivity(), OnItemClickListener {
         if (item is UserAction) {
             Toast.makeText(this, item.toString(), Toast.LENGTH_SHORT).show()
         }
+    }
+
+    override fun onDestroy() {
+        compositeDisposable.clear()
+        super.onDestroy()
     }
 }
