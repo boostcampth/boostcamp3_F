@@ -5,5 +5,5 @@ import com.boostcamp.travery.data.local.prefs.PreferHelper
 import com.boostcamp.travery.data.remote.ApiHelper
 
 interface DataManager : DbHelper, ApiHelper, PreferHelper {
-
+    fun insertDummyData()
 }
