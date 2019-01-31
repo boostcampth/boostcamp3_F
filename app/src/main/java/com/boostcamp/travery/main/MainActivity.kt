@@ -19,7 +19,6 @@ import com.boostcamp.travery.dummy.CourseDummyData
 import com.boostcamp.travery.main.adapter.CourseListAdapter
 import com.boostcamp.travery.main.viewholder.GroupItem
 import com.boostcamp.travery.mapservice.TrackingActivity
-import com.boostcamp.travery.mapservice.savecourse.CourseSaveActivity
 import com.boostcamp.travery.coursedetail.CourseDetailActivity
 import com.boostcamp.travery.search.SearchResultActivity
 import com.boostcamp.travery.utils.DateUtils
@@ -32,9 +31,10 @@ import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import com.boostcamp.travery.R
 import com.boostcamp.travery.base.BaseActivity
+import com.boostcamp.travery.mapservice.savecourse.CourseSaveActivity
 
 
-class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener,
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,
     OnItemClickListener {
     private val adapter = CourseListAdapter(this)
     private val compositeDisposable = CompositeDisposable()
@@ -60,7 +60,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                             startActivity(intent)
                         }
                     } else {
-                        "Permission Denied\n" + tedPermissionResult.deniedPermissions.toString().toast()
+                        //"Permission Denied\n" + tedPermissionResult.deniedPermissions.toString().toast()
                     }
                 }, { })
         }

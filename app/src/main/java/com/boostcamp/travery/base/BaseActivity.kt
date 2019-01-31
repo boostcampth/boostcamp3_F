@@ -1,17 +1,28 @@
 package com.boostcamp.travery.base
 
+import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDialog
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
 import com.boostcamp.travery.R
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.progressbar_loading.*
 
+abstract class BaseActivity<T: ViewDataBinding> : AppCompatActivity() {
+    private var progressDialog: AppCompatDialog? = null
 
-open class BaseActivity : AppCompatActivity() {
-    var progressDialog: AppCompatDialog? = null
+    abstract val layoutResourceId: Int
+
+    lateinit var viewDataBinding: T
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewDataBinding = DataBindingUtil.setContentView(this, layoutResourceId)
+    }
 
     // usage : "토스트".toast
     fun Any.toast(duration: Int = Toast.LENGTH_SHORT) {
