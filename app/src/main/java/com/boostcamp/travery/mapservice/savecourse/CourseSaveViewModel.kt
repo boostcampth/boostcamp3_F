@@ -1,16 +1,16 @@
-package com.boostcamp.travery.mapservice.saveroute
+package com.boostcamp.travery.mapservice.savecourse
 
 import android.app.Application
+import android.os.Bundle
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
+import android.view.View
+import com.boostcamp.travery.base.BaseViewModel
+import android.widget.AdapterView
 import androidx.databinding.ObservableField
-import android.text.Editable
-import android.text.TextWatcher
-import androidx.databinding.BaseObservable
-import java.util.*
-import androidx.databinding.adapters.TextViewBindingAdapter.setText
+import com.boostcamp.travery.Constants
 
-class CourseSaveViewModel(application: Application) : AndroidViewModel(application){
+
+class CourseSaveViewModel(application: Application) : BaseViewModel(application) {
 
     private var title: String = ""
         get() = if (field.isEmpty()) "활동" else field
@@ -18,14 +18,20 @@ class CourseSaveViewModel(application: Application) : AndroidViewModel(applicati
     private var body: String = ""
         get() = if (field.isEmpty()) "활동" else field
 
-    fun save() {
-        //TODO 저장
-        Log.d("lolote",title)
-        Log.d("lolote",body)
+    val theme = ObservableField<String>("")
+
+    fun onSelectItem(parent: AdapterView<*>, view: View, pos: Int, id: Long) {
+        theme.set(parent.selectedItem.toString())
+        Log.d("lolote", theme.get())
     }
 
-    private fun saveCourseToDatabase() {
+    fun saveCourseToDatabase(bundle: Bundle?) {
         val imageFilePath = requestStaticMap() // 비동기 호출 예상
+
+        Log.d("lolote", bundle?.getLong(Constants.EXTRA_ROUTE_START_TIME, System.currentTimeMillis()).toString())
+        Log.d("lolote", bundle?.getLong(Constants.EXTRA_ROUTE_END_TIME, System.currentTimeMillis()).toString())
+        Log.d("lolote", bundle?.getLong(Constants.EXTRA_ROUTE_DISTANCE, 0L).toString())
+        Log.d("lolote", bundle?.getString(Constants.EXTRA_ROUTE_COORDINATE, "").toString())
 
         // DB 저장 코드
 //        with(intent) {
@@ -52,11 +58,9 @@ class CourseSaveViewModel(application: Application) : AndroidViewModel(applicati
 
     fun onTitleChange(title: CharSequence) {
         this.title = title.toString()
-        Log.d("lolote",title.toString())
     }
 
     fun onBodyChange(body: CharSequence) {
         this.body = body.toString()
-        Log.d("lolote",body.toString())
     }
 }

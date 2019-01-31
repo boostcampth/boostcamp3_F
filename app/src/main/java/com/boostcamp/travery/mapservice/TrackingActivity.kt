@@ -14,9 +14,10 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import android.graphics.Color
 import android.os.*
+import android.util.Log
 import com.boostcamp.travery.Constants
 import com.boostcamp.travery.R
-import com.boostcamp.travery.mapservice.saveroute.CourseSaveActivity
+import com.boostcamp.travery.mapservice.savecourse.CourseSaveActivity
 import com.google.android.gms.maps.model.*
 import java.lang.ref.WeakReference
 
@@ -47,8 +48,8 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
         myLocationMarker = mMap.addMarker(MarkerOptions().position(LatLng(37.56, 126.97)))
 
         polylineOptions.color(Color.BLUE)
-                .geodesic(true)
-                .width(10f)
+            .geodesic(true)
+            .width(10f)
 
         doBindService()
     }
@@ -69,9 +70,14 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
         val EXTRA_ROUTE_END_TIME = "ROUTE_END_TIME"
         val EXTRA_ROUTE_DISTANCE = "ROUTE_DISTANCE"
         val EXTRA_ROUTE_COORDINATE = "ROUTE_COORDINATE"*/
-        val intent = Intent(this@TrackingActivity, CourseSaveActivity::class.java)
-        intent.putExtra(Constants.EXTRA_ROUTE_START_TIME, mapService.getStartTime())
-        startActivity(intent)
+        Log.d("lolot", mapService.getStartTime().toString())
+        Log.d("lolot", mapService.getEndTime().toString())
+        val saveIntent = Intent(this@TrackingActivity, CourseSaveActivity::class.java)
+        saveIntent.putExtra(Constants.EXTRA_ROUTE_START_TIME, mapService.getStartTime())
+        saveIntent.putExtra(Constants.EXTRA_ROUTE_END_TIME, mapService.getEndTime())
+        saveIntent.putExtra(Constants.EXTRA_ROUTE_DISTANCE, mapService.getTotalDistance())
+        saveIntent.putExtra(Constants.EXTRA_ROUTE_COORDINATE, mapService.getStartTime())
+        startActivity(saveIntent)
 
         stopRecordView()
         doUnbindService()
@@ -117,8 +123,8 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         override fun onServiceConnected(
-                name: ComponentName,
-                service: IBinder
+            name: ComponentName,
+            service: IBinder
         ) {
             // 서비스와 연결되었을 때 호출되는 메서드
             // 서비스 객체를 전역변수로 저장
@@ -178,8 +184,8 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun doBindService() {
         bindService(
-                Intent(this, MapTrackingService::class.java),
-                mapTrackingServiceConnection, Context.BIND_AUTO_CREATE
+            Intent(this, MapTrackingService::class.java),
+            mapTrackingServiceConnection, Context.BIND_AUTO_CREATE
         )
         isBound = true
     }

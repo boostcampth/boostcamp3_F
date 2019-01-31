@@ -2,8 +2,9 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <import type="android.view.View" />
         <variable name="savevm"
-                  type="com.boostcamp.travery.mapservice.saveroute.CourseSaveViewModel"/>
+                  type="com.boostcamp.travery.mapservice.savecourse.CourseSaveViewModel"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -61,13 +62,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:background="@null"
-                android:clickable="false"
-                android:enabled="false"
-                android:focusableInTouchMode="false"
                 android:maxLength="20"
                 android:text="@string/string_et_course_add_theme"
                 android:textColor="@android:color/black"
                 android:textSize="18sp"
+                app:visibility="@{savevm.theme.equals(@string/string_input_theme)}"
                 app:layout_constraintStart_toStartOf="@id/tv_theme"
                 app:layout_constraintTop_toBottomOf="@id/tv_theme"/>
 
@@ -76,10 +75,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
+                android:onItemSelected="@{(parent,view,pos,id)->savevm.onSelectItem(parent,view,pos,id)}"
                 app:layout_constraintStart_toEndOf="@id/et_selected_theme"
                 app:layout_constraintTop_toTopOf="@id/et_selected_theme"/>
 
-        <androidx.appcompat.widget.AppCompatImageButton
+        <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -89,7 +89,6 @@
                 android:textColor="@android:color/holo_green_dark"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                android:onClick="@{() -> savevm.save()}"
                 app:layout_constraintStart_toStartOf="@id/et_title"
                 app:layout_constraintTop_toBottomOf="@id/et_selected_theme"/>
 
