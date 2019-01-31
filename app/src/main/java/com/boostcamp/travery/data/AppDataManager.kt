@@ -8,12 +8,26 @@ import com.boostcamp.travery.data.remote.ApiHelper
 import io.reactivex.Flowable
 import io.reactivex.Observable
 
-class AppDataManager
-constructor(
-    private val dbHelper: DbHelper,
-    private val preferHelper: PreferHelper,
-    private val apiHelper: ApiHelper
-) : DataManager {
+class AppDataManager(private val dbHelper: DbHelper) : DataManager {
+    private lateinit var preferHelper: PreferHelper
+    private lateinit var apiHelper: ApiHelper
+
+    constructor(
+        dbHelper: DbHelper,
+        apiHelper: ApiHelper
+    ) : this(dbHelper) {
+        this.apiHelper = apiHelper
+    }
+
+    constructor(
+        dbHelper: DbHelper,
+        preferHelper: PreferHelper,
+        apiHelper: ApiHelper
+    ) : this(dbHelper) {
+        this.preferHelper = preferHelper
+        this.apiHelper = apiHelper
+    }
+
     override fun saveCourse(course: Course): Observable<Boolean> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
