@@ -5,7 +5,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.ArrayAdapter
 import androidx.appcompat.widget.Toolbar
-import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
 import com.boostcamp.travery.R
 import com.boostcamp.travery.base.BaseActivity
@@ -13,18 +12,16 @@ import com.boostcamp.travery.databinding.ActivityCourseSaveBinding
 import com.boostcamp.travery.utils.DateUtils
 import kotlinx.android.synthetic.main.activity_course_save.*
 
-class CourseSaveActivity : BaseActivity() {
-
-    lateinit var binding: ActivityCourseSaveBinding
+class CourseSaveActivity : BaseActivity<ActivityCourseSaveBinding>() {
+    override val layoutResourceId: Int
+        get() = R.layout.activity_course_save
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_course_save)
         setSupportActionBar(toolbar as Toolbar)
         title = ""
-        binding.savevm = ViewModelProviders.of(this).get(CourseSaveViewModel::class.java)
-        binding.setLifecycleOwner(this)
+        viewDataBinding.savevm = ViewModelProviders.of(this).get(CourseSaveViewModel::class.java)
 
         initView()
     }
@@ -40,8 +37,6 @@ class CourseSaveActivity : BaseActivity() {
             it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             spinner_theme.adapter = it
         }
-
-        //spinner_theme.onItemSelectedListener = this
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -51,7 +46,7 @@ class CourseSaveActivity : BaseActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem?) = when (item?.itemId) {
         R.id.menu_course_save -> {
-            binding.savevm?.saveCourseToDatabase(intent.extras)
+            viewDataBinding.savevm?.saveCourseToDatabase(intent.extras)
             finish()
             true
         }

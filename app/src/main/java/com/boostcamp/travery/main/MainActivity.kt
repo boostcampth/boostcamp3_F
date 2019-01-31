@@ -34,7 +34,7 @@ import com.boostcamp.travery.base.BaseActivity
 import com.boostcamp.travery.mapservice.savecourse.CourseSaveActivity
 
 
-class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener,
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,
     OnItemClickListener {
     private val adapter = CourseListAdapter(this)
     private val compositeDisposable = CompositeDisposable()
@@ -60,7 +60,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                             startActivity(intent)
                         }
                     } else {
-                        "Permission Denied\n" + tedPermissionResult.deniedPermissions.toString().toast()
+                        //"Permission Denied\n" + tedPermissionResult.deniedPermissions.toString().toast()
                     }
                 }, { })
         }
