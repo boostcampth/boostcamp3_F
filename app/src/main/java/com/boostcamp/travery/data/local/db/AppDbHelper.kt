@@ -8,6 +8,7 @@ import io.reactivex.Observable
 
 class AppDbHelper private constructor(private var appDatabase: AppDatabase) : DbHelper {
 
+
     companion object {
         private var appDbHelper: AppDbHelper? = null
         fun getInstance(context: Context): AppDbHelper {
