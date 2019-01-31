@@ -19,7 +19,7 @@ interface DbHelper {
 
     fun deleteUserAction(userAction: UserAction): Observable<Boolean>
 
-    fun deleteUserActionList(userAction: List<UserAction>): Observable<Boolean>
+    fun deleteUserActionList(userActionList: List<UserAction>): Observable<Boolean>
 
     fun updateUserAction(userAction: UserAction): Observable<Boolean>
 
@@ -27,9 +27,9 @@ interface DbHelper {
 
     fun getAllUserAction(): Flowable<List<UserAction>>
 
-    fun getCourseForKeyword(): Flowable<List<Course>>
+    fun getCourseForKeyword(keyword: String): Flowable<List<Course>>
 
-    fun getUserActionForKeyword(): Flowable<List<UserAction>>
+    fun getUserActionForKeyword(keyword: String): Flowable<List<UserAction>>
 
     fun getUserActionForCourse(course: Course): Flowable<List<UserAction>>
 }
