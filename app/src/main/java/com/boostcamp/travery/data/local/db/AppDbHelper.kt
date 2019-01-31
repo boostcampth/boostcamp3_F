@@ -9,64 +9,98 @@ import io.reactivex.Observable
 class AppDbHelper private constructor(private var appDatabase: AppDatabase) : DbHelper {
 
     companion object {
-        private var INSTANCE: AppDbHelper? = null
+        private var appDbHelper: AppDbHelper? = null
         fun getInstance(context: Context): AppDbHelper {
-            if (INSTANCE == null) {
-                INSTANCE = AppDbHelper(AppDatabase.getInstance(context))
+            if (appDbHelper == null) {
+                appDbHelper = AppDbHelper(AppDatabase.getInstance(context))
             }
-            return INSTANCE as AppDbHelper
+            return appDbHelper as AppDbHelper
         }
     }
 
     override fun saveCourse(course: Course): Observable<Boolean> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return Observable.fromCallable {
+            appDatabase.daoCourse().insert(course)
+            true
+        }
     }
 
     override fun saveUserAction(userAction: UserAction): Observable<Boolean> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return Observable.fromCallable {
+            appDatabase.daoUserAction().insert(userAction)
+            true
+        }
     }
 
     override fun saveUserActionList(userActionList: List<UserAction>): Observable<Boolean> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return Observable.fromCallable {
+            appDatabase.daoUserAction().insert(userActionList)
+            true
+        }
     }
 
     override fun deleteCourse(course: Course): Observable<Boolean> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return Observable.fromCallable {
+            appDatabase.daoCourse().delete(course)
+            true
+        }
     }
 
     override fun deleteCourseList(courseList: List<Course>): Observable<Boolean> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return Observable.fromCallable {
+            appDatabase.daoCourse().delete(courseList)
+            true
+        }
     }
 
     override fun deleteUserAction(userAction: UserAction): Observable<Boolean> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return Observable.fromCallable {
+            appDatabase.daoUserAction().delete(userAction)
+            true
+        }
     }
 
-    override fun deleteUserActionList(userAction: List<UserAction>): Observable<Boolean> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun deleteUserActionList(userActionList: List<UserAction>): Observable<Boolean> {
+        return Observable.fromCallable {
+            appDatabase.daoUserAction().delete(userActionList)
+            true
+        }
     }
 
     override fun updateUserAction(userAction: UserAction): Observable<Boolean> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return Observable.fromCallable {
+            appDatabase.daoUserAction().update(userAction)
+            true
+        }
     }
 
     override fun getAllCourse(): Flowable<List<Course>> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return Flowable.fromCallable {
+            appDatabase.daoCourse().loadAll()
+        }
     }
 
     override fun getAllUserAction(): Flowable<List<UserAction>> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun getCourseForKeyword(): Flowable<List<Course>> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun getUserActionForKeyword(): Flowable<List<UserAction>> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return Flowable.fromCallable {
+            appDatabase.daoUserAction().loadAll()
+        }
     }
 
     override fun getUserActionForCourse(course: Course): Flowable<List<UserAction>> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return Flowable.fromCallable {
+            appDatabase.daoUserAction().loadUserActionForCourse(course.startTime)
+        }
+    }
+
+    override fun getCourseForKeyword(keyword: String): Flowable<List<Course>> {
+        return Flowable.fromCallable {
+            appDatabase.daoCourse().searchCourseForKeyword(keyword)
+        }
+    }
+
+    override fun getUserActionForKeyword(keyword: String): Flowable<List<UserAction>> {
+        return Flowable.fromCallable {
+            appDatabase.daoUserAction().searchUserActionForKeyword(keyword)
+        }
     }
 }
