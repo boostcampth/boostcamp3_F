@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.boostcamp.travery.R
 import com.boostcamp.travery.data.model.UserAction
-import com.boostcamp.travery.dummy.UserActionDummyData
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import kotlinx.android.synthetic.main.activity_course_detail.*
@@ -21,13 +20,6 @@ class CourseDetailActivity : FragmentActivity(), OnMapReadyCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_course_detail)
-        val activityList = UserActionDummyData.getData()
-        topDataList.addAll(activityList)
-        topDataList.add(null)
-        topDataList.add(0, null)
-        leftDataList.addAll(activityList)
-        leftDataList.add(null)
-        leftDataList.add(null)
         initView()
     }
 
