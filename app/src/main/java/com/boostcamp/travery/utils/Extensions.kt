@@ -29,3 +29,4 @@ fun Number.dpToPixel(context: Context): Float {
 fun Any.toast(context: Context, duration: Int = Toast.LENGTH_SHORT) {
     Toast.makeText(context, this.toString(), duration).show()
 }
+

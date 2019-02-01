@@ -31,19 +31,19 @@ abstract class BaseActivity<T: ViewDataBinding> : AppCompatActivity() {
             setProgress(message)
         } else {
             progressDialog = AppCompatDialog(this)
-                    .apply {
-                        setCancelable(false)
-                        setContentView(R.layout.progressbar_loading)
-                        show()
-                    }
+                .apply {
+                    setCancelable(false)
+                    setContentView(R.layout.progressbar_loading)
+                    show()
+                }
         }
 
         progressDialog?.let {
             it.findViewById<TextView>(R.id.tv_pregress_message)?.text = message
             val imageView = it.findViewById<ImageView>(R.id.iv_frame_loading) ?: return
             Glide.with(this)
-                    .load(R.drawable.progress_bar)
-                    .into(imageView)
+                .load(R.drawable.progress_bar)
+                .into(imageView)
         }
     }
 

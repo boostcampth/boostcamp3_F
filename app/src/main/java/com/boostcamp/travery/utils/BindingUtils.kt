@@ -58,6 +58,14 @@ object BindingUtils {
         recyclerView.addItemDecoration(dividerItemDecoration)
     }
 
+
+    @JvmStatic
+    @BindingAdapter("setAdapter")
+    fun bindMultiSnapRecyclerViewAdapter(recyclerView: com.takusemba.multisnaprecyclerview.MultiSnapRecyclerView, adapter: RecyclerView.Adapter<*>) {
+        recyclerView.layoutManager = LinearLayoutManager(recyclerView.context)
+        recyclerView.adapter = adapter
+    }
+
     @JvmStatic
     @BindingAdapter("bind:visibility")
     fun setVisibility(view: View, value: Boolean) {
