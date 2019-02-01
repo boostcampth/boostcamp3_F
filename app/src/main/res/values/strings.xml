@@ -40,4 +40,6 @@
 
     <string name="progress_bar_message">잠시만 기다려주세요</string>
     <string name="string_tv_progress">Loading...</string>
+
+    <string name="string_save_course_error">데이터가 적어 저장할 수 없습니다.</string>
 </resources>

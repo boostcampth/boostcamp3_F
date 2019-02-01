@@ -18,6 +18,7 @@ import com.boostcamp.travery.Constants
 import com.boostcamp.travery.R
 import com.boostcamp.travery.data.model.Course
 import com.boostcamp.travery.mapservice.savecourse.CourseSaveActivity
+import com.boostcamp.travery.utils.toast
 import com.google.android.gms.maps.model.*
 import java.lang.ref.WeakReference
 
@@ -29,7 +30,7 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var mMap: GoogleMap
     private lateinit var myLocationMarker: Marker
     private var polyline: Polyline? = null
-    private val polylineOptions: PolylineOptions = PolylineOptions()
+    private var polylineOptions: PolylineOptions = PolylineOptions()
     private var secondForView = 0
     private val viewHandler = ViewChangeHandler(this)
     private var isBound = false
@@ -63,33 +64,45 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
         val serviceIntent = Intent(this, MapTrackingService::class.java)
         ContextCompat.startForegroundService(this, serviceIntent)
         startRecordView()
+        isService = true
+        polylineOptions = PolylineOptions()
+            .color(Color.BLUE)
+            .geodesic(true)
+            .width(10f)
     }
 
     fun stopService(v: View) {
-        val saveIntent = Intent(this@TrackingActivity, CourseSaveActivity::class.java)
-        saveIntent.putParcelableArrayListExtra(Constants.EXTRA_ROUTE_LOCATION_LIST, mapService.getLocationList())
-        saveIntent.putExtra(Constants.EXTRA_ROUTE_TIME_LIST, mapService.getTimeList())
-        saveIntent.putExtra(
-            Constants.EXTRA_ROUTE,
-            Course(
-                "",
-                "",
-                "",
-                mapService.getStartTime(),
-                mapService.getEndTime(),
-                mapService.getTotalDistance(),
-                mapService.getStartTime().toString(),
-                mapService.getStartTime().toString()
-            )
-        )
-        startActivity(saveIntent)
+        if (mapService.getTotalDistance() >= 10) {
+            val saveIntent = Intent(this@TrackingActivity, CourseSaveActivity::class.java)
+                .apply {
+                    putParcelableArrayListExtra(Constants.EXTRA_ROUTE_LOCATION_LIST, mapService.getLocationList())
+                    putExtra(Constants.EXTRA_ROUTE_TIME_LIST, mapService.getTimeList())
+                    putExtra(
+                        Constants.EXTRA_ROUTE,
+                        Course(
+                            "",
+                            "",
+                            "",
+                            mapService.getStartTime(),
+                            mapService.getEndTime(),
+                            mapService.getTotalDistance(),
+                            mapService.getStartTime().toString(),
+                            mapService.getStartTime().toString()
+                        )
+                    )
+                }
+            startActivity(saveIntent)
+        }else getString(R.string.string_save_course_error).toast(this)
 
         stopRecordView()
         doUnbindService()
+
         val serviceIntent = Intent(this, MapTrackingService::class.java)
         stopService(serviceIntent)
 
-        finish()
+        mMap.clear()
+        doBindService()
+        //finish()
     }
 
     fun gotoMyLocation(v: View) {
@@ -115,11 +128,13 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
                 myLocationMarker.position = location
                 //arrayPoints.add(locate)
                 tv_acc.text = accuracy.toString()
-                polylineOptions.add(location)
-                polyline?.remove()
-                polyline = mMap.addPolyline(polylineOptions)
-                if (isService)
+
+                if (isService) {
+                    polylineOptions.add(location)
+                    polyline?.remove()
+                    polyline = mMap.addPolyline(polylineOptions)
                     mMap.animateCamera(CameraUpdateFactory.newLatLng(location))
+                }
             }
 
             override fun sendSecond(second: Int) {
