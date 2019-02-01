@@ -2,104 +2,112 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <import type="android.view.View" />
+        <import type="android.view.View"/>
         <variable name="savevm"
                   type="com.boostcamp.travery.mapservice.savecourse.CourseSaveViewModel"/>
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="10dp">
+            android:orientation="vertical">
 
         <include
                 android:id="@+id/toolbar"
                 layout="@layout/toolbar"/>
 
-        <androidx.appcompat.widget.AppCompatEditText
-                android:id="@+id/et_title"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:hint="@string/string_et_course_add_hint"
-                android:inputType="text|textMultiLine"
-                android:maxLength="20"
-                android:onTextChanged="@{(text, start, before, count) -> savevm.onTitleChange(text)}"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/toolbar"/>
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="10dp">
 
-        <androidx.appcompat.widget.AppCompatEditText
-                android:id="@+id/et_content"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:background="#D1D1D1"
-                android:hint="@string/string_et_course_add_content_hint"
-                android:inputType="text|textMultiLine"
-                android:maxLength="40"
-                android:padding="10dp"
-                android:onTextChanged="@{(text, start, before, count) -> savevm.onBodyChange(text)}"
-                app:layout_constraintEnd_toEndOf="@id/et_title"
-                app:layout_constraintStart_toStartOf="@id/et_title"
-                app:layout_constraintTop_toBottomOf="@id/et_title"/>
+            <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/et_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/string_et_course_add_hint"
+                    android:inputType="text|textMultiLine"
+                    android:maxLength="20"
+                    android:onTextChanged="@{(text, start, before, count) -> savevm.onTitleChange(text)}"
+                    android:layout_marginTop="10dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
 
-        <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_theme"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="20dp"
-                android:text="@string/string_tv_course_add"
-                android:textColor="@android:color/holo_green_dark"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="@id/et_title"
-                app:layout_constraintTop_toBottomOf="@id/et_content"/>
+            <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/et_content"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="#DBDBDB"
+                    android:hint="@string/string_et_course_add_content_hint"
+                    android:inputType="text|textMultiLine"
+                    android:maxLength="40"
+                    android:padding="10dp"
+                    android:onTextChanged="@{(text, start, before, count) -> savevm.onBodyChange(text)}"
+                    app:layout_constraintEnd_toEndOf="@id/et_title"
+                    app:layout_constraintStart_toStartOf="@id/et_title"
+                    app:layout_constraintTop_toBottomOf="@id/et_title"/>
 
-        <androidx.appcompat.widget.AppCompatEditText
-                android:id="@+id/et_selected_theme"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:background="@null"
-                android:maxLength="20"
-                android:text="@string/string_et_course_add_theme"
-                android:textColor="@android:color/black"
-                android:textSize="18sp"
-                app:visibility="@{savevm.theme.equals(@string/string_input_theme)}"
-                app:layout_constraintStart_toStartOf="@id/tv_theme"
-                app:layout_constraintTop_toBottomOf="@id/tv_theme"/>
+            <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_theme"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/string_tv_course_add"
+                    android:textColor="@android:color/holo_green_dark"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="@id/et_title"
+                    app:layout_constraintTop_toBottomOf="@id/et_content"/>
 
-        <androidx.appcompat.widget.AppCompatSpinner
-                android:id="@+id/spinner_theme"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:onItemSelected="@{(parent,view,pos,id)->savevm.onSelectItem(parent,view,pos,id)}"
-                app:layout_constraintStart_toEndOf="@id/et_selected_theme"
-                app:layout_constraintTop_toTopOf="@id/et_selected_theme"/>
+            <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/et_selected_theme"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:background="@null"
+                    android:maxLength="20"
+                    android:hint="@string/string_et_course_add_theme"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"
+                    app:visibility="@{savevm.theme.equals(@string/string_input_theme)}"
+                    app:layout_constraintStart_toStartOf="@id/tv_theme"
+                    app:layout_constraintTop_toBottomOf="@id/tv_theme"/>
 
-        <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="20dp"
-                android:text="@string/string_tv_date"
-                android:textColor="@android:color/holo_green_dark"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="@id/et_title"
-                app:layout_constraintTop_toBottomOf="@id/et_selected_theme"/>
+            <androidx.appcompat.widget.AppCompatSpinner
+                    android:id="@+id/spinner_theme"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="5dp"
+                    android:onItemSelected="@{(parent,view,pos,id)->savevm.onSelectItem(parent,view,pos,id)}"
+                    app:layout_constraintStart_toEndOf="@id/et_selected_theme"
+                    app:layout_constraintTop_toBottomOf="@id/tv_theme"/>
 
-        <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_date_cur"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:textSize="18sp"
-                app:layout_constraintStart_toStartOf="@id/tv_date"
-                app:layout_constraintTop_toBottomOf="@id/tv_date"/>
+            <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/string_tv_date"
+                    android:textColor="@android:color/holo_green_dark"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="@id/et_title"
+                    app:layout_constraintTop_toBottomOf="@id/spinner_theme"/>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_date_cur"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:textSize="18sp"
+                    app:layout_constraintStart_toStartOf="@id/tv_date"
+                    app:layout_constraintTop_toBottomOf="@id/tv_date"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
 </layout>
