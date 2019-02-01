@@ -11,13 +11,13 @@ import com.boostcamp.travery.data.model.UserAction
 import com.boostcamp.travery.databinding.ItemUseractionListBinding
 import com.boostcamp.travery.search.viewholder.UserActionViewHolder
 
-class UserActionSearchAdapter(private var listener: OnItemClickListener) : BaseAdapter<UserAction>() {
+class UserActionSearchAdapter(private var listener: OnItemClickListener) : BaseAdapter<UserAction, BaseViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, position: Int): BaseViewHolder {
         DataBindingUtil.inflate<ItemUseractionListBinding>(
-            LayoutInflater.from(parent.context),
-            R.layout.item_useraction_list,
-            parent,
-            false
+                LayoutInflater.from(parent.context),
+                R.layout.item_useraction_list,
+                parent,
+                false
         ).apply {
             listener = this@UserActionSearchAdapter.listener
             return UserActionViewHolder(this)

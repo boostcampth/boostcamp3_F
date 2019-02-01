@@ -1,19 +1,19 @@
 package com.boostcamp.travery.main.adapter
 
-import androidx.databinding.DataBindingUtil
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import com.boostcamp.travery.OnItemClickListener
 import com.boostcamp.travery.R
 import com.boostcamp.travery.base.BaseAdapter
 import com.boostcamp.travery.base.BaseViewHolder
 import com.boostcamp.travery.databinding.ItemCourseListBinding
 import com.boostcamp.travery.databinding.ItemCourseListGroupBinding
+import com.boostcamp.travery.main.viewholder.CourseViewHolder
 import com.boostcamp.travery.main.viewholder.GroupItem
 import com.boostcamp.travery.main.viewholder.GroupViewHolder
-import com.boostcamp.travery.main.viewholder.CourseViewHolder
 
-class CourseListAdapter(private var listener: OnItemClickListener) : BaseAdapter<Any>() {
+class CourseListAdapter(private val listener: OnItemClickListener) : BaseAdapter<Any, BaseViewHolder>() {
 
     companion object {
         private const val VIEW_TYPE_GROUP = 1

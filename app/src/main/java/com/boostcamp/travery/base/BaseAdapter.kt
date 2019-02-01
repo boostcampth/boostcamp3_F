@@ -2,8 +2,11 @@ package com.boostcamp.travery.base
 
 import androidx.recyclerview.widget.RecyclerView
 
-abstract class BaseAdapter<T> : androidx.recyclerview.widget.RecyclerView.Adapter<BaseViewHolder>() {
+abstract class BaseAdapter<T, VH : RecyclerView.ViewHolder> : RecyclerView.Adapter<VH>() {
     protected val data = ArrayList<T>()
+
+    var onItemClickListener: OnItemClickListener? = null
+    var onItemLongClickListener: OnItemLongClickListener? = null
 
     override fun getItemCount() = data.size
 
@@ -19,12 +22,13 @@ abstract class BaseAdapter<T> : androidx.recyclerview.widget.RecyclerView.Adapte
     }
 
     fun addItems(data: List<T>) {
+        val position = this.data.size
         this.data.addAll(data)
-        notifyDataSetChanged()
+        notifyItemRangeInserted(position, data.size)
     }
 
-    fun addItem(data: T, position: Int) {
-        this.data.add(data)
+    fun addItem(position: Int, data: T) {
+        this.data.add(position, data)
         notifyItemInserted(position)
     }
 
