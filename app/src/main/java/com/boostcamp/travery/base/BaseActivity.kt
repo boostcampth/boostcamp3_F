@@ -10,6 +10,8 @@ import androidx.databinding.ViewDataBinding
 import com.boostcamp.travery.R
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.progressbar_loading.*
+import android.content.pm.ActivityInfo
+
 
 abstract class BaseActivity<T: ViewDataBinding> : AppCompatActivity() {
     private var progressDialog: AppCompatDialog? = null
@@ -20,6 +22,7 @@ abstract class BaseActivity<T: ViewDataBinding> : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         viewDataBinding = DataBindingUtil.inflate(layoutInflater, layoutResourceId, null, false)
     }
 
