@@ -17,6 +17,8 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme.NoActionBar">
+        <activity android:name=".save.UserActionSaveActivity">
+        </activity>
         <activity android:name=".mapservice.savecourse.CourseSaveActivity">
         </activity>
 

@@ -30,6 +30,11 @@
     <string name="string_save_menu">저장</string>
     <string name="string_input_theme">직접 입력</string>
 
+    <string name="string_et_content_hint">내용을 입력하세요\n\n\n</string>
+    <string name="string_tv_useraction_hashtag">해시태그</string>
+    <string name="string_tv_location">위치</string>
+    <string name="string_tv_image">사진</string>
+
     <string-array name="theme_array">
         <item>데이트코스</item>
         <item>산책</item>
