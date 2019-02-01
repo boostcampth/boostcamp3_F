@@ -63,9 +63,10 @@
                 android:layout_marginTop="5dp"
                 android:background="@null"
                 android:maxLength="20"
-                android:text="@string/string_et_course_add_theme"
+                android:hint="@string/string_et_course_add_theme"
                 android:textColor="@android:color/black"
                 android:textSize="18sp"
+                android:onTextChanged="@{(text, start, before, count) -> savevm.onThemeChange(text)}"
                 app:visibility="@{savevm.theme.equals(@string/string_input_theme)}"
                 app:layout_constraintStart_toStartOf="@id/tv_theme"
                 app:layout_constraintTop_toBottomOf="@id/tv_theme"/>
