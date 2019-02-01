@@ -42,7 +42,6 @@ class CourseSaveViewModel(application: Application) : BaseViewModel(application)
 
     private fun makeCoordinateJson(locationList: ArrayList<LatLng>, timeList: ArrayList<String>): JSONObject {
 
-        //path=color:0x0000ff|weight:5|40.737102,-73.990318|40.749825,-73.987963|40.752946,-73.987384|40.755823,-73.986397
         val coordinates = JSONObject()
         val coordinateItem = JSONArray()
         val colms = JSONObject()
