@@ -16,6 +16,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.boostcamp.travery.R
 import java.util.*
 import android.os.*
+import kotlin.collections.ArrayList
 
 
 @SuppressLint("Registered")
@@ -39,7 +40,7 @@ class MapTrackingService : Service() {
     private var lostLocationCnt = 0
 
     private val locationList: ArrayList<LatLng> = ArrayList()
-    private val timeList: ArrayList<Long> = ArrayList()
+    private val timeList: ArrayList<String> = ArrayList()
     private var canSuggest = true
     private val suggestList: ArrayList<LatLng> = ArrayList()
     private val TAG = "MyLocationService"
@@ -87,11 +88,11 @@ class MapTrackingService : Service() {
                     //이동거리가 1m 이상 10m 이하이고 오차범위가 10m 미만일 때
                     //실내에서는 12m~30m정도의 오차 발생
                     //야외에서는 3m~11m정도의 오차 발생
-                    if (dis >= 1 && dis < 10 && location.accuracy < 9.5) {
+                    if (dis >= 1/* && dis < 10 && location.accuracy < 9.5*/) {
                         totalDistance += location.distanceTo(exLocation)
                         val locate = LatLng(location.latitude, location.longitude)
                         locationList.add(locate)
-                        timeList.add(location.time)
+                        timeList.add(location.time.toString())
                         mCallback?.sendLocation(locate, location.accuracy)
                         exLocation = location
 
@@ -169,7 +170,7 @@ class MapTrackingService : Service() {
         }
         if (isRunning && bestLocation != null) {
             locationList.add(LatLng(bestLocation.latitude, bestLocation.longitude))
-            timeList.add(bestLocation.time)
+            timeList.add(bestLocation.time.toString())
         }
         return bestLocation
     }
@@ -217,6 +218,10 @@ class MapTrackingService : Service() {
 
     fun getLocationList(): ArrayList<LatLng> {
         return locationList
+    }
+
+    fun getTimeList(): ArrayList<String>{
+        return timeList
     }
 
     override fun onBind(intent: Intent): IBinder? {
