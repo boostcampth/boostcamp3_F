@@ -33,7 +33,7 @@ class AppDataManager(private val dbHelper: DbHelper) : DataManager {
     }
 
     override fun saveCourse(course: Course): Observable<Boolean> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return dbHelper.saveCourse(course)
     }
 
     override fun saveUserAction(userAction: UserAction): Observable<Boolean> {

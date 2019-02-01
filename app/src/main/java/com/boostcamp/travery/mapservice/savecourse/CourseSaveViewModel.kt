@@ -14,6 +14,7 @@ import com.boostcamp.travery.data.local.db.AppDatabase_Impl
 import com.boostcamp.travery.data.local.db.AppDbHelper
 import com.boostcamp.travery.data.local.db.DbHelper
 import com.boostcamp.travery.data.model.Course
+import com.boostcamp.travery.utils.FileUtils
 import com.google.android.gms.maps.model.LatLng
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -31,7 +32,7 @@ class CourseSaveViewModel(application: Application) : BaseViewModel(application)
 
     val theme = ObservableField<String>("")
 
-    private fun makeCoordinateJson(locationList: ArrayList<LatLng>, timeList: ArrayList<String>) {
+    private fun makeCoordinateJson(locationList: ArrayList<LatLng>, timeList: ArrayList<String>): JSONObject {
 
         val coordinates = JSONObject()
         val coordinateItem = JSONArray()
@@ -48,6 +49,8 @@ class CourseSaveViewModel(application: Application) : BaseViewModel(application)
         coordinates.put("coordinate", coordinateItem)
 
         Log.d("lolot", coordinates.toString())
+
+        return coordinates
     }
 
     fun onSelectItem(parent: AdapterView<*>, view: View, pos: Int, id: Long) {
@@ -57,18 +60,10 @@ class CourseSaveViewModel(application: Application) : BaseViewModel(application)
     fun saveCourseToDatabase(bundle: Bundle?) {
         val imageFilePath = requestStaticMap() // 비동기 호출 예상
 
-        /*Log.d("lolote", )
-        Log.d("lolote", bundle?.getLong(Constants.EXTRA_ROUTE_END_TIME, System.currentTimeMillis()).toString())
-        Log.d("lolote", bundle?.getLong(Constants.EXTRA_ROUTE_DISTANCE, 0L).toString())
-        Log.d("lolote", bundle?.getString(Constants.EXTRA_ROUTE_COORDINATE, "").toString())*/
-
         bundle?.let {
-            makeCoordinateJson(
-                it.getParcelableArrayList<LatLng>(Constants.EXTRA_ROUTE_LOCATION_LIST)!!,
-                it.getStringArrayList(Constants.EXTRA_ROUTE_TIME_LIST)!!
-            )
-            //it.getParcelableArrayList<LatLng>(Constants.EXTRA_ROUTE_LOCATION_LIST)
-            /*val mCourse = it.getParcelable<Course>(Constants.EXTRA_ROUTE)
+            it.getParcelableArrayList<LatLng>(Constants.EXTRA_ROUTE_LOCATION_LIST)
+            val mCourse = it.getParcelable<Course>(Constants.EXTRA_ROUTE)
+
             AppDataManager(AppDbHelper.getInstance(getApplication())).saveCourse(
                 Course(
                     title,
@@ -80,27 +75,15 @@ class CourseSaveViewModel(application: Application) : BaseViewModel(application)
                     mCourse.coordinate,
                     mCourse.mapImage
                 )
-            ).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe()*/
-        }
+            ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe()
 
-        // DB 저장 코드
-//        with(intent) {
-//            Thread(Runnable {
-//                DataBase.getDataBase(this@CourseSaveActivity)
-//                        .daoCourse()
-//                        .insertCourse(Course(
-//                                et_title.text.toString(),
-//                                et_content.text.toString(),
-//                                et_selected_theme.text.toString(),
-//                                getLongExtra(Constants.EXTRA_ROUTE_START_TIME, System.currentTimeMillis()),
-//                                getLongExtra(Constants.EXTRA_ROUTE_END_TIME, System.currentTimeMillis()),
-//                                getLongExtra(Constants.EXTRA_ROUTE_DISTANCE, 0L),
-//                                getStringExtra(Constants.EXTRA_ROUTE_COORDINATE),
-//                                imageFilePath))
-//            }).start()
-//        }
+            FileUtils.saveJsonFile(
+                getApplication(), "course", mCourse.startTime.toString(), makeCoordinateJson(
+                    it.getParcelableArrayList<LatLng>(Constants.EXTRA_ROUTE_LOCATION_LIST)!!,
+                    it.getStringArrayList(Constants.EXTRA_ROUTE_TIME_LIST)!!
+                )
+            )
+        }
     }
 
     private fun requestStaticMap(): String {

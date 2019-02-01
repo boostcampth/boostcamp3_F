@@ -14,7 +14,6 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import android.graphics.Color
 import android.os.*
-import android.util.Log
 import com.boostcamp.travery.Constants
 import com.boostcamp.travery.R
 import com.boostcamp.travery.data.model.Course
@@ -67,10 +66,6 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     fun stopService(v: View) {
-        /*
-        val EXTRA_ROUTE_END_TIME = "ROUTE_END_TIME"
-        val EXTRA_ROUTE_DISTANCE = "ROUTE_DISTANCE"
-        val EXTRA_ROUTE_COORDINATE = "ROUTE_COORDINATE"*/
         val saveIntent = Intent(this@TrackingActivity, CourseSaveActivity::class.java)
         saveIntent.putParcelableArrayListExtra(Constants.EXTRA_ROUTE_LOCATION_LIST, mapService.getLocationList())
         saveIntent.putExtra(Constants.EXTRA_ROUTE_TIME_LIST, mapService.getTimeList())
