@@ -9,7 +9,8 @@ import com.boostcamp.travery.databinding.ItemUseractionDetailToplistBinding
 import com.boostcamp.travery.databinding.ItemUseractionEmptyBinding
 import com.boostcamp.travery.utils.toImage
 
-class UserActionTopListAdapter(var dataList: List<UserAction?>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class UserActionTopListAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    private val dataList = ArrayList<UserAction?>()
 
     companion object {
         const val TYPE_ACTION = 0
@@ -19,19 +20,19 @@ class UserActionTopListAdapter(var dataList: List<UserAction?>) : RecyclerView.A
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         if (viewType == TYPE_ACTION) {
             return ActivityViewHolder(
-                ItemUseractionDetailToplistBinding.inflate(
-                    LayoutInflater.from(parent.context),
-                    parent,
-                    false
-                )
+                    ItemUseractionDetailToplistBinding.inflate(
+                            LayoutInflater.from(parent.context),
+                            parent,
+                            false
+                    )
             )
         } else {
             return ActivityEmptyViewHolder(
-                ItemUseractionEmptyBinding.inflate(
-                    LayoutInflater.from(parent.context),
-                    parent,
-                    false
-                )
+                    ItemUseractionEmptyBinding.inflate(
+                            LayoutInflater.from(parent.context),
+                            parent,
+                            false
+                    )
             )
         }
     }
@@ -46,8 +47,8 @@ class UserActionTopListAdapter(var dataList: List<UserAction?>) : RecyclerView.A
             }
             holder.binding.userAction = dataList[position]
         } else if (holder is ActivityViewHolder) {
-            var tens = position % 100 / 10
-            var units = position % 10
+            val tens = position % 100 / 10
+            val units = position % 10
             holder.binding.ivTens.setImageResource(tens.toImage())
             holder.binding.ivUnits.setImageResource(units.toImage())
             holder.binding.userAction = dataList[position]
@@ -63,6 +64,15 @@ class UserActionTopListAdapter(var dataList: List<UserAction?>) : RecyclerView.A
         return if (dataList[position] != null) TYPE_ACTION else TYPE_EMPTY_ACTIVITY
     }
 
+    fun addItems(data: List<UserAction>) {
+        dataList.addAll(data)
+        notifyDataSetChanged()
+    }
+
+    fun addItem(data: UserAction?) {
+        dataList.add(data)
+        notifyItemInserted(dataList.size - 1)
+    }
 
     //기록된 활동들에 대한 뷰홀더
     class ActivityViewHolder(var binding: ItemUseractionDetailToplistBinding) : RecyclerView.ViewHolder(binding.root)

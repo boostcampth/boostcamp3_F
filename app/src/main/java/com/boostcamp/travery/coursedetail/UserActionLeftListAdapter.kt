@@ -11,8 +11,8 @@ import com.boostcamp.travery.databinding.ItemUseractionDetailLeftlistBinding
 import com.boostcamp.travery.utils.toImage
 
 
-class UserActionLeftListAdapter(var dataList: List<UserAction?>) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class UserActionLeftListAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    private val dataList = ArrayList<UserAction?>()
 
     companion object {
         const val TYPE_ACTION = 0
@@ -23,24 +23,24 @@ class UserActionLeftListAdapter(var dataList: List<UserAction?>) :
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             TYPE_ACTION -> ActivityViewHolder(
-                ItemUseractionDetailLeftlistBinding.inflate(
-                    LayoutInflater.from(parent.context),
-                    parent,
-                    false
-                )
+                    ItemUseractionDetailLeftlistBinding.inflate(
+                            LayoutInflater.from(parent.context),
+                            parent,
+                            false
+                    )
             )
             TYPE_ENDPOINT -> EndViewHolder(
-                ItemUseractionDetailLeftendBinding.inflate(
-                    LayoutInflater.from(parent.context),
-                    parent,
-                    false
-                )
+                    ItemUseractionDetailLeftendBinding.inflate(
+                            LayoutInflater.from(parent.context),
+                            parent,
+                            false
+                    )
             )
             else -> {
                 val view = LinearLayout(parent.context)
                 view.layoutParams = LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.MATCH_PARENT
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.MATCH_PARENT
                 )
                 EmptyViewHolder(view)
             }
@@ -64,6 +64,16 @@ class UserActionLeftListAdapter(var dataList: List<UserAction?>) :
             position != dataList.size - 1 -> TYPE_ENDPOINT
             else -> TYPE_EMPTY_ACTIVITY
         }
+    }
+
+    fun addItems(data: List<UserAction>) {
+        dataList.addAll(data)
+        notifyDataSetChanged()
+    }
+
+    fun addItem(data: UserAction?) {
+        dataList.add(data)
+        notifyItemInserted(dataList.size - 1)
     }
 
     //활동 아이템을 위한 뷰홀더
