@@ -64,21 +64,23 @@ class CourseSaveViewModel(application: Application) : BaseViewModel(application)
             it.getParcelableArrayList<LatLng>(Constants.EXTRA_ROUTE_LOCATION_LIST)
             val mCourse = it.getParcelable<Course>(Constants.EXTRA_ROUTE)
 
-            AppDataManager(AppDbHelper.getInstance(getApplication())).saveCourse(
-                Course(
-                    title,
-                    body,
-                    theme.get(),
-                    mCourse!!.startTime,
-                    mCourse.endTime,
-                    mCourse.distance,
-                    mCourse.coordinate,
-                    mCourse.mapImage
-                )
-            ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe()
+            addDisposable(
+                repository.saveCourse(
+                    Course(
+                        title,
+                        body,
+                        theme.get(),
+                        mCourse!!.startTime,
+                        mCourse.endTime,
+                        mCourse.distance,
+                        mCourse.coordinate,
+                        mCourse.mapImage
+                    )
+                ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe()
+            )
 
             FileUtils.saveJsonFile(
-                getApplication(), "course", mCourse.startTime.toString(), makeCoordinateJson(
+                getApplication(), mCourse.startTime.toString(), makeCoordinateJson(
                     it.getParcelableArrayList<LatLng>(Constants.EXTRA_ROUTE_LOCATION_LIST)!!,
                     it.getStringArrayList(Constants.EXTRA_ROUTE_TIME_LIST)!!
                 )
