@@ -2,18 +2,12 @@ package com.boostcamp.travery.mapservice.savecourse
 
 import android.app.Application
 import android.os.Bundle
-import android.os.Parcelable
-import android.util.Log
 import android.view.View
 import com.boostcamp.travery.base.BaseViewModel
 import android.widget.AdapterView
 import androidx.databinding.ObservableField
 import com.boostcamp.travery.Constants
 import com.boostcamp.travery.R
-import com.boostcamp.travery.data.AppDataManager
-import com.boostcamp.travery.data.local.db.AppDatabase_Impl
-import com.boostcamp.travery.data.local.db.AppDbHelper
-import com.boostcamp.travery.data.local.db.DbHelper
 import com.boostcamp.travery.data.model.Course
 import com.boostcamp.travery.utils.FileUtils
 import com.google.android.gms.maps.model.LatLng
@@ -23,7 +17,6 @@ import io.reactivex.schedulers.Schedulers
 import org.json.JSONArray
 import org.json.JSONObject
 import java.lang.StringBuilder
-import io.reactivex.Observable
 
 
 class CourseSaveViewModel(application: Application) : BaseViewModel(application) {
@@ -62,7 +55,6 @@ class CourseSaveViewModel(application: Application) : BaseViewModel(application)
         coordinates.put("coordinate", coordinateItem)
 
         staticMapURL = urlPath.toString()
-        Log.d("lolot", urlPath.toString())
 
         return coordinates
     }
@@ -72,8 +64,6 @@ class CourseSaveViewModel(application: Application) : BaseViewModel(application)
     }
 
     fun saveCourseToDatabase(bundle: Bundle?) {
-        val imageFilePath = requestStaticMap() // 비동기 호출 예상
-
         bundle?.let {
             it.getParcelableArrayList<LatLng>(Constants.EXTRA_ROUTE_LOCATION_LIST)
             val mCourse = it.getParcelable<Course>(Constants.EXTRA_ROUTE)
@@ -109,11 +99,6 @@ class CourseSaveViewModel(application: Application) : BaseViewModel(application)
                 )
             }.subscribe()
         }
-    }
-
-    private fun requestStaticMap(): String {
-        // 스태틱맵을 요청하여 이미지 파일 저장 후 저장 경로 리턴
-        return ""
     }
 
     fun onTitleChange(title: CharSequence) {
