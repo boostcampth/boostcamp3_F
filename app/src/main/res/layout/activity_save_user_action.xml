@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable name="viewmodel" type="com.boostcamp.travery.save.UserActionSaveViewModel"/>
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/toolbar"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="10dp">
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/et_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:hint="@string/string_et_course_add_hint"
+                android:inputType="text|textMultiLine"
+                android:maxLength="20"
+                android:onTextChanged="@{(text, start, before, count) -> viewmodel.onTitleChange(text)}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/et_content"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="#DBDBDB"
+                android:gravity="top|start"
+                android:hint="@string/string_et_content_hint"
+                android:inputType="text|textMultiLine"
+                android:onTextChanged="@{(text, start, before, count) -> viewmodel.onContentChange(text)}"
+                android:padding="10dp"
+                app:layout_constraintEnd_toEndOf="@id/et_title"
+                app:layout_constraintStart_toStartOf="@id/et_title"
+                app:layout_constraintTop_toBottomOf="@id/et_title"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_theme"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                android:text="@string/string_tv_useraction_hashtag"
+                android:textColor="@android:color/holo_green_dark"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@id/et_title"
+                app:layout_constraintTop_toBottomOf="@id/et_content"/>
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/et_hashtag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="@null"
+                android:hint="@string/string_et_useraction_hashtag"
+                android:maxLength="20"
+                android:onTextChanged="@{(text, start, before, count) -> viewmodel.onHashTagChange(text)}"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="@id/tv_theme"
+                app:layout_constraintTop_toBottomOf="@id/tv_theme"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                android:text="@string/string_tv_location"
+                android:textColor="@android:color/holo_green_dark"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@id/et_title"
+                app:layout_constraintTop_toBottomOf="@id/et_hashtag"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_location_cur"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="@id/tv_date"
+                app:layout_constraintTop_toBottomOf="@id/tv_date"
+                tools:text="강남구 역삼동 테헤란로 부캠쓰"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="40dp"
+                android:text="@string/string_tv_image"
+                android:textColor="@android:color/holo_green_dark"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@id/et_title"
+                app:layout_constraintTop_toBottomOf="@id/tv_location_cur"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_save_useraction_image_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                app:imageAdapter="@{viewmodel}"
+                app:layout_constraintTop_toBottomOf="@id/tv_image"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
+</layout>

@@ -12,6 +12,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -75,12 +76,11 @@ dependencies {
 
     // glide
     implementation "com.github.bumptech.glide:okhttp3-integration:$glide_version"
-    annotationProcessor "com.github.bumptech.glide:compiler:$glide_version"
+    kapt "com.github.bumptech.glide:compiler:$glide_version"
 
     // room
     implementation "androidx.room:room-runtime:$room_version"
     implementation "androidx.room:room-rxjava2:$room_version"
-    annotationProcessor "androidx.room:room-compiler:$room_compiler_version"
     kapt "androidx.room:room-compiler:$room_compiler_version"
     kaptTest "androidx.room:room-testing:$room_compiler_version"
 
@@ -99,4 +99,7 @@ dependencies {
 
     // ViewModel and LiveData
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
+
+    // Image picker
+    implementation 'com.github.esafirm.android-image-picker:rximagepicker:1.13.1'
 }
