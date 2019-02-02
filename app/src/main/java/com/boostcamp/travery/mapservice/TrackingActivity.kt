@@ -49,8 +49,8 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap = googleMap
 
         polylineOptions.color(Color.BLUE)
-            .geodesic(true)
-            .width(10f)
+                .geodesic(true)
+                .width(10f)
 
         doBindService()
     }
@@ -66,32 +66,32 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
         startRecordView()
         isService = true
         polylineOptions = PolylineOptions()
-            .color(Color.BLUE)
-            .geodesic(true)
-            .width(10f)
+                .color(Color.BLUE)
+                .geodesic(true)
+                .width(10f)
         polylineOptions.add(myLocationMarker.position)
     }
 
     fun stopService(v: View) {
         if (mapService.getTotalDistance() >= 10) {
             val saveIntent = Intent(this@TrackingActivity, CourseSaveActivity::class.java)
-                .apply {
-                    putParcelableArrayListExtra(Constants.EXTRA_COURSE_LOCATION_LIST, mapService.getLocationList())
-                    putExtra(Constants.EXTRA_COURSE_TIME_LIST, mapService.getTimeList())
-                    putExtra(
-                        Constants.EXTRA_COURSE,
-                        Course(
-                            "",
-                            "",
-                            "",
-                            mapService.getStartTime(),
-                            mapService.getEndTime(),
-                            mapService.getTotalDistance(),
-                            mapService.getStartTime().toString(),
-                            mapService.getStartTime().toString()
+                    .apply {
+                        putParcelableArrayListExtra(Constants.EXTRA_COURSE_LOCATION_LIST, mapService.getLocationList())
+                        putExtra(Constants.EXTRA_COURSE_TIME_LIST, mapService.getTimeList())
+                        putExtra(
+                                Constants.EXTRA_COURSE,
+                                Course(
+                                        "",
+                                        "",
+                                        "",
+                                        mapService.getStartTime(),
+                                        mapService.getEndTime(),
+                                        mapService.getTotalDistance(),
+                                        mapService.getStartTime().toString(),
+                                        mapService.getStartTime().toString()
+                                )
                         )
-                    )
-                }
+                    }
             startActivity(saveIntent)
         } else getString(R.string.string_save_course_error).toast(this)
 
@@ -155,8 +155,8 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         override fun onServiceConnected(
-            name: ComponentName,
-            service: IBinder
+                name: ComponentName,
+                service: IBinder
         ) {
             // 서비스와 연결되었을 때 호출되는 메서드
             // 서비스 객체를 전역변수로 저장
@@ -170,11 +170,11 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
             //서울 위치
             var myLocation = LatLng(37.56, 126.97)
             myLocationMarker = mMap.addMarker(
-                MarkerOptions()
-                    .position(myLocation)
-                    .flat(true)
-                    .anchor(0.5f, 0.5f)
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.map_position_no_heading))
+                    MarkerOptions()
+                            .position(myLocation)
+                            .flat(true)
+                            .anchor(0.5f, 0.5f)
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.map_position_no_heading))
             )
             if (location != null) {
                 val lat = location.latitude
@@ -225,8 +225,8 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun doBindService() {
         bindService(
-            Intent(this, MapTrackingService::class.java),
-            mapTrackingServiceConnection, Context.BIND_AUTO_CREATE
+                Intent(this, MapTrackingService::class.java),
+                mapTrackingServiceConnection, Context.BIND_AUTO_CREATE
         )
         isBound = true
     }

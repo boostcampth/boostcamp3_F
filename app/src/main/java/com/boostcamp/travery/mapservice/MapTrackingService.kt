@@ -24,15 +24,15 @@ class MapTrackingService : Service() {
 
     private val mFusedLocationClient: FusedLocationProviderClient by lazy {
         LocationServices.getFusedLocationProviderClient(
-            this
+                this
         )
     }
 
     private val locationRequest: LocationRequest by lazy {
         LocationRequest()
-            .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-            .setInterval(UPDATE_INTERVAL_MS)
-            .setFastestInterval(FASTEST_UPDATE_INTERVAL_MS)
+                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                .setInterval(UPDATE_INTERVAL_MS)
+                .setFastestInterval(FASTEST_UPDATE_INTERVAL_MS)
     }
 
     private val UPDATE_INTERVAL_MS: Long = 2500  // 1초
@@ -55,14 +55,14 @@ class MapTrackingService : Service() {
     private val notification: NotificationCompat.Builder by lazy {
         val notificationIntent = Intent(this, MainActivity::class.java)
         val pendingIntent = PendingIntent.getActivity(
-            this,
-            0, notificationIntent, 0
+                this,
+                0, notificationIntent, 0
         )
         NotificationCompat.Builder(this, getString(R.string.notification_channel_id))
-            .setContentTitle(getString(R.string.service_title))
-            .setContentText(getString(R.string.service_message))
-            .setSmallIcon(R.drawable.ic_play_circle_filled_black_60dp)
-            .setContentIntent(pendingIntent)
+                .setContentTitle(getString(R.string.service_title))
+                .setContentText(getString(R.string.service_message))
+                .setSmallIcon(R.drawable.ic_play_circle_filled_black_60dp)
+                .setContentIntent(pendingIntent)
     }
     private val mBinder = LocalBinder()
 
@@ -220,7 +220,7 @@ class MapTrackingService : Service() {
         return locationList
     }
 
-    fun getTimeList(): ArrayList<String>{
+    fun getTimeList(): ArrayList<String> {
         return timeList
     }
 
