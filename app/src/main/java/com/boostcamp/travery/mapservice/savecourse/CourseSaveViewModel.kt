@@ -17,10 +17,13 @@ import com.boostcamp.travery.data.local.db.DbHelper
 import com.boostcamp.travery.data.model.Course
 import com.boostcamp.travery.utils.FileUtils
 import com.google.android.gms.maps.model.LatLng
+import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import org.json.JSONArray
 import org.json.JSONObject
+import java.lang.StringBuilder
+import io.reactivex.Observable
 
 
 class CourseSaveViewModel(application: Application) : BaseViewModel(application) {
@@ -35,6 +38,7 @@ class CourseSaveViewModel(application: Application) : BaseViewModel(application)
         get() = if (field.isEmpty()) "활동" else field
 
     val theme = ObservableField<String>("")
+    lateinit var staticMapURL: String
 
     private fun makeCoordinateJson(locationList: ArrayList<LatLng>, timeList: ArrayList<String>): JSONObject {
 
@@ -42,19 +46,24 @@ class CourseSaveViewModel(application: Application) : BaseViewModel(application)
         val coordinates = JSONObject()
         val coordinateItem = JSONArray()
         val colms = JSONObject()
-        var urlPath:StringBuffer
-        for (i in 0..(locationList.size - 1)) {
+        val urlPath =
+            StringBuilder("https://maps.googleapis.com/maps/api/staticmap?size=100x100&path=color:0x0000ff|weight:5")
+        for (i in 0 until locationList.size) {
             val coordinate = JSONObject()
             coordinate.put("lat", locationList[i].latitude)
             coordinate.put("lng", locationList[i].longitude)
             coordinate.put("time", timeList[i])
             coordinateItem.put(coordinate)
+            urlPath.append("|${locationList[i].latitude},${locationList[i].longitude}")
         }
+        urlPath.append("&key=${getApplication<Application>().getString(R.string.google_maps_key)}")
+
         colms.put("name", timeList[0])
         coordinates.put("colms", colms)
         coordinates.put("coordinate", coordinateItem)
 
-        Log.d("lolot", coordinates.toString())
+        staticMapURL = urlPath.toString()
+        Log.d("lolot", urlPath.toString())
 
         return coordinates
     }
@@ -70,34 +79,36 @@ class CourseSaveViewModel(application: Application) : BaseViewModel(application)
             it.getParcelableArrayList<LatLng>(Constants.EXTRA_ROUTE_LOCATION_LIST)
             val mCourse = it.getParcelable<Course>(Constants.EXTRA_ROUTE)
 
-            addDisposable(
-                repository.saveCourse(
-                    Course(
-                        title,
-                        body,
-                        when (theme.get()) {
-                            getApplication<Application>().getString(R.string.string_input_theme) -> {
-                                inputTheme
-                            }
-                            else -> {
-                                theme.get()
-                            }
-                        },
-                        mCourse!!.startTime,
-                        mCourse.endTime,
-                        mCourse.distance,
-                        mCourse.coordinate,
-                        mCourse.mapImage
+            Single.just(
+                FileUtils.saveJsonFile(
+                    getApplication(), mCourse!!.startTime.toString(), makeCoordinateJson(
+                        it.getParcelableArrayList<LatLng>(Constants.EXTRA_ROUTE_LOCATION_LIST)!!,
+                        it.getStringArrayList(Constants.EXTRA_ROUTE_TIME_LIST)!!
                     )
-                ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe()
-            )
-
-            FileUtils.saveJsonFile(
-                getApplication(), mCourse.startTime.toString(), makeCoordinateJson(
-                    it.getParcelableArrayList<LatLng>(Constants.EXTRA_ROUTE_LOCATION_LIST)!!,
-                    it.getStringArrayList(Constants.EXTRA_ROUTE_TIME_LIST)!!
                 )
-            )
+            ).doAfterSuccess {
+                addDisposable(
+                    repository.saveCourse(
+                        Course(
+                            title,
+                            body,
+                            when (theme.get()) {
+                                getApplication<Application>().getString(R.string.string_input_theme) -> {
+                                    inputTheme
+                                }
+                                else -> {
+                                    theme.get()
+                                }
+                            },
+                            mCourse.startTime,
+                            mCourse.endTime,
+                            mCourse.distance,
+                            mCourse.coordinate,
+                            staticMapURL
+                        )
+                    ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe()
+                )
+            }.subscribe()
         }
     }
 
