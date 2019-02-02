@@ -2,6 +2,8 @@ package com.boostcamp.travery.utils
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.util.Log
+import com.boostcamp.travery.data.model.TimeCode
 import org.json.JSONObject
 import java.io.File
 
@@ -18,11 +20,16 @@ object FileUtils {
         }
     }
 
-    fun loadStringFromJsonFile(context: Context, fileName: String): String {
+    fun loadCoordinateListFromJsonFile(context: Context, fileName: String): List<TimeCode> {
         val directory = context.filesDir
         val file = File(directory, "$fileName.json")
-
-        return file.readText()
+        val timeCode = ArrayList<TimeCode>()
+        val coordinateList = JSONObject(file.readText()).getJSONArray("coordinate")
+        for (i in 0 until coordinateList.length()) {
+            val item = coordinateList.getJSONObject(i)
+            timeCode.add(TimeCode(item.getDouble("lat"), item.getDouble("lng"), item.getLong("time")))
+        }
+        return timeCode
     }
 
     fun deleteCourseFile(context: Context, fileName: String) {
