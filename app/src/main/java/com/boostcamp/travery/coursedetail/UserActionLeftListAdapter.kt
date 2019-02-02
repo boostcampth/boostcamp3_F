@@ -4,15 +4,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import androidx.databinding.ObservableList
 import androidx.recyclerview.widget.RecyclerView
+import com.boostcamp.travery.base.ObservableRecyclerViewAdapter
 import com.boostcamp.travery.data.model.UserAction
 import com.boostcamp.travery.databinding.ItemUseractionDetailLeftendBinding
 import com.boostcamp.travery.databinding.ItemUseractionDetailLeftlistBinding
 import com.boostcamp.travery.utils.toImage
 
 
-class UserActionLeftListAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private val dataList = ArrayList<UserAction?>()
+class UserActionLeftListAdapter(userActionList: ObservableList<UserAction?>) :
+        ObservableRecyclerViewAdapter<UserAction?, RecyclerView.ViewHolder>(userActionList) {
 
     companion object {
         const val TYPE_ACTION = 0
@@ -22,26 +24,11 @@ class UserActionLeftListAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
-            TYPE_ACTION -> ActivityViewHolder(
-                    ItemUseractionDetailLeftlistBinding.inflate(
-                            LayoutInflater.from(parent.context),
-                            parent,
-                            false
-                    )
-            )
-            TYPE_ENDPOINT -> EndViewHolder(
-                    ItemUseractionDetailLeftendBinding.inflate(
-                            LayoutInflater.from(parent.context),
-                            parent,
-                            false
-                    )
-            )
+            TYPE_ACTION -> ActivityViewHolder(ItemUseractionDetailLeftlistBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+            TYPE_ENDPOINT -> EndViewHolder(ItemUseractionDetailLeftendBinding.inflate(LayoutInflater.from(parent.context), parent, false))
             else -> {
                 val view = LinearLayout(parent.context)
-                view.layoutParams = LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.MATCH_PARENT
-                )
+                view.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT)
                 EmptyViewHolder(view)
             }
         }
@@ -54,27 +41,15 @@ class UserActionLeftListAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder
         }
     }
 
-    override fun getItemCount(): Int {
-        return dataList.size
-    }
 
     override fun getItemViewType(position: Int): Int {
         return when {
-            dataList[position] != null -> TYPE_ACTION
-            position != dataList.size - 1 -> TYPE_ENDPOINT
+            getItem(position) != null -> TYPE_ACTION
+            position != itemCount - 1 -> TYPE_ENDPOINT
             else -> TYPE_EMPTY_ACTIVITY
         }
     }
 
-    fun addItems(data: List<UserAction>) {
-        dataList.addAll(data)
-        notifyDataSetChanged()
-    }
-
-    fun addItem(data: UserAction?) {
-        dataList.add(data)
-        notifyItemInserted(dataList.size - 1)
-    }
 
     //활동 아이템을 위한 뷰홀더
     class ActivityViewHolder(var binding: ItemUseractionDetailLeftlistBinding) : RecyclerView.ViewHolder(binding.root)

@@ -40,7 +40,6 @@
             android:layout_width="66dp"
             android:layout_height="0dp"
             android:background="@android:color/background_light"
-            android:isScrollContainer="true"
             app:setAdapter="@{viewModel.leftAdapter}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -51,15 +50,15 @@
         <com.takusemba.multisnaprecyclerview.MultiSnapRecyclerView
             android:id="@+id/rv_useraction_toplist"
             android:layout_width="0dp"
-            android:layout_height="100dp"
+            android:layout_height="90dp"
             android:background="@android:color/background_light"
             android:elevation="4dp"
-            app:setAdapter="@{viewModel.topAdapter}}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbar"
             app:msrv_gravity="start"
-            app:msrv_snap_count="1"/>
+            app:msrv_snap_count="1"
+            app:setAdapter="@{viewModel.topAdapter}}"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -10,7 +10,7 @@ import io.reactivex.disposables.Disposable
 open class BaseViewModel(application: Application) : AndroidViewModel(application) {
     private val compositeDisposable = CompositeDisposable()
 
-    protected val repository = AppDataManager(AppDbHelper.getInstance(application))
+    protected val repository = AppDataManager(application, AppDbHelper.getInstance(application))
 
     fun addDisposable(disposable: Disposable) {
         compositeDisposable.add(disposable)

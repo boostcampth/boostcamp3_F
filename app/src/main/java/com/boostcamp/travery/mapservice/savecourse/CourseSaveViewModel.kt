@@ -41,7 +41,8 @@ class CourseSaveViewModel(application: Application) : BaseViewModel(application)
             val coordinate = JSONObject()
             coordinate.put("lat", locationList[i].latitude)
             coordinate.put("lng", locationList[i].longitude)
-            coordinate.put("time", timeList[i])
+            //TODO timeList Long형으로 바꿔야합니다.
+            coordinate.put("time", timeList[i].toLong())
             coordinateItem.put(coordinate)
         }
         colms.put("name", timeList[0])

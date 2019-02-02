@@ -3,13 +3,14 @@ package com.boostcamp.travery.base
 import androidx.databinding.ObservableList
 import androidx.recyclerview.widget.RecyclerView
 
-abstract class ObservableRecyclerViewAdapter<T, Holder: RecyclerView.ViewHolder>(
-    private val items: ObservableList<T>) : RecyclerView.Adapter<Holder>() {
+abstract class ObservableRecyclerViewAdapter<T, Holder : RecyclerView.ViewHolder>(
+    private val items: ObservableList<T>
+) : RecyclerView.Adapter<Holder>() {
 
-    lateinit var onItemClickListener: (item: Any) -> Unit
+    var onItemClickListener: ((item: Any) -> Unit)? = null
 
     init {
-        items.addOnListChangedCallback(object: ObservableList.OnListChangedCallback<ObservableList<T>>() {
+        items.addOnListChangedCallback(object : ObservableList.OnListChangedCallback<ObservableList<T>>() {
             override fun onChanged(sender: ObservableList<T>?) {
                 notifyDataSetChanged()
             }
@@ -18,7 +19,12 @@ abstract class ObservableRecyclerViewAdapter<T, Holder: RecyclerView.ViewHolder>
                 notifyItemRangeRemoved(positionStart, itemCount)
             }
 
-            override fun onItemRangeMoved(sender: ObservableList<T>?, fromPosition: Int, toPosition: Int, itemCount: Int) {
+            override fun onItemRangeMoved(
+                sender: ObservableList<T>?,
+                fromPosition: Int,
+                toPosition: Int,
+                itemCount: Int
+            ) {
                 notifyDataSetChanged()
             }
 
