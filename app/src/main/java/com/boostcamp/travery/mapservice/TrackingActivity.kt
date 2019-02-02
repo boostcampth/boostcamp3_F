@@ -18,6 +18,7 @@ import com.boostcamp.travery.Constants
 import com.boostcamp.travery.R
 import com.boostcamp.travery.data.model.Course
 import com.boostcamp.travery.mapservice.savecourse.CourseSaveActivity
+import com.boostcamp.travery.save.UserActionSaveActivity
 import com.boostcamp.travery.utils.toast
 import com.google.android.gms.maps.model.*
 import java.lang.ref.WeakReference
@@ -46,7 +47,6 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-        myLocationMarker = mMap.addMarker(MarkerOptions().position(LatLng(37.56, 126.97)))
 
         polylineOptions.color(Color.BLUE)
             .geodesic(true)
@@ -69,16 +69,17 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
             .color(Color.BLUE)
             .geodesic(true)
             .width(10f)
+        polylineOptions.add(myLocationMarker.position)
     }
 
     fun stopService(v: View) {
         if (mapService.getTotalDistance() >= 10) {
             val saveIntent = Intent(this@TrackingActivity, CourseSaveActivity::class.java)
                 .apply {
-                    putParcelableArrayListExtra(Constants.EXTRA_ROUTE_LOCATION_LIST, mapService.getLocationList())
-                    putExtra(Constants.EXTRA_ROUTE_TIME_LIST, mapService.getTimeList())
+                    putParcelableArrayListExtra(Constants.EXTRA_COURSE_LOCATION_LIST, mapService.getLocationList())
+                    putExtra(Constants.EXTRA_COURSE_TIME_LIST, mapService.getTimeList())
                     putExtra(
-                        Constants.EXTRA_ROUTE,
+                        Constants.EXTRA_COURSE,
                         Course(
                             "",
                             "",
@@ -92,7 +93,7 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
                     )
                 }
             startActivity(saveIntent)
-        }else getString(R.string.string_save_course_error).toast(this)
+        } else getString(R.string.string_save_course_error).toast(this)
 
         stopRecordView()
         doUnbindService()
@@ -101,12 +102,21 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
         stopService(serviceIntent)
 
         mMap.clear()
+
         doBindService()
         //finish()
     }
 
+    fun saveUserAction(v: View) {
+        startActivity(Intent(this, UserActionSaveActivity::class.java).apply {
+            putExtra(Constants.EXTRA_LATITUDE, myLocationMarker.position.latitude)
+            putExtra(Constants.EXTRA_LONGITUDE, myLocationMarker.position.longitude)
+            putExtra(Constants.EXTRA_COURSE_CODE, mapService.getStartTime())
+        })
+    }
+
     fun gotoMyLocation(v: View) {
-        mMap.animateCamera(CameraUpdateFactory.newLatLng(myLocationMarker.position))
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocationMarker.position, 15f))
     }
 
     private class ViewChangeHandler(activity: TrackingActivity) : Handler() {
@@ -158,11 +168,20 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
 
             val location = mapService.getLastLocation()
             //서울 위치
+            var myLocation = LatLng(37.56, 126.97)
+            myLocationMarker = mMap.addMarker(
+                MarkerOptions()
+                    .position(myLocation)
+                    .flat(true)
+                    .anchor(0.5f, 0.5f)
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.map_position_no_heading))
+            )
             if (location != null) {
                 val lat = location.latitude
                 val lng = location.longitude
-                val myLocation = LatLng(lat, lng)
-                myLocationMarker = mMap.addMarker(MarkerOptions().position(myLocation))
+                myLocation = LatLng(lat, lng)
+                myLocationMarker.position = myLocation
+                //myLocationMarker = mMap.addMarker(MarkerOptions().position(myLocation))
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 15f))
             }
 

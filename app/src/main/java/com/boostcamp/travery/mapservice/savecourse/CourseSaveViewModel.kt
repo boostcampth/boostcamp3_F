@@ -66,14 +66,14 @@ class CourseSaveViewModel(application: Application) : BaseViewModel(application)
 
     fun saveCourseToDatabase(bundle: Bundle?) {
         bundle?.let {
-            it.getParcelableArrayList<LatLng>(Constants.EXTRA_ROUTE_LOCATION_LIST)
-            val mCourse = it.getParcelable<Course>(Constants.EXTRA_ROUTE)
+            it.getParcelableArrayList<LatLng>(Constants.EXTRA_COURSE_LOCATION_LIST)
+            val mCourse = it.getParcelable<Course>(Constants.EXTRA_COURSE)
 
             Single.just(
-                FileUtils.saveJsonFile(
-                    getApplication(), mCourse!!.startTime.toString(), makeCoordinateJson(
-                        it.getParcelableArrayList<LatLng>(Constants.EXTRA_ROUTE_LOCATION_LIST)!!,
-                        it.getStringArrayList(Constants.EXTRA_ROUTE_TIME_LIST)!!
+                    FileUtils.saveJsonFile(
+                            getApplication(), mCourse!!.startTime.toString(), makeCoordinateJson(
+                            it.getParcelableArrayList<LatLng>(Constants.EXTRA_COURSE_LOCATION_LIST)!!,
+                            it.getStringArrayList(Constants.EXTRA_COURSE_TIME_LIST)!!
                     )
                 )
             ).doAfterSuccess {
