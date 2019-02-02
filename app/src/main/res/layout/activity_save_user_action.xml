@@ -30,7 +30,6 @@
                 android:hint="@string/string_et_course_add_hint"
                 android:inputType="text|textMultiLine"
                 android:maxLength="20"
-                android:onTextChanged="@{(text, start, before, count) -> savevm.onTitleChange(text)}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
@@ -41,9 +40,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:background="#DBDBDB"
+                android:gravity="top|start"
                 android:hint="@string/string_et_content_hint"
                 android:inputType="text|textMultiLine"
-                android:onTextChanged="@{(text, start, before, count) -> savevm.onBodyChange(text)}"
                 android:padding="10dp"
                 app:layout_constraintEnd_toEndOf="@id/et_title"
                 app:layout_constraintStart_toStartOf="@id/et_title"
@@ -68,7 +67,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:background="@null"
-                android:hint="@string/string_et_course_add_theme"
+                android:hint="@string/string_et_useraction_hashtag"
                 android:maxLength="20"
                 android:textColor="@android:color/black"
                 android:textSize="18sp"
@@ -116,6 +115,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
+                app:imageAdapter="@{viewmodel}"
                 app:layout_constraintTop_toBottomOf="@id/tv_image"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
 

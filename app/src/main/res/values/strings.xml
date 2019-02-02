@@ -15,6 +15,8 @@
 
     <string name="permission_title">Notice</string>
     <string name="permission_message">we need permission for find your location</string>
+    <string name="permission_message_select_image">카메라 또는 앨범에 접근하려면 권한이 필요합니다.</string>
+    <string name="permission_denied">"권한이 없으면 제대로 동작하지 않습니다!\n"</string>
 
     <string name="permission_dialog_gps_title">위치 서비스 비활성화</string>
     <string name="permission_dialog_gps_description">앱을 사용하기 위해서는 위치 서비스가 필요합니다.\n위치 설정을 수정하실래요?</string>
@@ -45,6 +47,6 @@
 
     <string name="progress_bar_message">잠시만 기다려주세요</string>
     <string name="string_tv_progress">Loading...</string>
-
     <string name="string_save_course_error">데이터가 적어 저장할 수 없습니다.</string>
+    <string name="string_et_useraction_hashtag">해시태그를 입력하세요</string>
 </resources>
