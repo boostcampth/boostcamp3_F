@@ -42,7 +42,7 @@ class AppDataManager(private val context: Context, private val dbHelper: DbHelpe
     }
 
     override fun saveUserAction(userAction: UserAction): Observable<Boolean> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return dbHelper.saveUserAction(userAction)
     }
 
     override fun saveUserActionList(userActionList: List<UserAction>): Observable<Boolean> {
