@@ -41,15 +41,15 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
 
     private fun requestPermission() {
         TedRx2Permission.with(this)
-                .setRationaleTitle(getString(R.string.permission_title))
-                .setRationaleMessage(getString(R.string.permission_message_select_image))
-                .setPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
-                .request()
-                .subscribe({ tedPermissionResult ->
-                    if (!tedPermissionResult.isGranted) {
-                        getString(R.string.permission_denied) + tedPermissionResult.deniedPermissions.toString().toast(this)
-                    }
-                }, { }).also { compositeDisposable.add(it) }
+            .setRationaleTitle(getString(R.string.permission_title))
+            .setRationaleMessage(getString(R.string.permission_message_select_image))
+            .setPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
+            .request()
+            .subscribe({ tedPermissionResult ->
+                if (!tedPermissionResult.isGranted) {
+                    getString(R.string.permission_denied) + tedPermissionResult.deniedPermissions.toString().toast(this)
+                }
+            }, { }).also { compositeDisposable.add(it) }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -61,9 +61,10 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
         R.id.menu_course_save -> {
             with(intent) {
                 viewModel.saveUserAction(
-                        getLongExtra(Constants.EXTRA_LATITUDE, 0),
-                        getLongExtra(Constants.EXTRA_LONGITUDE, 0),
-                        getLongExtra(Constants.EXTRA_COURSE_CODE, 0))
+                    getDoubleExtra(Constants.EXTRA_LATITUDE, 0.0),
+                    getDoubleExtra(Constants.EXTRA_LONGITUDE, 0.0),
+                    getLongExtra(Constants.EXTRA_COURSE_CODE, 0)
+                )
             }
             finish()
             true
@@ -74,9 +75,9 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
 
     override fun saveSelectedImage() {
         ImagePicker.create(this)
-                .imageDirectory(getString(R.string.app_name))
-                .single()
-                .start()
+            .imageDirectory(getString(R.string.app_name))
+            .single()
+            .start()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
