@@ -1,7 +1,8 @@
 package com.boostcamp.travery.data.model
 
+import com.google.android.gms.maps.model.LatLng
+
 data class TimeCode(
-        var latitude: Double= 0.0,
-        var longitude: Double = 0.0,
+        var coordinate:LatLng,
         var timeStamp: Long = 0
 )

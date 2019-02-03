@@ -130,8 +130,8 @@ class AppDataManager(private val context: Context, private val dbHelper: DbHelpe
                                             "해시태그!!!!!",
                                             "",
                                             "",
-                                            0,
-                                            0,
+                                            0.0,
+                                            0.0,
                                             key
                                     )
                             )
