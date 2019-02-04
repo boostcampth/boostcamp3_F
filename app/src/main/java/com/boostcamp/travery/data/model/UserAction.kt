@@ -19,12 +19,12 @@ import java.util.*
     )]
 )
 data class UserAction(
-    @ColumnInfo(name = "title") var title: String?=null,
-    @ColumnInfo(name = "body") var body: String?=null,
-    @ColumnInfo(name = "date") var date: Date?=null,
-    @ColumnInfo(name = "hashtag") var hashTag: String?=null,
-    @ColumnInfo(name = "main_image") var mainImage: String?=null,
-    @ColumnInfo(name = "sub_image") var subImage: String?=null,
+    @ColumnInfo(name = "title") var title: String="",
+    @ColumnInfo(name = "body") var body: String="",
+    @ColumnInfo(name = "date") var date: Date=Date(),
+    @ColumnInfo(name = "hashtag") var hashTag: String="",
+    @ColumnInfo(name = "main_image") var mainImage: String="",
+    @ColumnInfo(name = "sub_image") var subImage: String="",
     @ColumnInfo(name = "latitude") var latitude: Double,
     @ColumnInfo(name = "longitude") var longitude: Double,
     @ColumnInfo(name = "course_code", index = true) var courseCode: Long?=null
