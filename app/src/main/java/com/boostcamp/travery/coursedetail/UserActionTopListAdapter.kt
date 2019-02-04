@@ -1,5 +1,6 @@
 package com.boostcamp.travery.coursedetail
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.ObservableList
@@ -19,14 +20,15 @@ class UserActionTopListAdapter(userActionList: ObservableList<UserAction?>) :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        if (viewType == TYPE_ACTION) {
-            return ActivityViewHolder(ItemUseractionDetailToplistBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+        return if (viewType == TYPE_ACTION) {
+            ActivityViewHolder(ItemUseractionDetailToplistBinding.inflate(LayoutInflater.from(parent.context), parent, false))
         } else {
-            return ActivityEmptyViewHolder(ItemUseractionEmptyBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+            ActivityEmptyViewHolder(ItemUseractionEmptyBinding.inflate(LayoutInflater.from(parent.context), parent, false))
         }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        Log.e("TEA", "" + position)
         if (holder is ActivityEmptyViewHolder) {
             //아이템이 0번째라면 시작 이미지
             if (position == 0) {
@@ -35,20 +37,27 @@ class UserActionTopListAdapter(userActionList: ObservableList<UserAction?>) :
                 holder.binding.ivEndpoint.setImageResource(R.drawable.finish)
             }
             holder.binding.userAction = getItem(position)
+            holder.binding.executePendingBindings()
         } else if (holder is ActivityViewHolder) {
             val tens = position % 100 / 10
             val units = position % 10
             holder.binding.ivTens.setImageResource(tens.toImage())
             holder.binding.ivUnits.setImageResource(units.toImage())
             holder.binding.userAction = getItem(position)
+            Log.e("USER", getItem(position).toString())
             holder.binding.executePendingBindings()
         }
+
 
     }
 
 
     override fun getItemViewType(position: Int): Int {
-        return if (getItem(position) != null) TYPE_ACTION else TYPE_EMPTY_ACTIVITY
+        return when (position) {
+            0 -> TYPE_EMPTY_ACTIVITY
+            itemCount - 1 -> TYPE_EMPTY_ACTIVITY
+            else -> TYPE_ACTION
+        }
     }
 
     //기록된 활동들에 대한 뷰홀더

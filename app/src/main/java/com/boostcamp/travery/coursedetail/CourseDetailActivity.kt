@@ -9,19 +9,18 @@ import androidx.recyclerview.widget.RecyclerView
 import com.boostcamp.travery.Constants
 import com.boostcamp.travery.R
 import com.boostcamp.travery.base.BaseActivity
-import com.boostcamp.travery.data.model.Course
 import com.boostcamp.travery.databinding.ActivityCourseDetailBinding
 import com.boostcamp.travery.utils.CustomMaker
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
-import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_course_detail.*
 
 
-class CourseDetailActivity : BaseActivity<ActivityCourseDetailBinding>(), OnMapReadyCallback {
+class CourseDetailActivity : BaseActivity<ActivityCourseDetailBinding>(), OnMapReadyCallback, OnMarkerClickListener {
     override val layoutResourceId: Int = R.layout.activity_course_detail
     private val viewModel by lazy {
         ViewModelProviders.of(this).get(CourseDetailViewModel::class.java)
@@ -56,7 +55,6 @@ class CourseDetailActivity : BaseActivity<ActivityCourseDetailBinding>(), OnMapR
         })
     }
 
-
     /**
      * googleMap Callback
      * @param 구글 맵
@@ -66,25 +64,41 @@ class CourseDetailActivity : BaseActivity<ActivityCourseDetailBinding>(), OnMapR
         map = googleMap
         viewModel.loadUserActionList()
         observeViewmodel()
+        map.setOnMarkerClickListener(this)
+    }
 
+    override fun onMarkerClick(marker: Marker?): Boolean {
+        marker?.tag?.let { viewModel.scrollTo.set(marker.tag as Int) }
+
+        return false
     }
 
     fun observeViewmodel() {
 
-        viewModel.latLng.observe(this, Observer {
+        viewModel.latLngList.observe(this, Observer {
             // 경로의 폴리라인과 시작점 끝점 마크를 맵위에 표시.
-            Log.e("TTTT", it.toString())
             map.addPolyline(PolylineOptions().addAll(it))
-            map.addMarker(MarkerOptions().position(it[0]).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_start)))
-            map.addMarker(MarkerOptions().position(it[it.size - 1]).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_arrive)))
-            map.moveCamera(CameraUpdateFactory.newLatLngBounds(LatLngBounds.builder().include(it[0]).include(it[it.size - 1]).build(), 100))
+
+            map.moveCamera(
+                    CameraUpdateFactory.newLatLngBounds(
+                            LatLngBounds.builder().include(it[0]).include(it[it.size - 1]).build(),
+                            100
+                    )
+            )
         })
 
-        viewModel.userActionList.observe(this, Observer { actionList ->
-            for (action in actionList) {
-                val marker = MarkerOptions().position(LatLng(action.latitude, action.longitude))
-                map.addMarker(marker.icon(BitmapDescriptorFactory.fromBitmap(CustomMaker.create(this, action.mainImage))))
+        viewModel.markerList.observe(this, Observer { actionList ->
+            for (i in actionList.indices) {
+                when (i) {
+                    0 -> map.addMarker(MarkerOptions().position(LatLng(actionList[i].latitude, actionList[i].longitude)).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_start))).tag=i
+                    actionList.size - 1 -> map.addMarker(MarkerOptions().position(LatLng(actionList[i].latitude, actionList[i].longitude)).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_arrive))).tag=i
+                    else -> map.addMarker(MarkerOptions().position(LatLng(actionList[i].latitude, actionList[i].longitude)).icon(BitmapDescriptorFactory.fromBitmap(CustomMaker.create(this, actionList[i].mainImage)))).tag = i
+                }
             }
         })
+        viewModel.curLatLng.observe(this, Observer {
+            map.moveCamera(CameraUpdateFactory.newLatLng(it))
+        })
     }
+
 }
