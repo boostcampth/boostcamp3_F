@@ -46,27 +46,31 @@ class AppDataManager(private val context: Context, private val dbHelper: DbHelpe
     }
 
     override fun saveUserActionList(userActionList: List<UserAction>): Observable<Boolean> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return dbHelper.saveUserActionList(userActionList)
     }
 
     override fun deleteCourse(course: Course): Observable<Boolean> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return dbHelper.deleteCourse(course)
     }
 
     override fun deleteCourseList(courseList: List<Course>): Observable<Boolean> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return dbHelper.deleteCourseList(courseList)
     }
 
     override fun deleteUserAction(userAction: UserAction): Observable<Boolean> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return dbHelper.deleteUserAction(userAction)
     }
 
     override fun deleteUserActionList(userActionList: List<UserAction>): Observable<Boolean> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return dbHelper.deleteUserActionList(userActionList)
+    }
+
+    override fun updateCourse(course: Course): Observable<Boolean> {
+        return dbHelper.updateCourse(course)
     }
 
     override fun updateUserAction(userAction: UserAction): Observable<Boolean> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return dbHelper.updateUserAction(userAction)
     }
 
     override fun getAllCourse(): Flowable<List<Course>> {
@@ -78,11 +82,11 @@ class AppDataManager(private val context: Context, private val dbHelper: DbHelpe
     }
 
     override fun getCourseForKeyword(keyword: String): Flowable<List<Course>> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return dbHelper.getCourseForKeyword(keyword)
     }
 
     override fun getUserActionForKeyword(keyword: String): Flowable<List<UserAction>> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return dbHelper.getUserActionForKeyword(keyword)
     }
 
     override fun getUserActionForCourse(course: Course): Flowable<List<UserAction>> {

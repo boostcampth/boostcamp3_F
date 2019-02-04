@@ -87,7 +87,7 @@ class CourseSaveViewModel(application: Application) : BaseViewModel(application)
                                     inputTheme
                                 }
                                 else -> {
-                                    theme.get()
+                                    theme.get()?:""
                                 }
                             },
                             mCourse.startTime,

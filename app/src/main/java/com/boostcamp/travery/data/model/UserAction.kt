@@ -19,15 +19,15 @@ import java.util.*
     )]
 )
 data class UserAction(
-    @ColumnInfo(name = "title") var title: String?,
-    @ColumnInfo(name = "body") var body: String?,
-    @ColumnInfo(name = "date") var date: Date?,
-    @ColumnInfo(name = "hashtag") var hashTag: String?,
-    @ColumnInfo(name = "main_image") var mainImage: String?,
-    @ColumnInfo(name = "sub_image") var subImage: String?,
+    @ColumnInfo(name = "title") var title: String="",
+    @ColumnInfo(name = "body") var body: String="",
+    @ColumnInfo(name = "date") var date: Date=Date(),
+    @ColumnInfo(name = "hashtag") var hashTag: String="",
+    @ColumnInfo(name = "main_image") var mainImage: String="",
+    @ColumnInfo(name = "sub_image") var subImage: String="",
     @ColumnInfo(name = "latitude") var latitude: Double,
     @ColumnInfo(name = "longitude") var longitude: Double,
-    @ColumnInfo(name = "course_code", index = true) var courseCode: Long?
+    @ColumnInfo(name = "course_code", index = true) var courseCode: Long?=null
 ) : Parcelable {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "seq")

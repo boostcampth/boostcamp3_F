@@ -21,6 +21,8 @@ interface DbHelper {
 
     fun deleteUserActionList(userActionList: List<UserAction>): Observable<Boolean>
 
+    fun updateCourse(course:Course):Observable<Boolean>
+
     fun updateUserAction(userAction: UserAction): Observable<Boolean>
 
     fun getAllCourse(): Flowable<List<Course>>
