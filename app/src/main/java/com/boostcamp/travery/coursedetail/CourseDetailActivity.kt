@@ -22,7 +22,6 @@ import kotlinx.android.synthetic.main.activity_course_detail.*
 
 
 class CourseDetailActivity : BaseActivity<ActivityCourseDetailBinding>(), OnMapReadyCallback {
-    private val compositeDisposable = CompositeDisposable()
     override val layoutResourceId: Int = R.layout.activity_course_detail
     private val viewModel by lazy {
         ViewModelProviders.of(this).get(CourseDetailViewModel::class.java)
@@ -67,6 +66,7 @@ class CourseDetailActivity : BaseActivity<ActivityCourseDetailBinding>(), OnMapR
         map = googleMap
         viewModel.loadUserActionList()
         observeViewmodel()
+
     }
 
     fun observeViewmodel() {
@@ -75,16 +75,15 @@ class CourseDetailActivity : BaseActivity<ActivityCourseDetailBinding>(), OnMapR
             // 경로의 폴리라인과 시작점 끝점 마크를 맵위에 표시.
             Log.e("TTTT", it.toString())
             map.addPolyline(PolylineOptions().addAll(it))
-            map.moveCamera(CameraUpdateFactory.newLatLngBounds(LatLngBounds.builder().include(it[0]).include(it[it.size - 1]).build(), 100))
             map.addMarker(MarkerOptions().position(it[0]).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_start)))
             map.addMarker(MarkerOptions().position(it[it.size - 1]).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_arrive)))
+            map.moveCamera(CameraUpdateFactory.newLatLngBounds(LatLngBounds.builder().include(it[0]).include(it[it.size - 1]).build(), 100))
         })
 
         viewModel.userActionList.observe(this, Observer { actionList ->
             for (action in actionList) {
                 val marker = MarkerOptions().position(LatLng(action.latitude, action.longitude))
-                action.mainImage?.let { map.addMarker(marker.icon(BitmapDescriptorFactory.fromBitmap(CustomMaker.create(this, it)))) }
-                        ?: map.addMarker(marker.title(action.title))
+                map.addMarker(marker.icon(BitmapDescriptorFactory.fromBitmap(CustomMaker.create(this, action.mainImage))))
             }
         })
     }

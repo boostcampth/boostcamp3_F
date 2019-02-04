@@ -9,15 +9,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.DrawableRes
+import com.boostcamp.travery.GlideApp
 import com.boostcamp.travery.R
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.custom_marker_layout.view.*
 
 object CustomMaker {
 
-    fun create(context: Context, path: String): Bitmap {
+    fun create(context: Context, path: String?): Bitmap {
         val marker = LayoutInflater.from(context).inflate(R.layout.custom_marker_layout, null)
 
+        GlideApp.with(context)
+                .load(path)
+                .error(R.drawable.empty_action_image)
+                .circleCrop()
+                .into(marker.cv_action_image)
         val displayMetrics = DisplayMetrics()
         (context as Activity).windowManager.defaultDisplay.getMetrics(displayMetrics)
         marker.layoutParams = ViewGroup.LayoutParams(52, ViewGroup.LayoutParams.WRAP_CONTENT)
