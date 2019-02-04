@@ -13,7 +13,7 @@ data class Course(
     @ColumnInfo(name = "body") var body: String?=null,
     @ColumnInfo(name = "theme") var theme: String?=null,
     @PrimaryKey @ColumnInfo(name = "start_time", index = true) var startTime: Long,
-    @ColumnInfo(name = "end_time") var endTime: Long?=null,
+    @ColumnInfo(name = "end_time") var endTime: Long=0L,
     @ColumnInfo(name = "distance") var distance: Long?=null,
     @ColumnInfo(name = "coordinate") var coordinate: String?=null,
     @ColumnInfo(name = "map_image") var mapImage: String?=null
