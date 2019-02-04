@@ -65,7 +65,7 @@ class CourseDetailActivity : BaseActivity<ActivityCourseDetailBinding>(), OnMapR
      */
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
-        viewModel.loadUserAtionList()
+        viewModel.loadUserActionList()
         observeViewmodel()
     }
 
