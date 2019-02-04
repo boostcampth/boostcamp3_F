@@ -22,17 +22,15 @@
             app:layout_constraintTop_toTopOf="parent"/>
 
         <fragment
-            android:id="@+id/fragment_map"
-            android:name="com.google.android.gms.maps.SupportMapFragment"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar"
-            app:layout_constraintVertical_bias="1.0"
-            tools:context=".MapsActivity"/>
+                android:id="@+id/fragment_map"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:context=".MapsActivity"
+                app:layout_constraintTop_toBottomOf="@+id/rv_useraction_toplist"
+                app:layout_constraintStart_toEndOf="@+id/rv_useraction_leftlist"/>
 
         <com.takusemba.multisnaprecyclerview.MultiSnapRecyclerView
 
@@ -40,7 +38,6 @@
             android:layout_width="66dp"
             android:layout_height="0dp"
             android:background="@android:color/background_light"
-            android:isScrollContainer="true"
             app:setAdapter="@{viewModel.leftAdapter}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -51,15 +48,15 @@
         <com.takusemba.multisnaprecyclerview.MultiSnapRecyclerView
             android:id="@+id/rv_useraction_toplist"
             android:layout_width="0dp"
-            android:layout_height="100dp"
+            android:layout_height="90dp"
             android:background="@android:color/background_light"
             android:elevation="4dp"
-            app:setAdapter="@{viewModel.topAdapter}}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbar"
             app:msrv_gravity="start"
-            app:msrv_snap_count="1"/>
+            app:msrv_snap_count="1"
+            app:setAdapter="@{viewModel.topAdapter}}"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

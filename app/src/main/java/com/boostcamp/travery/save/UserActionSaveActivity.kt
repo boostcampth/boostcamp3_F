@@ -61,9 +61,10 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
         R.id.menu_course_save -> {
             with(intent) {
                 viewModel.saveUserAction(
-                        getLongExtra(Constants.EXTRA_LATITUDE, 0),
-                        getLongExtra(Constants.EXTRA_LONGITUDE, 0),
-                        getLongExtra(Constants.EXTRA_COURSE_CODE, 0))
+                        getDoubleExtra(Constants.EXTRA_LATITUDE, 0.0),
+                        getDoubleExtra(Constants.EXTRA_LONGITUDE, 0.0),
+                        getLongExtra(Constants.EXTRA_COURSE_CODE, 0)
+                )
             }
             finish()
             true

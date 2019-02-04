@@ -6,6 +6,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ObservableList
 import com.boostcamp.travery.R
 import com.boostcamp.travery.base.BaseViewHolder
+import com.boostcamp.travery.base.ObservableRecyclerViewAdapter
 import com.boostcamp.travery.databinding.ItemUseractionSaveBinding
 import com.boostcamp.travery.databinding.ItemUseractionSaveImageBinding
 

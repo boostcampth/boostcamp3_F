@@ -27,7 +27,7 @@ class UserActionSaveViewModel(application: Application) : BaseViewModel(applicat
         this.contract = contract
     }
 
-    fun saveUserAction(latitude: Long, longitude: Long, courseCode: Long) {
+    fun saveUserAction(latitude: Double, longitude: Double, courseCode: Long) {
         // DB에 저장
         val sb = StringBuilder()
         imageList.forEach {

@@ -1,10 +1,13 @@
 package com.boostcamp.travery.data
 
+import android.content.Context
 import com.boostcamp.travery.data.local.db.DbHelper
 import com.boostcamp.travery.data.local.prefs.PreferHelper
 import com.boostcamp.travery.data.model.Course
+import com.boostcamp.travery.data.model.TimeCode
 import com.boostcamp.travery.data.model.UserAction
 import com.boostcamp.travery.data.remote.ApiHelper
+import com.boostcamp.travery.utils.FileUtils.loadCoordinateListFromJsonFile
 import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -12,22 +15,24 @@ import io.reactivex.schedulers.Schedulers
 import java.util.*
 
 
-class AppDataManager(private val dbHelper: DbHelper) : DataManager {
+class AppDataManager(private val context: Context, private val dbHelper: DbHelper) : DataManager {
     private lateinit var preferHelper: PreferHelper
     private lateinit var apiHelper: ApiHelper
 
     constructor(
+            context: Context,
             dbHelper: DbHelper,
             apiHelper: ApiHelper
-    ) : this(dbHelper) {
+    ) : this(context, dbHelper) {
         this.apiHelper = apiHelper
     }
 
     constructor(
+            context: Context,
             dbHelper: DbHelper,
             preferHelper: PreferHelper,
             apiHelper: ApiHelper
-    ) : this(dbHelper) {
+    ) : this(context, dbHelper) {
         this.preferHelper = preferHelper
         this.apiHelper = apiHelper
     }
@@ -84,6 +89,12 @@ class AppDataManager(private val dbHelper: DbHelper) : DataManager {
         return dbHelper.getUserActionForCourse(course)
     }
 
+    override fun loadCourseCoordinate(fileName: String): Flowable<List<TimeCode>> {
+        return Flowable.fromCallable {
+            loadCoordinateListFromJsonFile(context, fileName)
+        }
+    }
+
     /**
      * 더미데이터 DB insert
      * 한번만 최초 실행해야함.
@@ -119,13 +130,14 @@ class AppDataManager(private val dbHelper: DbHelper) : DataManager {
                                             "해시태그!!!!!",
                                             "",
                                             "",
-                                            0,
-                                            0,
+                                            0.0,
+                                            0.0,
                                             key
                                     )
                             )
                         }
-                        dbHelper.saveUserActionList(data).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe()
+                        dbHelper.saveUserActionList(data).subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread()).subscribe()
                     }
                 }.also { }
     }
