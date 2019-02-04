@@ -1,10 +1,7 @@
 package com.boostcamp.travery.data.local.db.dao
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
+import androidx.room.*
 import androidx.room.OnConflictStrategy.IGNORE
-import androidx.room.Query
 import com.boostcamp.travery.data.model.Course
 
 @Dao
@@ -18,6 +15,8 @@ interface CourseDao {
     @Delete
     fun delete(courseList: List<Course>)
 
+    @Update
+    fun update(course:Course)
     /**
      * 저장된 모든 경로 리스트 반환
      */

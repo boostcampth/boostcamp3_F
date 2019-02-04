@@ -68,6 +68,13 @@ class AppDbHelper private constructor(private var appDatabase: AppDatabase) : Db
         }
     }
 
+    override fun updateCourse(course: Course): Observable<Boolean> {
+        return Observable.fromCallable {
+            appDatabase.daoCourse().update(course)
+            true
+        }
+    }
+
     override fun updateUserAction(userAction: UserAction): Observable<Boolean> {
         return Observable.fromCallable {
             appDatabase.daoUserAction().update(userAction)
