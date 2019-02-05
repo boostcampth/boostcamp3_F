@@ -12,6 +12,7 @@ import com.boostcamp.travery.data.model.Course
 import com.boostcamp.travery.data.model.TimeCode
 import com.boostcamp.travery.utils.FileUtils
 import com.google.android.gms.maps.model.LatLng
+import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -69,35 +70,35 @@ class CourseSaveViewModel(application: Application) : BaseViewModel(application)
     fun saveCourseToDatabase(bundle: Bundle?) {
         bundle?.let {
             it.getParcelableArrayList<LatLng>(Constants.EXTRA_COURSE_LOCATION_LIST)
-            val mCourse = it.getParcelable<Course>(Constants.EXTRA_COURSE)
+            val mCourse = it.getParcelable<Course>(Constants.EXTRA_COURSE)!!
 
-            Single.just(
-                    FileUtils.saveJsonFile(
-                            getApplication(), mCourse!!.startTime.toString(), makeCoordinateJson(
-                            it.getParcelableArrayList<TimeCode>(Constants.EXTRA_COURSE_LOCATION_LIST)!!
-                    )
+            Completable.fromAction {
+                FileUtils.saveJsonFile(
+                        getApplication(), mCourse.startTime.toString(), makeCoordinateJson(
+                        it.getParcelableArrayList<TimeCode>(Constants.EXTRA_COURSE_LOCATION_LIST)!!
                 )
-            ).doAfterSuccess {
+                )
+            }.doOnComplete {
                 addDisposable(
-                    repository.saveCourse(
-                        Course(
-                            title,
-                            body,
-                            when (theme.get()) {
-                                getApplication<Application>().getString(R.string.string_input_theme) -> {
-                                    inputTheme
-                                }
-                                else -> {
-                                    theme.get()?:""
-                                }
-                            },
-                            mCourse.startTime,
-                            mCourse.endTime,
-                            mCourse.distance,
-                            mCourse.coordinate,
-                            staticMapURL
-                        )
-                    ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe()
+                        repository.updateCourse(
+                                Course(
+                                        title,
+                                        body,
+                                        when (theme.get()) {
+                                            getApplication<Application>().getString(R.string.string_input_theme) -> {
+                                                inputTheme
+                                            }
+                                            else -> {
+                                                theme.get() ?: ""
+                                            }
+                                        },
+                                        mCourse.startTime,
+                                        mCourse.endTime,
+                                        mCourse.distance,
+                                        mCourse.coordinate,
+                                        staticMapURL
+                                )
+                        ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe()
                 )
             }.subscribe()
         }

@@ -1,5 +1,6 @@
 package com.boostcamp.travery.mapservice
 
+import android.app.Application
 import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -14,14 +15,19 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import android.graphics.Color
 import android.os.*
+import android.util.Log
 import com.boostcamp.travery.Constants
 import com.boostcamp.travery.R
+import com.boostcamp.travery.data.AppDataManager
+import com.boostcamp.travery.data.local.db.AppDbHelper
 import com.boostcamp.travery.data.model.Course
 import com.boostcamp.travery.mapservice.savecourse.CourseSaveActivity
 import com.boostcamp.travery.save.UserActionSaveActivity
 import com.boostcamp.travery.utils.toast
 import com.google.android.gms.maps.model.*
 import io.reactivex.Completable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import java.lang.ref.WeakReference
 
 
@@ -109,8 +115,16 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
 
     fun saveUserAction(v: View) {
         startActivity(Intent(this, UserActionSaveActivity::class.java).apply {
-            putExtra(Constants.EXTRA_LATITUDE, myLocationMarker.position.latitude)
-            putExtra(Constants.EXTRA_LONGITUDE, myLocationMarker.position.longitude)
+            when (isService) {
+                true -> {
+                    putExtra(Constants.EXTRA_LATITUDE, myLocationMarker.position.latitude)
+                    putExtra(Constants.EXTRA_LONGITUDE, myLocationMarker.position.longitude)
+                }
+                false -> {
+                    putExtra(Constants.EXTRA_LATITUDE, mMap.cameraPosition.target.latitude)
+                    putExtra(Constants.EXTRA_LONGITUDE, mMap.cameraPosition.target.longitude)
+                }
+            }
             putExtra(Constants.EXTRA_COURSE_CODE, mapService.getStartTime())
         })
     }
@@ -150,6 +164,12 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
             override fun sendSecond(second: Int) {
                 secondForView = second
                 viewHandler.sendMessage(viewHandler.obtainMessage())
+            }
+
+            override fun saveInitCourse(startTime: Long) {
+                AppDataManager(application, AppDbHelper.getInstance(application)).saveCourse(
+                        Course(startTime = startTime)
+                ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe()
             }
             /* 서비스에서 데이터를 받아 메소드 호출 또는 핸들러로 전달 */
         }

@@ -152,6 +152,7 @@ class MapTrackingService : Service() {
         secondTimer.schedule(SecondTimer(), 1000, 1000)
 
         startTime = System.currentTimeMillis()
+        mCallback?.saveInitCourse(startTime?:System.currentTimeMillis())
 
         return Service.START_NOT_STICKY
     }
@@ -191,6 +192,7 @@ class MapTrackingService : Service() {
     interface ICallback {
         fun sendLocation(location: LatLng, accuracy: Float)
         fun sendSecond(second: Int)
+        fun saveInitCourse(startTime: Long)
     }
 
     fun registerCallback(cb: ICallback) {
