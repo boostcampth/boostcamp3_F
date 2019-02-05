@@ -42,7 +42,10 @@ class UserActionSaveViewModel(application: Application) : BaseViewModel(applicat
                         imageList[0].filePath,
                         sb.toString(),
                         latitude, longitude,
-                        courseCode)
+                        when(courseCode){
+                            0L -> null
+                            else -> courseCode
+                        })
         ).subscribeOn(Schedulers.io()).subscribe().also { addDisposable(it) }
     }
 

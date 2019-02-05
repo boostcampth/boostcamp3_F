@@ -16,10 +16,16 @@ import android.graphics.Color
 import android.os.*
 import com.boostcamp.travery.Constants
 import com.boostcamp.travery.R
+import com.boostcamp.travery.data.AppDataManager
+import com.boostcamp.travery.data.local.db.AppDbHelper
 import com.boostcamp.travery.data.model.Course
 import com.boostcamp.travery.mapservice.savecourse.CourseSaveActivity
+import com.boostcamp.travery.save.UserActionSaveActivity
 import com.boostcamp.travery.utils.toast
 import com.google.android.gms.maps.model.*
+import io.reactivex.Completable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import java.lang.ref.WeakReference
 
 
@@ -46,11 +52,10 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-        myLocationMarker = mMap.addMarker(MarkerOptions().position(LatLng(37.56, 126.97)))
 
         polylineOptions.color(Color.BLUE)
-            .geodesic(true)
-            .width(10f)
+                .geodesic(true)
+                .width(10f)
 
         doBindService()
     }
@@ -66,33 +71,33 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
         startRecordView()
         isService = true
         polylineOptions = PolylineOptions()
-            .color(Color.BLUE)
-            .geodesic(true)
-            .width(10f)
+                .color(Color.BLUE)
+                .geodesic(true)
+                .width(10f)
+        polylineOptions.add(myLocationMarker.position)
     }
 
     fun stopService(v: View) {
         if (mapService.getTotalDistance() >= 10) {
             val saveIntent = Intent(this@TrackingActivity, CourseSaveActivity::class.java)
-                .apply {
-                    putParcelableArrayListExtra(Constants.EXTRA_ROUTE_LOCATION_LIST, mapService.getLocationList())
-                    putExtra(Constants.EXTRA_ROUTE_TIME_LIST, mapService.getTimeList())
-                    putExtra(
-                        Constants.EXTRA_ROUTE,
-                        Course(
-                            "",
-                            "",
-                            "",
-                            mapService.getStartTime(),
-                            mapService.getEndTime(),
-                            mapService.getTotalDistance(),
-                            mapService.getStartTime().toString(),
-                            mapService.getStartTime().toString()
+                    .apply {
+                        putParcelableArrayListExtra(Constants.EXTRA_COURSE_LOCATION_LIST, mapService.getTimeCodeList())
+                        putExtra(
+                                Constants.EXTRA_COURSE,
+                                Course(
+                                        "",
+                                        "",
+                                        "",
+                                        mapService.getStartTime(),
+                                        mapService.getEndTime(),
+                                        mapService.getTotalDistance(),
+                                        mapService.getStartTime().toString(),
+                                        mapService.getStartTime().toString()
+                                )
                         )
-                    )
-                }
+                    }
             startActivity(saveIntent)
-        }else getString(R.string.string_save_course_error).toast(this)
+        } else getString(R.string.string_save_course_error).toast(this)
 
         stopRecordView()
         doUnbindService()
@@ -101,12 +106,29 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
         stopService(serviceIntent)
 
         mMap.clear()
+
         doBindService()
         //finish()
     }
 
+    fun saveUserAction(v: View) {
+        startActivity(Intent(this, UserActionSaveActivity::class.java).apply {
+            when (isService) {
+                true -> {
+                    putExtra(Constants.EXTRA_LATITUDE, myLocationMarker.position.latitude)
+                    putExtra(Constants.EXTRA_LONGITUDE, myLocationMarker.position.longitude)
+                }
+                false -> {
+                    putExtra(Constants.EXTRA_LATITUDE, mMap.cameraPosition.target.latitude)
+                    putExtra(Constants.EXTRA_LONGITUDE, mMap.cameraPosition.target.longitude)
+                }
+            }
+            putExtra(Constants.EXTRA_COURSE_CODE, mapService.getStartTime())
+        })
+    }
+
     fun gotoMyLocation(v: View) {
-        mMap.animateCamera(CameraUpdateFactory.newLatLng(myLocationMarker.position))
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocationMarker.position, 15f))
     }
 
     private class ViewChangeHandler(activity: TrackingActivity) : Handler() {
@@ -141,12 +163,18 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
                 secondForView = second
                 viewHandler.sendMessage(viewHandler.obtainMessage())
             }
+
+            override fun saveInitCourse(startTime: Long) {
+                AppDataManager(application, AppDbHelper.getInstance(application)).saveCourse(
+                        Course(startTime = startTime)
+                ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe()
+            }
             /* 서비스에서 데이터를 받아 메소드 호출 또는 핸들러로 전달 */
         }
 
         override fun onServiceConnected(
-            name: ComponentName,
-            service: IBinder
+                name: ComponentName,
+                service: IBinder
         ) {
             // 서비스와 연결되었을 때 호출되는 메서드
             // 서비스 객체를 전역변수로 저장
@@ -158,18 +186,32 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
 
             val location = mapService.getLastLocation()
             //서울 위치
+            var myLocation = LatLng(37.56, 126.97)
+            myLocationMarker = mMap.addMarker(
+                    MarkerOptions()
+                            .position(myLocation)
+                            .flat(true)
+                            .anchor(0.5f, 0.5f)
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.map_position_no_heading))
+            )
             if (location != null) {
                 val lat = location.latitude
                 val lng = location.longitude
-                val myLocation = LatLng(lat, lng)
-                myLocationMarker = mMap.addMarker(MarkerOptions().position(myLocation))
+                myLocation = LatLng(lat, lng)
+                myLocationMarker.position = myLocation
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 15f))
             }
 
             //서비스가 돌고 있을 때
             if (isService) {
-                polylineOptions.addAll(mapService.getLocationList())
-                polyline = mMap.addPolyline(polylineOptions)
+                Completable.fromAction {
+                    mapService.getTimeCodeList().forEach {
+                        polylineOptions.add(it.coordinate)
+                    }
+                }.doOnComplete {
+                    polyline = mMap.addPolyline(polylineOptions)
+                }.subscribe().dispose()
+
                 startRecordView()
             }
         }
@@ -206,8 +248,8 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun doBindService() {
         bindService(
-            Intent(this, MapTrackingService::class.java),
-            mapTrackingServiceConnection, Context.BIND_AUTO_CREATE
+                Intent(this, MapTrackingService::class.java),
+                mapTrackingServiceConnection, Context.BIND_AUTO_CREATE
         )
         isBound = true
     }

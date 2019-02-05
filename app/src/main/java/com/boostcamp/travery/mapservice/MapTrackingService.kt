@@ -16,6 +16,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.boostcamp.travery.R
 import java.util.*
 import android.os.*
+import com.boostcamp.travery.data.model.TimeCode
 import kotlin.collections.ArrayList
 
 
@@ -24,23 +25,22 @@ class MapTrackingService : Service() {
 
     private val mFusedLocationClient: FusedLocationProviderClient by lazy {
         LocationServices.getFusedLocationProviderClient(
-            this
+                this
         )
     }
 
     private val locationRequest: LocationRequest by lazy {
         LocationRequest()
-            .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-            .setInterval(UPDATE_INTERVAL_MS)
-            .setFastestInterval(FASTEST_UPDATE_INTERVAL_MS)
+                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                .setInterval(UPDATE_INTERVAL_MS)
+                .setFastestInterval(FASTEST_UPDATE_INTERVAL_MS)
     }
 
     private val UPDATE_INTERVAL_MS: Long = 2500  // 1초
     private val FASTEST_UPDATE_INTERVAL_MS: Long = 1500 //
     private var lostLocationCnt = 0
 
-    private val locationList: ArrayList<LatLng> = ArrayList()
-    private val timeList: ArrayList<String> = ArrayList()
+    private val timeCodeList: ArrayList<TimeCode> = ArrayList()
     private var canSuggest = true
     private val suggestList: ArrayList<LatLng> = ArrayList()
     private val TAG = "MyLocationService"
@@ -55,14 +55,14 @@ class MapTrackingService : Service() {
     private val notification: NotificationCompat.Builder by lazy {
         val notificationIntent = Intent(this, MainActivity::class.java)
         val pendingIntent = PendingIntent.getActivity(
-            this,
-            0, notificationIntent, 0
+                this,
+                0, notificationIntent, 0
         )
         NotificationCompat.Builder(this, getString(R.string.notification_channel_id))
-            .setContentTitle(getString(R.string.service_title))
-            .setContentText(getString(R.string.service_message))
-            .setSmallIcon(R.drawable.ic_play_circle_filled_black_60dp)
-            .setContentIntent(pendingIntent)
+                .setContentTitle(getString(R.string.service_title))
+                .setContentText(getString(R.string.service_message))
+                .setSmallIcon(R.drawable.ic_play_circle_filled_black_60dp)
+                .setContentIntent(pendingIntent)
     }
     private val mBinder = LocalBinder()
 
@@ -91,8 +91,7 @@ class MapTrackingService : Service() {
                     if (dis >= 1/* && dis < 10 && location.accuracy < 9.5*/) {
                         totalDistance += location.distanceTo(exLocation)
                         val locate = LatLng(location.latitude, location.longitude)
-                        locationList.add(locate)
-                        timeList.add(location.time.toString())
+                        timeCodeList.add(TimeCode(locate, location.time))
                         mCallback?.sendLocation(locate, location.accuracy)
                         exLocation = location
 
@@ -153,6 +152,7 @@ class MapTrackingService : Service() {
         secondTimer.schedule(SecondTimer(), 1000, 1000)
 
         startTime = System.currentTimeMillis()
+        mCallback?.saveInitCourse(startTime ?: System.currentTimeMillis())
 
         return Service.START_NOT_STICKY
     }
@@ -164,13 +164,11 @@ class MapTrackingService : Service() {
         for (provider in providers) {
             val mLocation = mLocationManager.getLastKnownLocation(provider) ?: continue
             if (bestLocation == null || mLocation.accuracy < bestLocation.accuracy) {
-                // Found best last known location: %s", l);
                 bestLocation = mLocation
             }
         }
         if (isRunning && bestLocation != null) {
-            locationList.add(LatLng(bestLocation.latitude, bestLocation.longitude))
-            timeList.add(bestLocation.time.toString())
+            timeCodeList.add(TimeCode(LatLng(bestLocation.latitude, bestLocation.longitude), bestLocation.time))
         }
         return bestLocation
     }
@@ -193,6 +191,7 @@ class MapTrackingService : Service() {
     interface ICallback {
         fun sendLocation(location: LatLng, accuracy: Float)
         fun sendSecond(second: Int)
+        fun saveInitCourse(startTime: Long)
     }
 
     fun registerCallback(cb: ICallback) {
@@ -204,7 +203,7 @@ class MapTrackingService : Service() {
     }
 
     fun getEndTime(): Long {
-        return (startTime ?: 0+second.toLong())
+        return ((startTime?:0) + (second.toLong()*1000L))
     }
 
     fun getTotalDistance(): Long {
@@ -212,16 +211,11 @@ class MapTrackingService : Service() {
     }
 
     fun getLastLocation(): Location? {
-
         return getLastKnownLocation()
     }
 
-    fun getLocationList(): ArrayList<LatLng> {
-        return locationList
-    }
-
-    fun getTimeList(): ArrayList<String>{
-        return timeList
+    fun getTimeCodeList(): ArrayList<TimeCode> {
+        return timeCodeList
     }
 
     override fun onBind(intent: Intent): IBinder? {

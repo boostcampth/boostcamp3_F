@@ -160,10 +160,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), NavigationView.OnNavig
         when (requestCode) {
             GPS_ENABLE_REQUEST_CODE ->
                 //사용자가 GPS 활성 시켰는지 검사
-                if (checkLocationServicesStatus()) {
-                    val intent = Intent(this@MainActivity, TrackingActivity::class.java)
-                    startActivity(intent)
-                }
+                if (checkLocationServicesStatus()) { }
         }
     }
 }

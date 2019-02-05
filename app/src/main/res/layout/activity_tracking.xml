@@ -24,9 +24,10 @@
 
     <ImageView
         android:id="@+id/img_midMarker"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:src="@drawable/ic_add_location_black_24dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/plan_smarker_start"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -37,7 +38,7 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginBottom="40dp"
-        android:background="@drawable/ic_add_location_black_24dp"
+        android:background="@drawable/map_current_button"
         android:onClick="gotoMyLocation"
         app:layout_constraintBottom_toTopOf="@+id/btn_play"
         app:layout_constraintRight_toRightOf="parent"/>
@@ -52,6 +53,17 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
+        tools:ignore="MissingConstraints"/>
+
+    <ImageButton
+        android:id="@+id/btn_save_action"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:background="@drawable/ic_add_circle_outline_black_24dp"
+        android:onClick="saveUserAction"
+        app:layout_constraintBottom_toBottomOf="@+id/btn_play"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/btn_play"
         tools:ignore="MissingConstraints"/>
 
     <ImageButton
@@ -71,6 +83,9 @@
         android:id="@+id/tv_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"

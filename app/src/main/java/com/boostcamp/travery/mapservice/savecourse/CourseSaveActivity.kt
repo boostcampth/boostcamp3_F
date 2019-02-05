@@ -37,9 +37,9 @@ class CourseSaveActivity : BaseActivity<ActivityCourseSaveBinding>() {
         tv_date_cur.text = DateUtils.getDateToString()
 
         ArrayAdapter.createFromResource(
-            this,
-            R.array.theme_array,
-            android.R.layout.simple_spinner_item
+                this,
+                R.array.theme_array,
+                android.R.layout.simple_spinner_item
         ).also {
             it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             spinner_theme.adapter = it
