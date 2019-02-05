@@ -204,7 +204,7 @@ class MapTrackingService : Service() {
     }
 
     fun getEndTime(): Long {
-        return (startTime ?: 0+second.toLong())
+        return ((startTime?:0) + (second.toLong()*1000L))
     }
 
     fun getTotalDistance(): Long {
@@ -212,7 +212,6 @@ class MapTrackingService : Service() {
     }
 
     fun getLastLocation(): Location? {
-
         return getLastKnownLocation()
     }
 
