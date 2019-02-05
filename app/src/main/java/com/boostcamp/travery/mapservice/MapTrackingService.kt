@@ -16,6 +16,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.boostcamp.travery.R
 import java.util.*
 import android.os.*
+import com.boostcamp.travery.data.model.TimeCode
 import kotlin.collections.ArrayList
 
 
@@ -39,8 +40,7 @@ class MapTrackingService : Service() {
     private val FASTEST_UPDATE_INTERVAL_MS: Long = 1500 //
     private var lostLocationCnt = 0
 
-    private val locationList: ArrayList<LatLng> = ArrayList()
-    private val timeList: ArrayList<String> = ArrayList()
+    private val timeCodeList: ArrayList<TimeCode> = ArrayList()
     private var canSuggest = true
     private val suggestList: ArrayList<LatLng> = ArrayList()
     private val TAG = "MyLocationService"
@@ -91,8 +91,7 @@ class MapTrackingService : Service() {
                     if (dis >= 1/* && dis < 10 && location.accuracy < 9.5*/) {
                         totalDistance += location.distanceTo(exLocation)
                         val locate = LatLng(location.latitude, location.longitude)
-                        locationList.add(locate)
-                        timeList.add(location.time.toString())
+                        timeCodeList.add(TimeCode(locate, location.time))
                         mCallback?.sendLocation(locate, location.accuracy)
                         exLocation = location
 
@@ -169,8 +168,7 @@ class MapTrackingService : Service() {
             }
         }
         if (isRunning && bestLocation != null) {
-            locationList.add(LatLng(bestLocation.latitude, bestLocation.longitude))
-            timeList.add(bestLocation.time.toString())
+            timeCodeList.add(TimeCode(LatLng(bestLocation.latitude, bestLocation.longitude),bestLocation.time))
         }
         return bestLocation
     }
@@ -216,12 +214,8 @@ class MapTrackingService : Service() {
         return getLastKnownLocation()
     }
 
-    fun getLocationList(): ArrayList<LatLng> {
-        return locationList
-    }
-
-    fun getTimeList(): ArrayList<String> {
-        return timeList
+    fun getTimeCodeList(): ArrayList<TimeCode> {
+        return timeCodeList
     }
 
     override fun onBind(intent: Intent): IBinder? {

@@ -21,6 +21,7 @@ import com.boostcamp.travery.mapservice.savecourse.CourseSaveActivity
 import com.boostcamp.travery.save.UserActionSaveActivity
 import com.boostcamp.travery.utils.toast
 import com.google.android.gms.maps.model.*
+import io.reactivex.Completable
 import java.lang.ref.WeakReference
 
 
@@ -76,8 +77,7 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
         if (mapService.getTotalDistance() >= 10) {
             val saveIntent = Intent(this@TrackingActivity, CourseSaveActivity::class.java)
                     .apply {
-                        putParcelableArrayListExtra(Constants.EXTRA_COURSE_LOCATION_LIST, mapService.getLocationList())
-                        putExtra(Constants.EXTRA_COURSE_TIME_LIST, mapService.getTimeList())
+                        putParcelableArrayListExtra(Constants.EXTRA_COURSE_LOCATION_LIST, mapService.getTimeCodeList())
                         putExtra(
                                 Constants.EXTRA_COURSE,
                                 Course(
@@ -187,8 +187,14 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
 
             //서비스가 돌고 있을 때
             if (isService) {
-                polylineOptions.addAll(mapService.getLocationList())
-                polyline = mMap.addPolyline(polylineOptions)
+                Completable.fromAction {
+                    mapService.getTimeCodeList().forEach {
+                        polylineOptions.add(it.coordinate)
+                    }
+                }.doOnComplete {
+                    polyline = mMap.addPolyline(polylineOptions)
+                }.subscribe()
+
                 startRecordView()
             }
         }
