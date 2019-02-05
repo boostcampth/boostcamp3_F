@@ -152,7 +152,7 @@ class MapTrackingService : Service() {
         secondTimer.schedule(SecondTimer(), 1000, 1000)
 
         startTime = System.currentTimeMillis()
-        mCallback?.saveInitCourse(startTime?:System.currentTimeMillis())
+        mCallback?.saveInitCourse(startTime ?: System.currentTimeMillis())
 
         return Service.START_NOT_STICKY
     }
@@ -169,7 +169,7 @@ class MapTrackingService : Service() {
             }
         }
         if (isRunning && bestLocation != null) {
-            timeCodeList.add(TimeCode(LatLng(bestLocation.latitude, bestLocation.longitude),bestLocation.time))
+            timeCodeList.add(TimeCode(LatLng(bestLocation.latitude, bestLocation.longitude), bestLocation.time))
         }
         return bestLocation
     }
