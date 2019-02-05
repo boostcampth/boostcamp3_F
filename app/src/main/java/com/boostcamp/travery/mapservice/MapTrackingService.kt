@@ -164,7 +164,6 @@ class MapTrackingService : Service() {
         for (provider in providers) {
             val mLocation = mLocationManager.getLastKnownLocation(provider) ?: continue
             if (bestLocation == null || mLocation.accuracy < bestLocation.accuracy) {
-                // Found best last known location: %s", l);
                 bestLocation = mLocation
             }
         }

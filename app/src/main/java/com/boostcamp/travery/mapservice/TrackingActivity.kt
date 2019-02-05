@@ -1,6 +1,5 @@
 package com.boostcamp.travery.mapservice
 
-import android.app.Application
 import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -15,7 +14,6 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import android.graphics.Color
 import android.os.*
-import android.util.Log
 import com.boostcamp.travery.Constants
 import com.boostcamp.travery.R
 import com.boostcamp.travery.data.AppDataManager
@@ -201,7 +199,6 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
                 val lng = location.longitude
                 myLocation = LatLng(lat, lng)
                 myLocationMarker.position = myLocation
-                //myLocationMarker = mMap.addMarker(MarkerOptions().position(myLocation))
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 15f))
             }
 
@@ -213,7 +210,7 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
                     }
                 }.doOnComplete {
                     polyline = mMap.addPolyline(polylineOptions)
-                }.subscribe()
+                }.subscribe().dispose()
 
                 startRecordView()
             }

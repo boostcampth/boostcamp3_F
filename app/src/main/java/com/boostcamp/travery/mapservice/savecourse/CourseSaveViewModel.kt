@@ -13,7 +13,6 @@ import com.boostcamp.travery.data.model.TimeCode
 import com.boostcamp.travery.utils.FileUtils
 import com.google.android.gms.maps.model.LatLng
 import io.reactivex.Completable
-import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import org.json.JSONArray
@@ -100,7 +99,7 @@ class CourseSaveViewModel(application: Application) : BaseViewModel(application)
                                 )
                         ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe()
                 )
-            }.subscribe()
+            }.subscribe().dispose()
         }
     }
 
