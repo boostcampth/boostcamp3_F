@@ -1,8 +1,10 @@
 package com.boostcamp.travery.search
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.boostcamp.travery.Constants
 import com.boostcamp.travery.OnItemClickListener
 import com.boostcamp.travery.R
 import com.boostcamp.travery.base.BaseActivity
@@ -10,6 +12,7 @@ import com.boostcamp.travery.data.local.db.AppDbHelper
 import com.boostcamp.travery.data.model.UserAction
 import com.boostcamp.travery.databinding.ActivitySearchResultBinding
 import com.boostcamp.travery.search.adapter.UserActionSearchAdapter
+import com.boostcamp.travery.useractiondetail.UserActionDetailActivity
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -51,7 +54,9 @@ class SearchResultActivity : BaseActivity<ActivitySearchResultBinding>(), OnItem
 
     override fun onItemClick(item: Any) {
         if (item is UserAction) {
-            Toast.makeText(this, item.toString(), Toast.LENGTH_SHORT).show()
+            startActivity(Intent(this, UserActionDetailActivity::class.java).apply {
+                putExtra(Constants.EXTRA_USER_ACTION, item)
+            })
         }
     }
 
