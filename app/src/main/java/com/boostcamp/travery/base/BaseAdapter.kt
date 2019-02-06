@@ -5,9 +5,6 @@ import androidx.recyclerview.widget.RecyclerView
 abstract class BaseAdapter<T, VH : RecyclerView.ViewHolder> : RecyclerView.Adapter<VH>() {
     protected val data = ArrayList<T>()
 
-    var onItemClickListener: OnItemClickListener? = null
-    var onItemLongClickListener: OnItemLongClickListener? = null
-
     override fun getItemCount() = data.size
 
     protected fun clearItems() {
