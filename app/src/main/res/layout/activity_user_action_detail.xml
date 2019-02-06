@@ -101,7 +101,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:padding="10dp"
-                    app:flChildSpacing="auto"
+                    app:flChildSpacing="10dp"
                     app:flRowSpacing="5dp"
                     app:hashTag="@{viewmodel.hashTagList}" />
             </androidx.appcompat.widget.LinearLayoutCompat>
