@@ -70,7 +70,6 @@
                 android:layout_marginTop="5dp"
                 android:background="@null"
                 android:hint="@string/string_et_useraction_hashtag"
-                android:maxLength="20"
                 android:onTextChanged="@{(text, start, before, count) -> viewmodel.onHashTagChange(text)}"
                 android:textColor="@android:color/black"
                 android:textSize="18sp"

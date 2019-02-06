@@ -24,7 +24,7 @@
                 android:layout_height="wrap_content"
                 android:padding="20dp">
 
-                <TextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tv_user_action_detail_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -36,7 +36,7 @@
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="강남역에서의 점심" />
 
-                <TextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tv_user_action_detail_location"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -44,7 +44,7 @@
                     app:layout_constraintTop_toBottomOf="@id/tv_user_action_detail_title"
                     tools:text="서울시 강남구 역삼동 1234" />
 
-                <TextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tv_user_action_detail_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -53,7 +53,7 @@
                     app:layout_constraintTop_toBottomOf="@id/tv_user_action_detail_location"
                     tools:text="2019.02.04 AM 02:39" />
 
-                <ImageView
+                <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/iv_user_action_detail_main_image"
                     android:layout_width="match_parent"
                     android:layout_height="300dp"
@@ -61,6 +61,15 @@
                     app:image="@{viewmodel.mainImage}"
                     app:layout_constraintTop_toBottomOf="@id/tv_user_action_detail_date"
                     tools:srcCompat="@mipmap/ic_launcher" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="@{viewmodel.userAction.body}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/iv_user_action_detail_main_image" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <View
@@ -76,7 +85,7 @@
                 android:orientation="vertical"
                 android:padding="20dp">
 
-                <TextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tv_user_action_hash_tag_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -110,7 +119,7 @@
                 android:orientation="vertical"
                 android:padding="20dp">
 
-                <TextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tv_image_list_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

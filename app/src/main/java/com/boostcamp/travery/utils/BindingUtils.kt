@@ -1,29 +1,25 @@
 package com.boostcamp.travery.utils
 
 import android.annotation.SuppressLint
-import androidx.databinding.BindingAdapter
-import android.os.Build
-import androidx.annotation.RequiresApi
-import android.widget.TextView
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.boostcamp.travery.R
-import java.text.SimpleDateFormat
-import java.util.*
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.core.content.ContextCompat
+import androidx.databinding.BindingAdapter
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.boostcamp.travery.GlideApp
-import com.boostcamp.travery.save.UserActionImage
+import com.boostcamp.travery.R
 import com.boostcamp.travery.save.UserActionImageListAdapter
 import com.boostcamp.travery.save.UserActionSaveViewModel
 import com.boostcamp.travery.useractiondetail.UserActionDetailViewModel
 import com.boostcamp.travery.useractiondetail.UserActionImageAdapter
 import com.nex3z.flowlayout.FlowLayout
-import kotlinx.android.synthetic.main.activity_user_action_detail.*
+import java.text.SimpleDateFormat
+import java.util.*
 
 object BindingUtils {
     @JvmStatic
@@ -48,7 +44,7 @@ object BindingUtils {
                     .centerCrop()
                     .into(imageView)
         } else {
-            imageView.setImageDrawable(ContextCompat.getDrawable(imageView.context, R.mipmap.ic_launcher_round))
+            imageView.visibility = View.GONE
         }
     }
 
