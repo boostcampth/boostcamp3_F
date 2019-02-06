@@ -35,7 +35,9 @@ class CourseDetailActivity : BaseActivity<ActivityCourseDetailBinding>(), OnMapR
         val mapFragment = fragment_map as SupportMapFragment
         mapFragment.getMapAsync(this)
         setupBindings(savedInstanceState)
+        viewModel.loadUserActionList()
         observeViewmodel()
+
     }
 
     private fun setupBindings(savedInstanceState: Bundle?) {
@@ -53,6 +55,7 @@ class CourseDetailActivity : BaseActivity<ActivityCourseDetailBinding>(), OnMapR
                 rv_useraction_toplist.scrollBy(0, dy)
             }
         })
+        rv_useraction_leftlist.setOnSnapListener { viewModel.updatePosition(it) }
     }
 
     /**
@@ -62,8 +65,6 @@ class CourseDetailActivity : BaseActivity<ActivityCourseDetailBinding>(), OnMapR
      */
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
-        viewModel.loadUserActionList()
-        observeViewmodel()
         map.setOnMarkerClickListener(this)
     }
 

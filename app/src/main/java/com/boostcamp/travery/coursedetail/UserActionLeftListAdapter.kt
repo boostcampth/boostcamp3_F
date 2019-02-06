@@ -45,9 +45,9 @@ class UserActionLeftListAdapter(userActionList: ObservableList<UserAction?>) :
 
 
     override fun getItemViewType(position: Int): Int {
-        return when {
-            position == itemCount - 1 -> TYPE_EMPTY_ACTIVITY
-            position == itemCount - 2 -> TYPE_ENDPOINT
+        return when (position) {
+            itemCount - 1 -> TYPE_EMPTY_ACTIVITY
+            itemCount - 2 -> TYPE_ENDPOINT
             else -> TYPE_ACTION
         }
     }

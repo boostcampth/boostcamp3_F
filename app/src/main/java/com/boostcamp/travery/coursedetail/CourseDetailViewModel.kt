@@ -54,10 +54,9 @@ class CourseDetailViewModel(application: Application) : BaseViewModel(applicatio
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-//                    userActionList.value = it
                     val arr: Array<UserAction?> = arrayOf(
-                            UserAction("산뜻한 출발", null,null,null,null,null, latLngList.value!![0].latitude,latLngList.value!![0].longitude,null),
-                            UserAction("도오착", null,null,null,null,null, latLngList.value!![latLngList.value!!.size-1].latitude,latLngList.value!![latLngList.value!!.size-1].longitude,null)
+                            UserAction("산뜻한 출발",latitude = latLngList.value!![0].latitude,longitude = latLngList.value!![0].longitude),
+                            UserAction("도오착", latitude = latLngList.value!![latLngList.value!!.size-1].latitude,longitude = latLngList.value!![latLngList.value!!.size-1].longitude)
                     )
                     leftActionList.addAll(arr)
                     topActionList.addAll(arr)
@@ -68,7 +67,6 @@ class CourseDetailViewModel(application: Application) : BaseViewModel(applicatio
     }
 
     fun onUserActionClicked(position: Int) {
-        Log.e("Te", "" + position)
         if (position == leftAdapter.itemCount - 1) {
             scrollTo.set(0)
             curLatLng.value= LatLng(topActionList[0].latitude,topActionList[0].longitude)
@@ -77,6 +75,11 @@ class CourseDetailViewModel(application: Application) : BaseViewModel(applicatio
             curLatLng.value= LatLng(topActionList[position+1].latitude,topActionList[position+1].longitude)
         }
         scrollTo.notifyChange()
+    }
+
+    fun updatePosition(position: Int){
+        scrollTo.set(position)
+        curLatLng.value= LatLng(topActionList[position].latitude,topActionList[position].longitude)
     }
 }
 
