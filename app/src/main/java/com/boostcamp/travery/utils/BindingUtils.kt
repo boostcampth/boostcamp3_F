@@ -13,9 +13,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.boostcamp.travery.GlideApp
 import com.boostcamp.travery.R
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.internal.FlowLayout
 import java.text.SimpleDateFormat
 import java.util.*
+
 
 object BindingUtils {
     @JvmStatic
@@ -38,15 +41,11 @@ object BindingUtils {
 
     @JvmStatic
     @BindingAdapter("image")
-    fun setImage(imageView: ImageView, path: String) {
-        if (!path.isEmpty()) {
-            GlideApp.with(imageView.context)
-                    .load(path)
-                    .centerCrop()
-                    .into(imageView)
-        } else {
-            imageView.setImageDrawable(ContextCompat.getDrawable(imageView.context, R.mipmap.ic_launcher_round))
-        }
+    fun setImage(imageView: ImageView, path: String?) {
+        Glide.with(imageView.context)
+                .load(path)
+                .apply(RequestOptions().centerCrop().error(R.mipmap.ic_launcher))
+                .into(imageView)
     }
 
     @SuppressLint("SimpleDateFormat")

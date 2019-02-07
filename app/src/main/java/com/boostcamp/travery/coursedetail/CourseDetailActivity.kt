@@ -46,6 +46,7 @@ class CourseDetailActivity : BaseActivity<ActivityCourseDetailBinding>(), OnMapR
         savedInstanceState?.let {}
                 ?: viewModel.init(intent.getParcelableExtra(Constants.EXTRA_COURSE))
         viewDataBinding.viewModel = viewModel
+        viewDataBinding.setLifecycleOwner(this)
         //상단 리사이클러뷰 터치 막기
         rv_useraction_toplist.setOnTouchListener { v, event -> true }
         //화면상 좌 리사이클러뷰 스크롤
@@ -69,7 +70,7 @@ class CourseDetailActivity : BaseActivity<ActivityCourseDetailBinding>(), OnMapR
     }
 
     override fun onMarkerClick(marker: Marker?): Boolean {
-        marker?.tag?.let { viewModel.scrollTo.set(marker.tag as Int) }
+        marker?.tag?.let { viewModel.markerClick(it as Int) }
 
         return false
     }
@@ -97,8 +98,8 @@ class CourseDetailActivity : BaseActivity<ActivityCourseDetailBinding>(), OnMapR
                 }
             }
         })
-        viewModel.curLatLng.observe(this, Observer {
-            map.moveCamera(CameraUpdateFactory.newLatLng(it))
+        viewModel.curUseraction.observe(this, Observer {
+            map.moveCamera(CameraUpdateFactory.newLatLng(LatLng(it.latitude,it.longitude)))
         })
     }
 
