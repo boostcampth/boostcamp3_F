@@ -3,7 +3,6 @@ package com.boostcamp.travery.main
 import android.app.Application
 import android.util.Log
 import androidx.databinding.ObservableArrayList
-import com.boostcamp.travery.OnItemClickListener
 import com.boostcamp.travery.base.BaseViewModel
 import com.boostcamp.travery.data.model.Course
 import com.boostcamp.travery.main.adapter.viewholder.GroupItem
@@ -33,7 +32,9 @@ class MainViewModel(application: Application) : BaseViewModel(application) {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .map {
-                    createGroup(it)
+                    createGroup(it.filter { item ->
+                        item.endTime != 0L
+                    })
                 }.subscribe(
                         {
                             data.addAll(it)
