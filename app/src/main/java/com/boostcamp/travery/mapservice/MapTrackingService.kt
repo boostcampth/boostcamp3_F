@@ -25,15 +25,15 @@ class MapTrackingService : Service() {
 
     private val mFusedLocationClient: FusedLocationProviderClient by lazy {
         LocationServices.getFusedLocationProviderClient(
-                this
+            this
         )
     }
 
     private val locationRequest: LocationRequest by lazy {
         LocationRequest()
-                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                .setInterval(UPDATE_INTERVAL_MS)
-                .setFastestInterval(FASTEST_UPDATE_INTERVAL_MS)
+            .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+            .setInterval(UPDATE_INTERVAL_MS)
+            .setFastestInterval(FASTEST_UPDATE_INTERVAL_MS)
     }
 
     private val UPDATE_INTERVAL_MS: Long = 2500  // 1초
@@ -55,14 +55,14 @@ class MapTrackingService : Service() {
     private val notification: NotificationCompat.Builder by lazy {
         val notificationIntent = Intent(this, MainActivity::class.java)
         val pendingIntent = PendingIntent.getActivity(
-                this,
-                0, notificationIntent, 0
+            this,
+            0, notificationIntent, 0
         )
         NotificationCompat.Builder(this, getString(R.string.notification_channel_id))
-                .setContentTitle(getString(R.string.service_title))
-                .setContentText(getString(R.string.service_message))
-                .setSmallIcon(R.drawable.ic_play_circle_filled_black_60dp)
-                .setContentIntent(pendingIntent)
+            .setContentTitle(getString(R.string.service_title))
+            .setContentText(getString(R.string.service_message))
+            .setSmallIcon(R.drawable.ic_play_circle_filled_black_60dp)
+            .setContentIntent(pendingIntent)
     }
     private val mBinder = LocalBinder()
 
@@ -89,9 +89,12 @@ class MapTrackingService : Service() {
                     //실내에서는 12m~30m정도의 오차 발생
                     //야외에서는 3m~11m정도의 오차 발생
                     if (dis >= 1/* && dis < 10 && location.accuracy < 9.5*/) {
-                        totalDistance += location.distanceTo(exLocation)
+
                         val locate = LatLng(location.latitude, location.longitude)
-                        timeCodeList.add(TimeCode(locate, location.time))
+                        if (isRunning) {
+                            totalDistance += location.distanceTo(exLocation)
+                            timeCodeList.add(TimeCode(locate, location.time))
+                        }
                         mCallback?.sendLocation(locate, location.accuracy)
                         exLocation = location
 
@@ -102,7 +105,8 @@ class MapTrackingService : Service() {
                         canSuggest = true
                         lostLocationCnt = 0
                     } else {
-                        lostLocationCnt++
+                        if (isRunning)
+                            lostLocationCnt++
                     }
 
                     //Log.d(TAG, "onLocationResult: ${totalDistance}")
@@ -205,7 +209,7 @@ class MapTrackingService : Service() {
     }
 
     fun getEndTime(): Long {
-        return ((startTime?:0) + (second.toLong()*1000L))
+        return ((startTime ?: 0) + (second.toLong() * 1000L))
     }
 
     fun getTotalDistance(): Long {
@@ -224,7 +228,7 @@ class MapTrackingService : Service() {
         return suggestList
     }
 
-    fun removeSuggestItem(postion: Int){
+    fun removeSuggestItem(postion: Int) {
         suggestList.removeAt(postion)
     }
 
