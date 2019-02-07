@@ -49,12 +49,12 @@ class MainViewModel(application: Application) : BaseViewModel(application) {
         val result = ArrayList<Any>()
         var partition = -1
 
-        list.forEach { route ->
-            if (partition != DateUtils.getTermDay(toMillis = route.endTime)) {
-                result.add(GroupItem("${DateUtils.getDate(route.endTime)[2]}"))
+        list.forEach { course ->
+            if (partition != DateUtils.getTermDay(toMillis = course.endTime)) {
+                result.add(GroupItem(course.endTime))
             }
-            partition = DateUtils.getTermDay(toMillis = route.endTime)
-            result.add(route)
+            partition = DateUtils.getTermDay(toMillis = course.endTime)
+            result.add(course)
         }
 
         return result

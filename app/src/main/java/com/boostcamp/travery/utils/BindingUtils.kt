@@ -218,4 +218,15 @@ object BindingUtils {
             }
         }
     }
+
+    @JvmStatic
+    @BindingAdapter("group")
+    fun setGroupTitle(textView: TextView, group: Long) {
+        val termDay = DateUtils.getTermDay(toMillis = group)
+        textView.text = when (termDay) {
+            0 -> textView.resources.getString(R.string.string_group_title_today)
+            1 -> textView.resources.getString(R.string.string_group_title_yesterday)
+            else -> DateUtils.getDateToString(group)
+        }
+    }
 }
