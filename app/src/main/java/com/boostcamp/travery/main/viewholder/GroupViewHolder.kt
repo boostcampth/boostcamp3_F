@@ -11,4 +11,4 @@ class GroupViewHolder(private val binding: ItemCourseListGroupBinding) : BaseVie
     }
 }
 
-data class GroupItem(val groupName: String)
+data class GroupItem(val date: Long)
