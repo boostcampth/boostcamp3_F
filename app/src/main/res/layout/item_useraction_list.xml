@@ -8,23 +8,18 @@
         <variable
             name="item"
             type="com.boostcamp.travery.data.model.UserAction"/>
-
-        <variable
-            name="listener"
-            type="com.boostcamp.travery.OnItemClickListener"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="@{() -> listener.onItemClick(item)}"
         android:padding="10dp">
 
         <ImageView
             android:id="@+id/iv_map"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:src="@{item.mainImage}"
+            app:image="@{item.mainImage}"
             app:layout_constraintBottom_toBottomOf="@id/tv_hashTag"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/tv_date"

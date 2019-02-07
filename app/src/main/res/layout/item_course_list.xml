@@ -8,16 +8,11 @@
         <variable
             name="item"
             type="com.boostcamp.travery.data.model.Course" />
-
-        <variable
-            name="listener"
-            type="com.boostcamp.travery.OnItemClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="@{() -> listener.onItemClick(item)}"
         android:padding="10dp">
 
         <com.boostcamp.travery.custom.CircleImageView

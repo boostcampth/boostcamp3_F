@@ -38,11 +38,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), NavigationView.OnNavig
         super.onCreate(savedInstanceState)
         setContentView(viewDataBinding.root)
 
-        val viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
-        viewDataBinding.viewmodel = viewModel
-
-        viewModel.loadCourseList()
-        viewModel.setViewModelContract(this)
+        viewDataBinding.viewmodel = ViewModelProviders.of(this).get(MainViewModel::class.java).apply {
+            setViewModelContract(this@MainActivity)
+        }
 
         setSupportActionBar(toolbar)
 

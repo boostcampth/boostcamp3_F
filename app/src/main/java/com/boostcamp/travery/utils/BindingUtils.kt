@@ -14,8 +14,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.boostcamp.travery.GlideApp
 import com.boostcamp.travery.R
+import com.boostcamp.travery.main.MainViewModel
+import com.boostcamp.travery.main.adapter.CourseListAdapter
 import com.boostcamp.travery.save.UserActionImageListAdapter
 import com.boostcamp.travery.save.UserActionSaveViewModel
+import com.boostcamp.travery.search.SearchResultViewModel
+import com.boostcamp.travery.search.UserActionSearchAdapter
 import com.boostcamp.travery.useractiondetail.UserActionDetailViewModel
 import com.boostcamp.travery.useractiondetail.UserActionImageAdapter
 import com.bumptech.glide.load.DataSource
@@ -76,9 +80,11 @@ object BindingUtils {
     @JvmStatic
     @BindingAdapter("bind:startTime", "bind:endTime")
     fun setTime(textView: TextView, startTime: Long, endTime: Long) {
-        val start = SimpleDateFormat("yyyy.MM.dd - kk:mm")
-        val end = SimpleDateFormat("kk:mm")
-        textView.text = "${start.format(Date(startTime))} ~ ${end.format(Date(endTime))}"
+        val start = SimpleDateFormat("yyyy.MM.dd - HH:mm")
+        val end = SimpleDateFormat("HH:mm")
+        textView.text = String.format(textView.context.resources.getString(R.string.string_place_holder_date,
+                start.format(Date(startTime)),
+                end.format(Date(endTime))))
     }
 
     @JvmStatic
@@ -170,4 +176,27 @@ object BindingUtils {
         }
     }
 
+    @JvmStatic
+    @BindingAdapter("listAdapter")
+    fun setAdapter(recyclerView: RecyclerView, viewModel: MainViewModel) {
+        val adapter = CourseListAdapter(viewModel.data).apply {
+            onItemClickListener = { item: Any -> viewModel.onItemClick(item) }
+        }
+        recyclerView.apply {
+            layoutManager = LinearLayoutManager(recyclerView.context)
+            this.adapter = adapter
+        }
+    }
+
+    @JvmStatic
+    @BindingAdapter("listAdapter")
+    fun setAdapter(recyclerView: RecyclerView, viewModel: SearchResultViewModel) {
+        val adapter = UserActionSearchAdapter(viewModel.data).apply {
+            onItemClickListener = { item: Any -> viewModel.onItemClick(item) }
+        }
+        recyclerView.apply {
+            layoutManager = LinearLayoutManager(recyclerView.context)
+            this.adapter = adapter
+        }
+    }
 }

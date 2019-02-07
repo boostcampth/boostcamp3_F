@@ -18,7 +18,7 @@ object DateUtils {
     }
 
     fun getTermDay(fromMillis: Long = System.currentTimeMillis(), toMillis: Long): Int {
-        val oneDay = 1000 * 60 * 24L
+        val oneDay = 1000 * 60 * 60 * 24L
         return ((fromMillis - toMillis) / oneDay).toInt()
     }
 }
