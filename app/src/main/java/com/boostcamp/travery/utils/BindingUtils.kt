@@ -78,9 +78,11 @@ object BindingUtils {
     @JvmStatic
     @BindingAdapter("bind:startTime", "bind:endTime")
     fun setTime(textView: TextView, startTime: Long, endTime: Long) {
-        val start = SimpleDateFormat("yyyy.MM.dd - kk:mm")
-        val end = SimpleDateFormat("kk:mm")
-        textView.text = "${start.format(Date(startTime))} ~ ${end.format(Date(endTime))}"
+        val start = SimpleDateFormat("yyyy.MM.dd - HH:mm")
+        val end = SimpleDateFormat("HH:mm")
+        textView.text = String.format(textView.context.resources.getString(R.string.string_place_holder_date,
+                start.format(Date(startTime)),
+                end.format(Date(endTime))))
     }
 
     @JvmStatic

@@ -45,6 +45,8 @@
         <item>직접 입력</item>
     </string-array>
 
+    <string name="string_place_holder_date">%s ~ %s</string>
+
     <string name="progress_bar_message">잠시만 기다려주세요</string>
     <string name="string_tv_progress">Loading...</string>
     <string name="string_save_course_error">데이터가 적어 저장할 수 없습니다.</string>
