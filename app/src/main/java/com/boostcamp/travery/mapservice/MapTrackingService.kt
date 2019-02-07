@@ -16,6 +16,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.boostcamp.travery.R
 import java.util.*
 import android.os.*
+import com.boostcamp.travery.data.model.Suggestion
 import com.boostcamp.travery.data.model.TimeCode
 import kotlin.collections.ArrayList
 
@@ -42,7 +43,7 @@ class MapTrackingService : Service() {
 
     private val timeCodeList: ArrayList<TimeCode> = ArrayList()
     private var canSuggest = true
-    private val suggestList: ArrayList<LatLng> = ArrayList()
+    private val suggestList: ArrayList<Suggestion> = ArrayList()
     private val TAG = "MyLocationService"
 
     private var startTime: Long? = null
@@ -96,12 +97,14 @@ class MapTrackingService : Service() {
                             timeCodeList.add(TimeCode(locate, location.time))
                         }
                         mCallback?.sendLocation(locate, location.accuracy)
-                        exLocation = location
 
                         if (lostLocationCnt > 2 && canSuggest) {
-                            suggestList.add(locate)
+                            suggestList.add(Suggestion(locate, exLocation?.time ?: 0, location.time))
                             mCallback?.sendSuggestList(suggestList)
                         }
+
+                        exLocation = location
+
                         canSuggest = true
                         lostLocationCnt = 0
                     } else {
@@ -197,7 +200,7 @@ class MapTrackingService : Service() {
         fun sendLocation(location: LatLng, accuracy: Float)
         fun sendSecond(second: Int)
         fun saveInitCourse(startTime: Long)
-        fun sendSuggestList(suggestList: ArrayList<LatLng>)
+        fun sendSuggestList(suggestList: ArrayList<Suggestion>)
     }
 
     fun registerCallback(cb: ICallback) {
@@ -224,7 +227,7 @@ class MapTrackingService : Service() {
         return timeCodeList
     }
 
-    fun getSuggestList(): ArrayList<LatLng> {
+    fun getSuggestList(): ArrayList<Suggestion> {
         return suggestList
     }
 

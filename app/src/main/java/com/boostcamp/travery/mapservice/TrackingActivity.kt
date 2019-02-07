@@ -32,6 +32,7 @@ import android.view.Gravity
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProviders
 import com.boostcamp.travery.base.BaseActivity
+import com.boostcamp.travery.data.model.Suggestion
 import com.boostcamp.travery.databinding.ActivityTrackingBinding
 import kotlinx.android.synthetic.main.item_dialog_footer.*
 
@@ -175,16 +176,16 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
             .setAdapter(adapter)
             .setGravity(Gravity.BOTTOM)
             .setOnItemClickListener { dialog, item, view, position ->
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(item as LatLng, 15f))
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom((item as Suggestion).location, 15f))
                 footer.visibility = View.VISIBLE
                 if (suggestionMarker == null) {
                     suggestionMarker = mMap.addMarker(
                         MarkerOptions()
-                            .position(item)
+                            .position(item.location)
                             .flat(true)
                     )
                 } else {
-                    suggestionMarker?.position = item
+                    suggestionMarker?.position = item.location
                 }
 
                 footer_cancel_button.setOnClickListener {
@@ -258,7 +259,7 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
             }
 
 
-            override fun sendSuggestList(suggestList: ArrayList<LatLng>) {
+            override fun sendSuggestList(suggestList: ArrayList<Suggestion>) {
                 showSuggestNoti(suggestList.size)
             }
             /* 서비스에서 데이터를 받아 메소드 호출 또는 핸들러로 전달 */
