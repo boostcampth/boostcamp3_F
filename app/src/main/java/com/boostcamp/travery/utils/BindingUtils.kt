@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.boostcamp.travery.GlideApp
 import com.boostcamp.travery.R
+import com.boostcamp.travery.main.MainViewModel
+import com.boostcamp.travery.main.adapter.CourseListAdapter
 import com.boostcamp.travery.save.UserActionImageListAdapter
 import com.boostcamp.travery.save.UserActionSaveViewModel
 import com.boostcamp.travery.useractiondetail.UserActionDetailViewModel
@@ -170,4 +172,15 @@ object BindingUtils {
         }
     }
 
+    @JvmStatic
+    @BindingAdapter("listAdapter")
+    fun setAdapter(recyclerView: RecyclerView, viewModel: MainViewModel) {
+        val adapter = CourseListAdapter(viewModel.data).apply {
+            onItemClickListener = { item: Any -> viewModel.onItemClick(item) }
+        }
+        recyclerView.apply {
+            layoutManager = LinearLayoutManager(recyclerView.context)
+            this.adapter = adapter
+        }
+    }
 }

@@ -3,17 +3,19 @@ package com.boostcamp.travery.main.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.databinding.ObservableArrayList
 import com.boostcamp.travery.OnItemClickListener
 import com.boostcamp.travery.R
 import com.boostcamp.travery.base.BaseAdapter
 import com.boostcamp.travery.base.BaseViewHolder
+import com.boostcamp.travery.base.ObservableRecyclerViewAdapter
 import com.boostcamp.travery.databinding.ItemCourseListBinding
 import com.boostcamp.travery.databinding.ItemCourseListGroupBinding
-import com.boostcamp.travery.main.viewholder.CourseViewHolder
-import com.boostcamp.travery.main.viewholder.GroupItem
-import com.boostcamp.travery.main.viewholder.GroupViewHolder
+import com.boostcamp.travery.main.adapter.viewholder.CourseViewHolder
+import com.boostcamp.travery.main.adapter.viewholder.GroupItem
+import com.boostcamp.travery.main.adapter.viewholder.GroupViewHolder
 
-class CourseListAdapter(private val listener: OnItemClickListener) : BaseAdapter<Any, BaseViewHolder>() {
+class CourseListAdapter(private val data: ObservableArrayList<Any>) : ObservableRecyclerViewAdapter<Any, BaseViewHolder>(data) {
 
     companion object {
         private const val VIEW_TYPE_GROUP = 1
@@ -37,8 +39,7 @@ class CourseListAdapter(private val listener: OnItemClickListener) : BaseAdapter
                         R.layout.item_course_list,
                         parent,
                         false)
-                binding.listener = this@CourseListAdapter.listener
-                CourseViewHolder(binding)
+                CourseViewHolder(binding, onItemClickListener)
             }
         }
     }
