@@ -18,6 +18,8 @@ import com.boostcamp.travery.main.MainViewModel
 import com.boostcamp.travery.main.adapter.CourseListAdapter
 import com.boostcamp.travery.save.UserActionImageListAdapter
 import com.boostcamp.travery.save.UserActionSaveViewModel
+import com.boostcamp.travery.search.SearchResultViewModel
+import com.boostcamp.travery.search.UserActionSearchAdapter
 import com.boostcamp.travery.useractiondetail.UserActionDetailViewModel
 import com.boostcamp.travery.useractiondetail.UserActionImageAdapter
 import com.bumptech.glide.load.DataSource
@@ -178,6 +180,18 @@ object BindingUtils {
     @BindingAdapter("listAdapter")
     fun setAdapter(recyclerView: RecyclerView, viewModel: MainViewModel) {
         val adapter = CourseListAdapter(viewModel.data).apply {
+            onItemClickListener = { item: Any -> viewModel.onItemClick(item) }
+        }
+        recyclerView.apply {
+            layoutManager = LinearLayoutManager(recyclerView.context)
+            this.adapter = adapter
+        }
+    }
+
+    @JvmStatic
+    @BindingAdapter("listAdapter")
+    fun setAdapter(recyclerView: RecyclerView, viewModel: SearchResultViewModel) {
+        val adapter = UserActionSearchAdapter(viewModel.data).apply {
             onItemClickListener = { item: Any -> viewModel.onItemClick(item) }
         }
         recyclerView.apply {
