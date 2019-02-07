@@ -95,8 +95,9 @@ class MapTrackingService : Service() {
                         mCallback?.sendLocation(locate, location.accuracy)
                         exLocation = location
 
-                        if (lostLocationCnt > 60 && canSuggest) {
+                        if (lostLocationCnt > 2 && canSuggest) {
                             suggestList.add(locate)
+                            mCallback?.sendSuggestList(suggestList)
                         }
                         canSuggest = true
                         lostLocationCnt = 0
@@ -192,6 +193,7 @@ class MapTrackingService : Service() {
         fun sendLocation(location: LatLng, accuracy: Float)
         fun sendSecond(second: Int)
         fun saveInitCourse(startTime: Long)
+        fun sendSuggestList(suggestList: ArrayList<LatLng>)
     }
 
     fun registerCallback(cb: ICallback) {
@@ -216,6 +218,14 @@ class MapTrackingService : Service() {
 
     fun getTimeCodeList(): ArrayList<TimeCode> {
         return timeCodeList
+    }
+
+    fun getSuggestList(): ArrayList<LatLng> {
+        return suggestList
+    }
+
+    fun removeSuggestItem(postion: Int){
+        suggestList.removeAt(postion)
     }
 
     override fun onBind(intent: Intent): IBinder? {

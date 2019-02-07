@@ -105,4 +105,7 @@ dependencies {
 
     // flow layout library
     implementation "com.nex3z:flow-layout:1.2.4"
+
+    //dialog motion library
+    implementation 'com.orhanobut:dialogplus:1.11@aar'
 }

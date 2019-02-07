@@ -27,9 +27,17 @@ import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import java.lang.ref.WeakReference
+import com.orhanobut.dialogplus.DialogPlus
+import android.view.Gravity
+import androidx.lifecycle.ViewModelProviders
+import com.boostcamp.travery.base.BaseActivity
+import com.boostcamp.travery.databinding.ActivityTrackingBinding
+import com.boostcamp.travery.main.adapter.CourseListAdapter
 
 
-class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
+class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCallback {
+    override val layoutResourceId: Int
+        get() = R.layout.activity_tracking
 
     lateinit var mapService: MapTrackingService
     var isService = false
@@ -43,7 +51,8 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_tracking)
+        setContentView(viewDataBinding.root)
+        viewDataBinding.viewmodel = ViewModelProviders.of(this).get(TrackingViewModel::class.java)
 
         val mapFragment = map_trackingActivity as SupportMapFragment
         mapFragment.getMapAsync(this)
@@ -54,8 +63,8 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap = googleMap
 
         polylineOptions.color(Color.BLUE)
-                .geodesic(true)
-                .width(10f)
+            .geodesic(true)
+            .width(10f)
 
         doBindService()
     }
@@ -71,31 +80,31 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
         startRecordView()
         isService = true
         polylineOptions = PolylineOptions()
-                .color(Color.BLUE)
-                .geodesic(true)
-                .width(10f)
+            .color(Color.BLUE)
+            .geodesic(true)
+            .width(10f)
         polylineOptions.add(myLocationMarker.position)
     }
 
     fun stopService(v: View) {
         if (mapService.getTotalDistance() >= 10) {
             val saveIntent = Intent(this@TrackingActivity, CourseSaveActivity::class.java)
-                    .apply {
-                        putParcelableArrayListExtra(Constants.EXTRA_COURSE_LOCATION_LIST, mapService.getTimeCodeList())
-                        putExtra(
-                                Constants.EXTRA_COURSE,
-                                Course(
-                                        "",
-                                        "",
-                                        "",
-                                        mapService.getStartTime(),
-                                        mapService.getEndTime(),
-                                        mapService.getTotalDistance(),
-                                        mapService.getStartTime().toString(),
-                                        mapService.getStartTime().toString()
-                                )
+                .apply {
+                    putParcelableArrayListExtra(Constants.EXTRA_COURSE_LOCATION_LIST, mapService.getTimeCodeList())
+                    putExtra(
+                        Constants.EXTRA_COURSE,
+                        Course(
+                            "",
+                            "",
+                            "",
+                            mapService.getStartTime(),
+                            mapService.getEndTime(),
+                            mapService.getTotalDistance(),
+                            mapService.getStartTime().toString(),
+                            mapService.getStartTime().toString()
                         )
-                    }
+                    )
+                }
             startActivity(saveIntent)
         } else getString(R.string.string_save_course_error).toast(this)
 
@@ -129,6 +138,23 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
 
     fun gotoMyLocation(v: View) {
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocationMarker.position, 15f))
+    }
+
+    fun openSuggestDialog(v: View) {
+        val adapter = SuggestListAdapter(this@TrackingActivity, mapService.getSuggestList())
+        val dialog = DialogPlus.newDialog(this@TrackingActivity)
+            .setAdapter(adapter)
+            .setGravity(Gravity.BOTTOM)
+            .setOnItemClickListener { dialog, item, view, position ->
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(item as LatLng, 15f))
+                mapService.removeSuggestItem(position)
+                tv_seggest_num.text = mapService.getSuggestList().size.toString()
+                dialog.dismiss()
+            }
+            .setCancelable(true)
+            .setExpanded(false)  // This will enable the expand feature, (similar to android L share dialog)
+            .create()
+        dialog.show()
     }
 
     private class ViewChangeHandler(activity: TrackingActivity) : Handler() {
@@ -166,15 +192,34 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
 
             override fun saveInitCourse(startTime: Long) {
                 AppDataManager(application, AppDbHelper.getInstance(application)).saveCourse(
-                        Course(startTime = startTime)
+                    Course(startTime = startTime)
                 ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe()
+            }
+
+
+            override fun sendSuggestList(suggestList: ArrayList<LatLng>) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    btn_suggest.setImageDrawable(
+                        resources.getDrawable(
+                            R.drawable.ic_add_alert_red_24dp,
+                            application.theme
+                        )
+                    )
+                } else {
+                    btn_suggest.setImageDrawable(
+                        resources.getDrawable(
+                            R.drawable.ic_add_alert_red_24dp
+                        )
+                    )
+                }
+                tv_seggest_num.text = suggestList.size.toString()
             }
             /* 서비스에서 데이터를 받아 메소드 호출 또는 핸들러로 전달 */
         }
 
         override fun onServiceConnected(
-                name: ComponentName,
-                service: IBinder
+            name: ComponentName,
+            service: IBinder
         ) {
             // 서비스와 연결되었을 때 호출되는 메서드
             // 서비스 객체를 전역변수로 저장
@@ -188,11 +233,11 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
             //서울 위치
             var myLocation = LatLng(37.56, 126.97)
             myLocationMarker = mMap.addMarker(
-                    MarkerOptions()
-                            .position(myLocation)
-                            .flat(true)
-                            .anchor(0.5f, 0.5f)
-                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.map_position_no_heading))
+                MarkerOptions()
+                    .position(myLocation)
+                    .flat(true)
+                    .anchor(0.5f, 0.5f)
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.map_position_no_heading))
             )
             if (location != null) {
                 val lat = location.latitude
@@ -248,8 +293,8 @@ class TrackingActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun doBindService() {
         bindService(
-                Intent(this, MapTrackingService::class.java),
-                mapTrackingServiceConnection, Context.BIND_AUTO_CREATE
+            Intent(this, MapTrackingService::class.java),
+            mapTrackingServiceConnection, Context.BIND_AUTO_CREATE
         )
         isBound = true
     }
