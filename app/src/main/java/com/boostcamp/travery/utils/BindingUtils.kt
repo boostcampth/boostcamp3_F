@@ -175,7 +175,7 @@ object BindingUtils {
             recyclerView.scrollBy(0, positionTop - curTop)
         }
     }
-
+    
     @JvmStatic
     @BindingAdapter("listAdapter")
     fun setAdapter(recyclerView: RecyclerView, viewModel: MainViewModel) {
