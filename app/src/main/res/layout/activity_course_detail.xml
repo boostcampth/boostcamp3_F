@@ -22,15 +22,15 @@
             app:layout_constraintTop_toTopOf="parent"/>
 
         <fragment
-                android:id="@+id/fragment_map"
-                android:name="com.google.android.gms.maps.SupportMapFragment"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                tools:context=".MapsActivity"
-                app:layout_constraintTop_toBottomOf="@+id/rv_useraction_toplist"
-                app:layout_constraintStart_toEndOf="@+id/rv_useraction_leftlist"/>
+            android:id="@+id/fragment_map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/rv_useraction_leftlist"
+            app:layout_constraintTop_toBottomOf="@+id/rv_useraction_toplist"
+            tools:context=".MapsActivity"/>
 
         <com.takusemba.multisnaprecyclerview.MultiSnapRecyclerView
 
@@ -38,12 +38,14 @@
             android:layout_width="66dp"
             android:layout_height="0dp"
             android:background="@android:color/background_light"
-            app:setAdapter="@{viewModel.leftAdapter}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/rv_useraction_toplist"
             app:msrv_gravity="start"
-            app:msrv_snap_count="1"/>
+            app:msrv_snap_count="1"
+            app:scrollTo="@{viewModel.scrollTo}"
+            app:setAdapter="@{viewModel.leftAdapter}"
+        />
 
         <com.takusemba.multisnaprecyclerview.MultiSnapRecyclerView
             android:id="@+id/rv_useraction_toplist"
@@ -56,7 +58,43 @@
             app:layout_constraintTop_toBottomOf="@+id/toolbar"
             app:msrv_gravity="start"
             app:msrv_snap_count="1"
-            app:setAdapter="@{viewModel.topAdapter}}"/>
+            app:scrollTo="@{viewModel.scrollTo}"
+            app:setAdapter="@{viewModel.topAdapter}}"
+        />
+        <LinearLayout
+            android:id="@+id/ll_useraction_info"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@android:color/background_light"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="@+id/fragment_map"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/rv_useraction_leftlist">
+            <ImageView
+                android:id="@+id/iv_useraction_mainimg"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                app:image="@{viewModel.curUseraction.mainImage}"
+            />
+            <TextView
+                android:id="@+id/tv_useraction_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:paddingTop="10dp"
+                android:paddingRight="10dp"
+                android:text="@{viewModel.curUseraction.title}"
+                android:textSize="18sp"
+                android:textStyle="bold"/>
+            <TextView
+                android:id="@+id/tv_useraction_hashtag"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="10dp"
+                android:text="@{viewModel.curUseraction.hashTag}"/>
+        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

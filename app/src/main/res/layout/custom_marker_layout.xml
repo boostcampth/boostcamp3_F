@@ -3,22 +3,21 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/custom_marker_view"
-    android:layout_width="52dp"
+    android:layout_width="63dp"
     android:layout_height="wrap_content">
 
-    <RelativeLayout
+    <ImageView
         android:id="@+id/action_marker_image"
-        android:layout_width="50dp" android:layout_height="59dp"
-        android:background="@drawable/map_marker"
-        android:backgroundTint="@color/colorAccent"
-    >
-    </RelativeLayout>
-    <com.boostcamp.travery.custom.CircleImageView
+        android:layout_width="63dp" android:layout_height="65dp"
+        android:src="@drawable/marker"
+        android:contentDescription="@null">
+
+    </ImageView>
+    <ImageView
         android:id="@+id/cv_action_image"
-        android:layout_width="42dp"
+        android:layout_width="40dp"
         android:layout_height="46dp"
-        android:layout_alignParentTop="true"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginLeft="4dp"
-    />
+        android:layout_marginTop="5dp"
+        android:layout_centerHorizontal="true"
+        />
 </RelativeLayout>
