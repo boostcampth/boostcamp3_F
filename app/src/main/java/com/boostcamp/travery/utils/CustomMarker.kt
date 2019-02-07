@@ -14,7 +14,7 @@ import com.boostcamp.travery.R
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.custom_marker_layout.view.*
 
-object CustomMaker {
+object CustomMarker {
 
     fun create(context: Context, path: String?): Bitmap {
         val marker = LayoutInflater.from(context).inflate(R.layout.custom_marker_layout, null)
