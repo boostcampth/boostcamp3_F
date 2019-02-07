@@ -1,11 +1,11 @@
 package com.boostcamp.travery.utils
 
 import android.annotation.SuppressLint
-import android.view.ContextThemeWrapper
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.view.ContextThemeWrapper
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -13,9 +13,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.boostcamp.travery.GlideApp
 import com.boostcamp.travery.R
+import com.boostcamp.travery.save.UserActionImageListAdapter
+import com.boostcamp.travery.save.UserActionSaveViewModel
+import com.boostcamp.travery.useractiondetail.UserActionDetailViewModel
+import com.boostcamp.travery.useractiondetail.UserActionImageAdapter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.google.android.material.internal.FlowLayout
+import com.nex3z.flowlayout.FlowLayout
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -78,7 +82,10 @@ object BindingUtils {
 
     @JvmStatic
     @BindingAdapter("setAdapter")
-    fun bindMultiSnapRecyclerViewAdapter(recyclerView: com.takusemba.multisnaprecyclerview.MultiSnapRecyclerView, adapter: RecyclerView.Adapter<*>) {
+    fun bindMultiSnapRecyclerViewAdapter(
+            recyclerView: com.takusemba.multisnaprecyclerview.MultiSnapRecyclerView,
+            adapter: RecyclerView.Adapter<*>
+    ) {
         recyclerView.layoutManager = LinearLayoutManager(recyclerView.context)
         recyclerView.adapter = adapter
     }
@@ -94,6 +101,18 @@ object BindingUtils {
         }
     }
 
+
+    @JvmStatic
+    @BindingAdapter("imageAdapter")
+    fun setAdapter(recyclerView: RecyclerView, viewModel: UserActionSaveViewModel) {
+        val adapter = UserActionImageListAdapter(viewModel.imageList).apply {
+            onAddItemClickListener = viewModel::onAddItemClick
+        }
+        recyclerView.apply {
+            layoutManager = LinearLayoutManager(recyclerView.context, LinearLayoutManager.HORIZONTAL, false)
+            this.adapter = adapter
+        }
+    }
 
     @JvmStatic
     @BindingAdapter("imageAdapter")
