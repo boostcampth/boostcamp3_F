@@ -199,4 +199,23 @@ object BindingUtils {
             this.adapter = adapter
         }
     }
+
+    /**
+     * 선택한 테마에 맞추어 배경 변경(총 5가지 색상)
+     */
+    @JvmStatic
+    @BindingAdapter("theme")
+    fun setTheme(textView: TextView, theme: String) {
+        val string = textView.resources.getStringArray(R.array.theme_array)
+        textView.apply {
+            text = theme
+            background = when (theme) {
+                string[0] -> ContextCompat.getDrawable(textView.context, R.drawable.bg_theme_red)
+                string[1] -> ContextCompat.getDrawable(textView.context, R.drawable.bg_theme_pink)
+                string[2] -> ContextCompat.getDrawable(textView.context, R.drawable.bg_theme_deep_purple)
+                string[3] -> ContextCompat.getDrawable(textView.context, R.drawable.bg_theme_indigo)
+                else -> ContextCompat.getDrawable(textView.context, R.drawable.bg_theme_green)
+            }
+        }
+    }
 }
