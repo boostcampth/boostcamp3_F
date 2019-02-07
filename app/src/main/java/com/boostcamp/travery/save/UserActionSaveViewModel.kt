@@ -28,10 +28,10 @@ class UserActionSaveViewModel(application: Application) : BaseViewModel(applicat
     }
 
     fun saveUserAction(latitude: Double, longitude: Double, courseCode: Long) {
-        // DB에 저장
-        val sb = StringBuilder()
-        imageList.forEach {
-            sb.append(it.filePath + ",")
+        // 사진 경로 리스트 저장. 구분자 : ,
+
+        val result = imageList.subList(0, imageList.size - 1).fold("") { acc, item ->
+            if (acc.isEmpty()) item.filePath else "$acc,${item.filePath}"
         }
 
         repository.saveUserAction(
@@ -40,9 +40,9 @@ class UserActionSaveViewModel(application: Application) : BaseViewModel(applicat
                         Date(System.currentTimeMillis()),
                         hashTag,
                         imageList[0].filePath,
-                        sb.toString(),
+                        result,
                         latitude, longitude,
-                        when(courseCode){
+                        when (courseCode) {
                             0L -> null
                             else -> courseCode
                         })

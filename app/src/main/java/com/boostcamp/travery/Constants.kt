@@ -6,4 +6,6 @@ object Constants {
     const val EXTRA_LATITUDE = "LATITUDE"
     const val EXTRA_LONGITUDE = "LONGITUDE"
     const val EXTRA_COURSE_CODE = "COURSE_CODE"
+
+    const val EXTRA_USER_ACTION = "USER_ACTION"
 }

@@ -102,4 +102,7 @@ dependencies {
 
     // Image picker
     implementation 'com.github.esafirm.android-image-picker:rximagepicker:1.13.1'
+
+    // flow layout library
+    implementation "com.nex3z:flow-layout:1.2.4"
 }
