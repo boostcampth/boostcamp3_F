@@ -3,6 +3,10 @@
     <string name="app_name">Travery</string>
     <string name="all_setting">설정</string>
     <string name="all_cancel">취소</string>
+    <string name="all_ignore">무시하기</string>
+    <string name="all_delete">삭제</string>
+    <string name="all_save">저장</string>
+    <string name="all_hold">보류</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -20,6 +24,9 @@
 
     <string name="permission_dialog_gps_title">위치 서비스 비활성화</string>
     <string name="permission_dialog_gps_description">앱을 사용하기 위해서는 위치 서비스가 필요합니다.\n위치 설정을 수정하실래요?</string>
+
+    <string name="suggestion_dialog_title">활동 추가 제안</string>
+    <string name="suggestion_dialog_description">확인하지 않은 활동 추가 제안이 남아 있습니다. 제안을 무시하고 저장하시겠습니까?</string>
 
     <string name="service_title">Example Service</string>
     <string name="service_message">활동 기록 중 입니다.</string>

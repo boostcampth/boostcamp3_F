@@ -1,8 +1,8 @@
 package com.boostcamp.travery.mapservice
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import android.view.View
 import android.content.ComponentName
@@ -29,20 +29,21 @@ import io.reactivex.schedulers.Schedulers
 import java.lang.ref.WeakReference
 import com.orhanobut.dialogplus.DialogPlus
 import android.view.Gravity
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProviders
 import com.boostcamp.travery.base.BaseActivity
 import com.boostcamp.travery.databinding.ActivityTrackingBinding
-import com.boostcamp.travery.main.adapter.CourseListAdapter
-
+import kotlinx.android.synthetic.main.item_dialog_footer.*
 
 class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCallback {
     override val layoutResourceId: Int
         get() = R.layout.activity_tracking
 
     lateinit var mapService: MapTrackingService
-    var isService = false
+    //var isService = false
     private lateinit var mMap: GoogleMap
     private lateinit var myLocationMarker: Marker
+    private var suggestionMarker: Marker? = null
     private var polyline: Polyline? = null
     private var polylineOptions: PolylineOptions = PolylineOptions()
     private var secondForView = 0
@@ -56,7 +57,6 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
 
         val mapFragment = map_trackingActivity as SupportMapFragment
         mapFragment.getMapAsync(this)
-
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -77,8 +77,9 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
     fun startService(v: View) {
         val serviceIntent = Intent(this, MapTrackingService::class.java)
         ContextCompat.startForegroundService(this, serviceIntent)
-        startRecordView()
-        isService = true
+        //startRecordView()
+        viewDataBinding.viewmodel?.setIsServiceState(true)
+        //isService = true
         polylineOptions = PolylineOptions()
             .color(Color.BLUE)
             .geodesic(true)
@@ -87,6 +88,27 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
     }
 
     fun stopService(v: View) {
+        if (mapService.getSuggestList().size > 0) {
+            AlertDialog.Builder(this@TrackingActivity).apply {
+                setTitle(getString(R.string.suggestion_dialog_title))
+                setMessage(getString(R.string.suggestion_dialog_description))
+                setCancelable(true)
+                setPositiveButton(getString(R.string.all_cancel)) { dialog, _ ->
+                    dialog.cancel()
+                }
+                setNegativeButton(getString(R.string.all_ignore)) { dialog, _ ->
+                    startCourseSaveActivity()
+                    dialog.cancel()
+                }
+                create().show()
+            }
+        } else {
+            startCourseSaveActivity()
+        }
+    }
+
+    private fun startCourseSaveActivity() {
+        dismissSuggestNoti()
         if (mapService.getTotalDistance() >= 10) {
             val saveIntent = Intent(this@TrackingActivity, CourseSaveActivity::class.java)
                 .apply {
@@ -108,7 +130,6 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
             startActivity(saveIntent)
         } else getString(R.string.string_save_course_error).toast(this)
 
-        stopRecordView()
         doUnbindService()
 
         val serviceIntent = Intent(this, MapTrackingService::class.java)
@@ -117,12 +138,11 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
         mMap.clear()
 
         doBindService()
-        //finish()
     }
 
     fun saveUserAction(v: View) {
         startActivity(Intent(this, UserActionSaveActivity::class.java).apply {
-            when (isService) {
+            when (viewDataBinding.viewmodel?.getIsServiceState()) {
                 true -> {
                     putExtra(Constants.EXTRA_LATITUDE, myLocationMarker.position.latitude)
                     putExtra(Constants.EXTRA_LONGITUDE, myLocationMarker.position.longitude)
@@ -140,15 +160,56 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocationMarker.position, 15f))
     }
 
+    private fun removeSuggestionMarker() {
+        footer.visibility = View.GONE
+        suggestionMarker?.remove()
+        suggestionMarker = null
+    }
+
+    @SuppressLint("ResourceAsColor")
     fun openSuggestDialog(v: View) {
-        val adapter = SuggestListAdapter(this@TrackingActivity, mapService.getSuggestList())
+        val list = mapService.getSuggestList()
+        if (list.size == 0) return
+        val adapter = SuggestListAdapter(this@TrackingActivity, list)
         val dialog = DialogPlus.newDialog(this@TrackingActivity)
             .setAdapter(adapter)
             .setGravity(Gravity.BOTTOM)
             .setOnItemClickListener { dialog, item, view, position ->
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(item as LatLng, 15f))
-                mapService.removeSuggestItem(position)
-                tv_seggest_num.text = mapService.getSuggestList().size.toString()
+                footer.visibility = View.VISIBLE
+                if (suggestionMarker == null) {
+                    suggestionMarker = mMap.addMarker(
+                        MarkerOptions()
+                            .position(item)
+                            .flat(true)
+                    )
+                } else {
+                    suggestionMarker?.position = item
+                }
+
+                footer_cancel_button.setOnClickListener {
+                    removeSuggestionMarker()
+                }
+
+                footer_delete_button.setOnClickListener {
+                    mapService.removeSuggestItem(position)
+                    tv_seggest_num.text = mapService.getSuggestList().size.toString()
+                    if (tv_seggest_num.text == "0") dismissSuggestNoti()
+                    removeSuggestionMarker()
+                }
+
+                footer_save_button.setOnClickListener {
+                    startActivity(Intent(this, UserActionSaveActivity::class.java).apply {
+                        putExtra(Constants.EXTRA_LATITUDE, suggestionMarker!!.position.latitude)
+                        putExtra(Constants.EXTRA_LONGITUDE, suggestionMarker!!.position.longitude)
+                        putExtra(Constants.EXTRA_COURSE_CODE, mapService.getStartTime())
+                    })
+
+                    mapService.removeSuggestItem(position)
+                    tv_seggest_num.text = mapService.getSuggestList().size.toString()
+                    if (tv_seggest_num.text == "0") dismissSuggestNoti()
+                    removeSuggestionMarker()
+                }
                 dialog.dismiss()
             }
             .setCancelable(true)
@@ -177,7 +238,7 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
                 //arrayPoints.add(locate)
                 tv_acc.text = accuracy.toString()
 
-                if (isService) {
+                if (viewDataBinding.viewmodel?.getIsServiceState() == true) {
                     polylineOptions.add(location)
                     polyline?.remove()
                     polyline = mMap.addPolyline(polylineOptions)
@@ -198,21 +259,7 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
 
 
             override fun sendSuggestList(suggestList: ArrayList<LatLng>) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    btn_suggest.setImageDrawable(
-                        resources.getDrawable(
-                            R.drawable.ic_add_alert_red_24dp,
-                            application.theme
-                        )
-                    )
-                } else {
-                    btn_suggest.setImageDrawable(
-                        resources.getDrawable(
-                            R.drawable.ic_add_alert_red_24dp
-                        )
-                    )
-                }
-                tv_seggest_num.text = suggestList.size.toString()
+                showSuggestNoti(suggestList.size)
             }
             /* 서비스에서 데이터를 받아 메소드 호출 또는 핸들러로 전달 */
         }
@@ -227,7 +274,7 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
             mapService = mb.service // 서비스가 제공하는 메소드 호출하여
             mapService.registerCallback(mCallback)
             // 서비스쪽 객체를 전달받을수 있슴
-            isService = mapService.isRunning
+            viewDataBinding.viewmodel?.setIsServiceState(mapService.isRunning)
 
             val location = mapService.getLastLocation()
             //서울 위치
@@ -248,7 +295,7 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
             }
 
             //서비스가 돌고 있을 때
-            if (isService) {
+            if (viewDataBinding.viewmodel?.getIsServiceState() == true) {
                 Completable.fromAction {
                     mapService.getTimeCodeList().forEach {
                         polylineOptions.add(it.coordinate)
@@ -257,28 +304,52 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
                     polyline = mMap.addPolyline(polylineOptions)
                 }.subscribe().dispose()
 
-                startRecordView()
+                showSuggestNoti(mapService.getSuggestList().size)
             }
         }
 
         override fun onServiceDisconnected(name: ComponentName) {
             // 서비스와 연결이 끊겼을 때 호출되는 메서드
-            isService = false
+            viewDataBinding.viewmodel?.setIsServiceState(false)
         }
     }
 
-    private fun startRecordView() {
-        tv_text.visibility = View.VISIBLE
-        btn_stop.visibility = View.VISIBLE
-        img_midMarker.visibility = View.INVISIBLE
-        btn_play.visibility = View.INVISIBLE
+    private fun showSuggestNoti(listSize: Int) {
+        if (listSize > 0) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                btn_suggest.setImageDrawable(
+                    resources.getDrawable(
+                        R.drawable.ic_add_alert_red_24dp,
+                        application.theme
+                    )
+                )
+            } else {
+                btn_suggest.setImageDrawable(
+                    resources.getDrawable(
+                        R.drawable.ic_add_alert_red_24dp
+                    )
+                )
+            }
+            tv_seggest_num.text = listSize.toString()
+        }
     }
 
-    private fun stopRecordView() {
-        btn_stop.visibility = View.INVISIBLE
-        img_midMarker.visibility = View.VISIBLE
-        btn_play.visibility = View.VISIBLE
-        tv_text.visibility = View.GONE
+    private fun dismissSuggestNoti() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            btn_suggest.setImageDrawable(
+                resources.getDrawable(
+                    R.drawable.ic_add_alert_black_24dp,
+                    application.theme
+                )
+            )
+        } else {
+            btn_suggest.setImageDrawable(
+                resources.getDrawable(
+                    R.drawable.ic_add_alert_black_24dp
+                )
+            )
+        }
+        tv_seggest_num.text = "0"
     }
 
     private fun setIntToTime(timeInt: Int): String {

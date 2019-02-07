@@ -35,6 +35,7 @@
                 android:layout_margin="10dp"
                 android:onClick="openSuggestDialog"
                 android:src="@drawable/ic_add_alert_black_24dp"
+                app:visibility="@{viewmodel.isService}"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/include"/>
 
@@ -42,7 +43,9 @@
                 android:id="@+id/tv_seggest_num"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="14sp"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:text="0"
                 android:textColor="@color/colorAccent"
                 app:layout_constraintRight_toRightOf="@+id/btn_suggest"
                 app:layout_constraintTop_toTopOf="@+id/btn_suggest"/>
@@ -53,6 +56,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:src="@drawable/plan_smarker_start"
+                app:visibility="@{!viewmodel.isService}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
@@ -75,6 +79,7 @@
                 android:layout_marginBottom="15dp"
                 android:background="@drawable/ic_play_circle_filled_black_60dp"
                 android:onClick="startService"
+                app:visibility="@{!viewmodel.isService}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
@@ -84,11 +89,11 @@
                 android:id="@+id/btn_save_action"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
+                android:layout_marginBottom="20dp"
                 android:background="@drawable/ic_add_circle_outline_black_24dp"
                 android:onClick="saveUserAction"
-                app:layout_constraintBottom_toBottomOf="@+id/btn_play"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/btn_play"
                 tools:ignore="MissingConstraints"/>
 
         <androidx.appcompat.widget.AppCompatImageButton
@@ -98,7 +103,7 @@
                 android:layout_marginBottom="15dp"
                 android:background="@drawable/ic_pause_circle_filled_black_60dp"
                 android:onClick="stopService"
-                android:visibility="gone"
+                app:visibility="@{viewmodel.isService}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
@@ -110,11 +115,11 @@
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                android:visibility="gone"
+                app:visibility="@{viewmodel.isService}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/btn_play"/>
+                app:layout_constraintTop_toBottomOf="@+id/btn_stop"/>
 
         <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_acc"
@@ -124,6 +129,18 @@
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintRight_toRightOf="parent"/>
+
+        <include
+                android:visibility="gone"
+                android:id="@+id/footer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintVertical_bias="0.6"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                layout="@layout/item_dialog_footer"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
