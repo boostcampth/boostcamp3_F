@@ -14,9 +14,7 @@
         android:paddingTop="20dp"
         android:paddingRight="8dp"
         android:paddingBottom="20dp"
-        app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
+>
         <ImageView
             android:id="@+id/iv_tens"
             android:layout_width="30dp"
