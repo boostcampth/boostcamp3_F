@@ -70,40 +70,52 @@
                 android:layout_marginBottom="40dp"
                 android:background="@drawable/map_current_button"
                 android:onClick="gotoMyLocation"
-                app:layout_constraintBottom_toTopOf="@+id/btn_play"
+                app:layout_constraintVertical_bias="0.8"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintRight_toRightOf="parent"/>
 
-        <androidx.appcompat.widget.AppCompatImageButton
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/btn_play"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginBottom="15dp"
-                android:background="@drawable/ic_play_circle_filled_black_60dp"
+                android:src="@drawable/ic_directions_run_black_24dp"
                 android:onClick="startService"
+                app:backgroundTint="@color/whiteBlue"
+                app:fabCustomSize="90dp"
+                app:maxImageSize="60dp"
                 app:visibility="@{!viewmodel.isService}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 tools:ignore="MissingConstraints"/>
 
-        <androidx.appcompat.widget.AppCompatImageButton
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/btn_save_action"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_marginBottom="20dp"
-                android:background="@drawable/ic_add_circle_outline_black_24dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="30dp"
+                android:src="@drawable/ic_add_white_24dp"
                 android:onClick="saveUserAction"
+                android:layout_marginEnd="10dp"
+                app:backgroundTint="@color/whiteBlue"
+                app:fabSize="normal"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 tools:ignore="MissingConstraints"/>
 
-        <androidx.appcompat.widget.AppCompatImageButton
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:visibility="gone"
                 android:id="@+id/btn_stop"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginBottom="15dp"
-                android:background="@drawable/ic_pause_circle_filled_black_60dp"
+                android:src="@drawable/ic_stop_black_24dp"
                 android:onClick="stopService"
+                app:backgroundTint="@color/whiteBlue"
+                app:maxImageSize="60dp"
+                app:fabCustomSize="90dp"
                 app:visibility="@{viewmodel.isService}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"

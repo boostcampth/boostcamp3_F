@@ -89,7 +89,7 @@ class MapTrackingService : Service() {
                     //이동거리가 1m 이상 10m 이하이고 오차범위가 10m 미만일 때
                     //실내에서는 12m~30m정도의 오차 발생
                     //야외에서는 3m~11m정도의 오차 발생
-                    if (dis >= 1/* && dis < 10 && location.accuracy < 9.5*/) {
+                    if (dis >= 2 && location.accuracy < 9.5) {
 
                         val locate = LatLng(location.latitude, location.longitude)
                         if (isRunning) {
@@ -98,7 +98,7 @@ class MapTrackingService : Service() {
                         }
                         mCallback?.sendLocation(locate, location.accuracy)
 
-                        if (lostLocationCnt > 2 && canSuggest) {
+                        if (lostLocationCnt > 30 && canSuggest) {
                             suggestList.add(Suggestion(locate, exLocation?.time ?: 0, location.time))
                             mCallback?.sendSuggestList(suggestList)
                         }

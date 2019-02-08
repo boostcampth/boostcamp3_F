@@ -176,7 +176,7 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
             .setAdapter(adapter)
             .setGravity(Gravity.BOTTOM)
             .setOnItemClickListener { dialog, item, view, position ->
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom((item as Suggestion).location, 15f))
+                mMap.animateCamera(CameraUpdateFactory.newLatLng((item as Suggestion).location))
                 footer.visibility = View.VISIBLE
                 if (suggestionMarker == null) {
                     suggestionMarker = mMap.addMarker(
