@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable name="viewmodel" type="com.boostcamp.travery.save.UserActionSaveViewModel"/>
+
+        <variable
+            name="viewmodel"
+            type="com.boostcamp.travery.save.UserActionSaveViewModel" />
     </data>
 
     <LinearLayout
@@ -15,12 +17,12 @@
 
         <include
             android:id="@+id/toolbar"
-            layout="@layout/toolbar"/>
+            layout="@layout/toolbar" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="10dp">
+            android:padding="@dimen/activity_content_padding">
 
             <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/et_title"
@@ -33,7 +35,7 @@
                 android:onTextChanged="@{(text, start, before, count) -> viewmodel.onTitleChange(text)}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/et_content"
@@ -48,20 +50,16 @@
                 android:padding="10dp"
                 app:layout_constraintEnd_toEndOf="@id/et_title"
                 app:layout_constraintStart_toStartOf="@id/et_title"
-                app:layout_constraintTop_toBottomOf="@id/et_title"/>
+                app:layout_constraintTop_toBottomOf="@id/et_title" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_theme"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
+                style="@style/TitleTextView"
+                android:layout_marginStart="@dimen/save_activity_keyline_margin_start"
                 android:layout_marginTop="20dp"
                 android:text="@string/string_tv_useraction_hashtag"
-                android:textColor="@android:color/holo_green_dark"
-                android:textSize="20sp"
-                android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="@id/et_title"
-                app:layout_constraintTop_toBottomOf="@id/et_content"/>
+                app:layout_constraintTop_toBottomOf="@id/et_content" />
 
             <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/et_hashtag"
@@ -74,20 +72,16 @@
                 android:textColor="@android:color/black"
                 android:textSize="18sp"
                 app:layout_constraintStart_toStartOf="@id/tv_theme"
-                app:layout_constraintTop_toBottomOf="@id/tv_theme"/>
+                app:layout_constraintTop_toBottomOf="@id/tv_theme" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
+                android:id="@+id/tv_location"
+                style="@style/TitleTextView"
+                android:layout_marginStart="@dimen/save_activity_keyline_margin_start"
                 android:layout_marginTop="20dp"
                 android:text="@string/string_tv_location"
-                android:textColor="@android:color/holo_green_dark"
-                android:textSize="20sp"
-                android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="@id/et_title"
-                app:layout_constraintTop_toBottomOf="@id/et_hashtag"/>
+                app:layout_constraintTop_toBottomOf="@id/et_hashtag" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_location_cur"
@@ -95,22 +89,18 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:textSize="18sp"
-                app:layout_constraintStart_toStartOf="@id/tv_date"
-                app:layout_constraintTop_toBottomOf="@id/tv_date"
-                tools:text="강남구 역삼동 테헤란로 부캠쓰"/>
+                app:layout_constraintStart_toStartOf="@id/tv_location"
+                app:layout_constraintTop_toBottomOf="@id/tv_location"
+                tools:text="강남구 역삼동 테헤란로 부캠쓰" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
+                style="@style/TitleTextView"
+                android:layout_marginStart="@dimen/save_activity_keyline_margin_start"
                 android:layout_marginTop="40dp"
                 android:text="@string/string_tv_image"
-                android:textColor="@android:color/holo_green_dark"
-                android:textSize="20sp"
-                android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="@id/et_title"
-                app:layout_constraintTop_toBottomOf="@id/tv_location_cur"/>
+                app:layout_constraintTop_toBottomOf="@id/tv_location_cur" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_save_useraction_image_list"
@@ -118,7 +108,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 app:imageAdapter="@{viewmodel}"
-                app:layout_constraintTop_toBottomOf="@id/tv_image"/>
+                app:layout_constraintTop_toBottomOf="@id/tv_image" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </LinearLayout>
