@@ -231,8 +231,8 @@ class MapTrackingService : Service() {
         return suggestList
     }
 
-    fun removeSuggestItem(postion: Int) {
-        suggestList.removeAt(postion)
+    fun removeSuggestItem(position: Int) {
+        suggestList.removeAt(position)
     }
 
     override fun onBind(intent: Intent): IBinder? {

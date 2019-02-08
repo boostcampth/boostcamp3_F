@@ -317,39 +317,13 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
 
     private fun showSuggestNoti(listSize: Int) {
         if (listSize > 0) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                btn_suggest.setImageDrawable(
-                    resources.getDrawable(
-                        R.drawable.ic_add_alert_red_24dp,
-                        application.theme
-                    )
-                )
-            } else {
-                btn_suggest.setImageDrawable(
-                    resources.getDrawable(
-                        R.drawable.ic_add_alert_red_24dp
-                    )
-                )
-            }
+            btn_suggest.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_add_alert_red_24dp))
             tv_seggest_num.text = listSize.toString()
         }
     }
 
     private fun dismissSuggestNoti() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            btn_suggest.setImageDrawable(
-                resources.getDrawable(
-                    R.drawable.ic_add_alert_black_24dp,
-                    application.theme
-                )
-            )
-        } else {
-            btn_suggest.setImageDrawable(
-                resources.getDrawable(
-                    R.drawable.ic_add_alert_black_24dp
-                )
-            )
-        }
+        btn_suggest.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_add_alert_black_24dp))
         tv_seggest_num.text = "0"
     }
 

@@ -33,7 +33,7 @@ class SuggestListAdapter(
         return position.toLong()
     }
 
-    @SuppressLint("SimpleDateFormat")
+    @SuppressLint("SetTextI18n")
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val viewHolder: ViewHolder
         var view: View? = convertView
@@ -49,11 +49,8 @@ class SuggestListAdapter(
         } else {
             viewHolder = view.tag as ViewHolder
         }
-
-        val context = parent.context
-
-        val start = SimpleDateFormat("yyyy.MM.dd - kk:mm")
-        val end = SimpleDateFormat("kk:mm")
+        val start = SimpleDateFormat("yyyy.MM.dd - kk:mm", Locale.getDefault())
+        val end = SimpleDateFormat("kk:mm", Locale.getDefault())
         viewHolder.date.text = "${start.format(Date(suggestList[position].startTime))} ~ ${end.format(Date(suggestList[position].endTime))}"
         viewHolder.title.text = "${position + 1}번째 제안"
 
