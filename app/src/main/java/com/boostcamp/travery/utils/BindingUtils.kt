@@ -158,8 +158,7 @@ object BindingUtils {
     @JvmStatic
     @BindingAdapter("imageAdapter")
     fun setAdapter(recyclerView: RecyclerView, viewModel: UserActionDetailViewModel) {
-        val adapter = UserActionImageAdapter().apply {
-            setItems(viewModel.imageList)
+        val adapter = UserActionImageAdapter(viewModel.imageList).apply {
             onItemClickListener = { item: Any -> viewModel.onItemClick(item) }
         }
         recyclerView.apply {

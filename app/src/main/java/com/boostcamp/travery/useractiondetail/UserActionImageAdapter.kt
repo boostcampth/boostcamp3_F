@@ -3,13 +3,13 @@ package com.boostcamp.travery.useractiondetail
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.databinding.ObservableArrayList
 import com.boostcamp.travery.R
-import com.boostcamp.travery.base.BaseAdapter
 import com.boostcamp.travery.base.BaseViewHolder
+import com.boostcamp.travery.base.ObservableRecyclerViewAdapter
 import com.boostcamp.travery.databinding.ItemUseractionDetailImageBinding
 
-class UserActionImageAdapter : BaseAdapter<String, BaseViewHolder>() {
-    var onItemClickListener: ((item: Any) -> Unit)? = null
+class UserActionImageAdapter(list: ObservableArrayList<String>) : ObservableRecyclerViewAdapter<String, BaseViewHolder>(list) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         val binding = DataBindingUtil.inflate<ItemUseractionDetailImageBinding>(
@@ -21,7 +21,7 @@ class UserActionImageAdapter : BaseAdapter<String, BaseViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
-        holder.bind(data[position])
+        holder.bind(getItems()[position])
     }
 
 

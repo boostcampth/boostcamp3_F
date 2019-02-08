@@ -4,9 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ObservableArrayList
-import com.boostcamp.travery.OnItemClickListener
 import com.boostcamp.travery.R
-import com.boostcamp.travery.base.BaseAdapter
 import com.boostcamp.travery.base.BaseViewHolder
 import com.boostcamp.travery.base.ObservableRecyclerViewAdapter
 import com.boostcamp.travery.databinding.ItemCourseListBinding
