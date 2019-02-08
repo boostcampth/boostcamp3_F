@@ -10,10 +10,11 @@ import com.boostcamp.travery.R
 import com.boostcamp.travery.base.BaseActivity
 import com.boostcamp.travery.databinding.ActivityCourseDetailBinding
 import com.boostcamp.travery.utils.CustomMarker
+import com.boostcamp.travery.utils.toPx
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener
+import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import kotlinx.android.synthetic.main.activity_course_detail.*
@@ -34,8 +35,7 @@ class CourseDetailActivity : BaseActivity<ActivityCourseDetailBinding>(), OnMapR
         val mapFragment = fragment_map as SupportMapFragment
         mapFragment.getMapAsync(this)
         setupBindings(savedInstanceState)
-        viewModel.loadUserActionList()
-        observeViewmodel()
+
 
     }
 
@@ -55,7 +55,7 @@ class CourseDetailActivity : BaseActivity<ActivityCourseDetailBinding>(), OnMapR
                 rv_useraction_toplist.scrollBy(0, dy)
             }
         })
-        rv_useraction_leftlist.setOnSnapListener { viewModel.updatePosition(it) }
+        rv_useraction_leftlist.setOnSnapListener { viewModel.updateCurUseraction(it) }
     }
 
     /**
@@ -66,6 +66,8 @@ class CourseDetailActivity : BaseActivity<ActivityCourseDetailBinding>(), OnMapR
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
         map.setOnMarkerClickListener(this)
+        viewModel.loadUserActionList()
+        observeViewmodel()
     }
 
     override fun onMarkerClick(marker: Marker?): Boolean {
@@ -80,25 +82,28 @@ class CourseDetailActivity : BaseActivity<ActivityCourseDetailBinding>(), OnMapR
             // 경로의 폴리라인과 시작점 끝점 마크를 맵위에 표시.
             map.addPolyline(PolylineOptions().addAll(it))
 
-            map.moveCamera(
-                    CameraUpdateFactory.newLatLngBounds(
-                            LatLngBounds.builder().include(it[0]).include(it[it.size - 1]).build(),
-                            100
-                    )
-            )
+            //지도가 완전히 뜨고나서 카메라가 지정한 위치로 이동하기 위해 post를 사용.
+            fragment_map.view?.post {
+                map.moveCamera(
+                        CameraUpdateFactory.newLatLngBounds(
+                                LatLngBounds.builder().include(it[0]).include(it[it.size - 1]).build()
+                                , 110.toPx())
+                )
+            }
+
         })
 
         viewModel.markerList.observe(this, Observer { actionList ->
             for (i in actionList.indices) {
                 when (i) {
-                    0 -> map.addMarker(MarkerOptions().position(LatLng(actionList[i].latitude, actionList[i].longitude)).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_start))).tag=i
-                    actionList.size - 1 -> map.addMarker(MarkerOptions().position(LatLng(actionList[i].latitude, actionList[i].longitude)).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_arrive))).tag=i
+                    0 -> map.addMarker(MarkerOptions().position(LatLng(actionList[i].latitude, actionList[i].longitude)).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_start))).tag = i
+                    actionList.size - 1 -> map.addMarker(MarkerOptions().position(LatLng(actionList[i].latitude, actionList[i].longitude)).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_arrive))).tag = i
                     else -> map.addMarker(MarkerOptions().position(LatLng(actionList[i].latitude, actionList[i].longitude)).icon(BitmapDescriptorFactory.fromBitmap(CustomMarker.create(this, actionList[i].mainImage)))).tag = i
                 }
             }
         })
         viewModel.curUseraction.observe(this, Observer {
-            map.moveCamera(CameraUpdateFactory.newLatLng(LatLng(it.latitude,it.longitude)))
+            map.moveCamera(CameraUpdateFactory.newLatLng(LatLng(it.latitude, it.longitude)))
         })
     }
 

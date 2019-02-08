@@ -4,7 +4,7 @@ import androidx.databinding.ObservableList
 import androidx.recyclerview.widget.RecyclerView
 
 abstract class ObservableRecyclerViewAdapter<T, Holder : RecyclerView.ViewHolder>(
-    private val items: ObservableList<T>
+        private val items: ObservableList<T>
 ) : RecyclerView.Adapter<Holder>() {
 
     var onItemClickListener: ((item: Any) -> Unit)? = null
@@ -20,10 +20,10 @@ abstract class ObservableRecyclerViewAdapter<T, Holder : RecyclerView.ViewHolder
             }
 
             override fun onItemRangeMoved(
-                sender: ObservableList<T>?,
-                fromPosition: Int,
-                toPosition: Int,
-                itemCount: Int
+                    sender: ObservableList<T>?,
+                    fromPosition: Int,
+                    toPosition: Int,
+                    itemCount: Int
             ) {
                 notifyDataSetChanged()
             }
@@ -33,7 +33,7 @@ abstract class ObservableRecyclerViewAdapter<T, Holder : RecyclerView.ViewHolder
             }
 
             override fun onItemRangeChanged(sender: ObservableList<T>?, positionStart: Int, itemCount: Int) {
-                notifyItemRangeChanged(positionStart, itemCount)
+                notifyItemRangeChanged(positionStart + 1, itemCount)
             }
         })
     }
@@ -47,4 +47,6 @@ abstract class ObservableRecyclerViewAdapter<T, Holder : RecyclerView.ViewHolder
     fun getItems(): ObservableList<T> {
         return items
     }
+
+
 }

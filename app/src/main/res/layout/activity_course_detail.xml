@@ -28,8 +28,8 @@
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/rv_useraction_leftlist"
-            app:layout_constraintTop_toBottomOf="@+id/rv_useraction_toplist"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/rv_useraction_toplist"
             tools:context=".MapsActivity"/>
 
         <com.takusemba.multisnaprecyclerview.MultiSnapRecyclerView
@@ -43,8 +43,8 @@
             app:layout_constraintTop_toBottomOf="@+id/rv_useraction_toplist"
             app:msrv_gravity="start"
             app:msrv_snap_count="1"
-            app:scrollTo="@{viewModel.scrollTo}"
             app:setAdapter="@{viewModel.leftAdapter}"
+            app:scrollTo="@{viewModel.scrollTo}"
         />
 
         <com.takusemba.multisnaprecyclerview.MultiSnapRecyclerView
@@ -58,9 +58,10 @@
             app:layout_constraintTop_toBottomOf="@+id/toolbar"
             app:msrv_gravity="start"
             app:msrv_snap_count="1"
+            app:setAdapter="@{viewModel.topAdapter}"
             app:scrollTo="@{viewModel.scrollTo}"
-            app:setAdapter="@{viewModel.topAdapter}}"
         />
+        
         <LinearLayout
             android:id="@+id/ll_useraction_info"
             android:layout_width="0dp"
