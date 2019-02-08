@@ -1,6 +1,7 @@
 package com.boostcamp.travery.utils
 
 import android.content.Context
+import android.content.res.Resources
 import android.widget.Toast
 import com.boostcamp.travery.R
 
@@ -21,9 +22,10 @@ fun Number.toImage(): Int {
     }
 }
 
-fun Number.dpToPixel(context: Context): Float {
-    return this.toFloat() * (context.resources.displayMetrics.densityDpi / 160f)
-}
+/**
+ * DpToPx
+ */
+fun Number.toPx(): Int =(this.toFloat() * Resources.getSystem().displayMetrics.density).toInt()
 
 // usage : "토스트".toast(context)
 fun Any.toast(context: Context, duration: Int = Toast.LENGTH_SHORT) {
