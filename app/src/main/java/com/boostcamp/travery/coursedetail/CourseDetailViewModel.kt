@@ -87,8 +87,7 @@ class CourseDetailViewModel(application: Application) : BaseViewModel(applicatio
         scrollTo.notifyChange()
     }
 
-    fun updatePosition(position: Int) {
-        scrollTo.set(position)
+    fun updateCurUseraction(position: Int) {
         curUseraction.value = topActionList[position]
     }
 

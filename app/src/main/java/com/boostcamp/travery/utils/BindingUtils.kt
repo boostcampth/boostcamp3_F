@@ -2,6 +2,7 @@ package com.boostcamp.travery.utils
 
 import android.annotation.SuppressLint
 import android.graphics.drawable.Drawable
+import android.os.Handler
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -33,15 +34,15 @@ object BindingUtils {
     fun setMapImage(imageView: ImageView, path: String) {
         if (!path.isEmpty()) {
             GlideApp.with(imageView.context)
-                    .load(path)
-                    .circleCrop()
-                    .into(imageView)
+                .load(path)
+                .circleCrop()
+                .into(imageView)
         } else {
             imageView.setImageDrawable(
-                    ContextCompat.getDrawable(
-                            imageView.context,
-                            com.boostcamp.travery.R.mipmap.ic_launcher_round
-                    )
+                ContextCompat.getDrawable(
+                    imageView.context,
+                    com.boostcamp.travery.R.mipmap.ic_launcher_round
+                )
             )
         }
     }
@@ -50,18 +51,29 @@ object BindingUtils {
     @BindingAdapter("image")
     fun setImage(imageView: ImageView, path: String?) {
         GlideApp.with(imageView.context)
-                .load(path)
-                .listener(object : RequestListener<Drawable> {
-                    override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
-                        imageView.visibility = View.GONE
-                        return false
-                    }
+            .load(path)
+            .listener(object : RequestListener<Drawable> {
+                override fun onLoadFailed(
+                    e: GlideException?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    imageView.visibility = View.GONE
+                    return false
+                }
 
-                    override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
-                        return false
-                    }
-                })
-                .into(imageView)
+                override fun onResourceReady(
+                    resource: Drawable?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    dataSource: DataSource?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    return false
+                }
+            })
+            .into(imageView)
     }
 
     @SuppressLint("SimpleDateFormat")
@@ -87,7 +99,7 @@ object BindingUtils {
         recyclerView.layoutManager = LinearLayoutManager(recyclerView.context)
         recyclerView.adapter = adapter
         val dividerItemDecoration =
-                DividerItemDecoration(recyclerView.context, LinearLayoutManager(recyclerView.context).orientation)
+            DividerItemDecoration(recyclerView.context, LinearLayoutManager(recyclerView.context).orientation)
         recyclerView.addItemDecoration(dividerItemDecoration)
     }
 
@@ -95,8 +107,8 @@ object BindingUtils {
     @JvmStatic
     @BindingAdapter("setAdapter")
     fun bindMultiSnapRecyclerViewAdapter(
-            recyclerView: com.takusemba.multisnaprecyclerview.MultiSnapRecyclerView,
-            adapter: RecyclerView.Adapter<*>
+        recyclerView: com.takusemba.multisnaprecyclerview.MultiSnapRecyclerView,
+        adapter: RecyclerView.Adapter<*>
     ) {
         recyclerView.layoutManager = LinearLayoutManager(recyclerView.context)
         recyclerView.adapter = adapter
@@ -159,15 +171,20 @@ object BindingUtils {
     fun scrollTo(recyclerView: RecyclerView, position: Int) {
         //리사이클러뷰의 최상단으로 scrollBy를 이용하여 하면 작동이 잘안되는 문제로
         //position==0일때만 scrollToPosition을 사용
-        if (position == 0) {
-            recyclerView.scrollToPosition(0)
-        } else {
-            val top = (recyclerView.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition()
-            val curTop = recyclerView.findViewHolderForAdapterPosition(top)?.itemView?.top ?: 0
-            val positionTop = recyclerView.findViewHolderForAdapterPosition(position)?.itemView?.top
-                    ?: 0
-            recyclerView.scrollBy(0, positionTop - curTop)
-        }
+//        if (position == 0) {
+//            recyclerView.scrollToPosition(0)
+//        } else {
+//            val top = (recyclerView.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition()
+//            val curTop = recyclerView.findViewHolderForAdapterPosition(top)?.itemView?.top ?: 0
+//            val positionTop = recyclerView.findViewHolderForAdapterPosition(position)?.itemView?.top
+//                    ?: 0
+//            recyclerView.scrollBy(0, positionTop - curTop)
+//        }
+
+        //scrollToPositionWithOffset 시 이동한 해당 아이템 값 노출이 안됨.
+        (recyclerView.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(position, 0)
+
     }
+
 
 }

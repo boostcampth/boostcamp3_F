@@ -55,7 +55,7 @@ class CourseDetailActivity : BaseActivity<ActivityCourseDetailBinding>(), OnMapR
                 rv_useraction_toplist.scrollBy(0, dy)
             }
         })
-        rv_useraction_leftlist.setOnSnapListener { viewModel.updatePosition(it) }
+        rv_useraction_leftlist.setOnSnapListener { viewModel.updateCurUseraction(it) }
     }
 
     /**

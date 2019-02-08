@@ -12,8 +12,8 @@ import com.boostcamp.travery.databinding.ItemUseractionDetailToplistBinding
 import com.boostcamp.travery.databinding.ItemUseractionEmptyBinding
 import com.boostcamp.travery.utils.toImage
 
-class UserActionTopListAdapter(userActionList: ObservableList<UserAction?>) :
-        ObservableRecyclerViewAdapter<UserAction?, RecyclerView.ViewHolder>(userActionList) {
+class UserActionTopListAdapter(userActionList: ObservableList<UserAction>) :
+        ObservableRecyclerViewAdapter<UserAction, RecyclerView.ViewHolder>(userActionList) {
     companion object {
         const val TYPE_ACTION = 0
         const val TYPE_EMPTY_ACTIVITY = 1
@@ -28,7 +28,7 @@ class UserActionTopListAdapter(userActionList: ObservableList<UserAction?>) :
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        Log.e("TEA", "" + position)
+        Log.e("TopListAdapter", "" + position)
         if (holder is ActivityEmptyViewHolder) {
             //아이템이 0번째라면 시작 이미지
             if (position == 0) {
@@ -48,7 +48,6 @@ class UserActionTopListAdapter(userActionList: ObservableList<UserAction?>) :
             holder.binding.executePendingBindings()
         }
 
-
     }
 
 
@@ -65,6 +64,5 @@ class UserActionTopListAdapter(userActionList: ObservableList<UserAction?>) :
 
     //시작점과 끝점 아이템을 위한 뷰홀더
     class ActivityEmptyViewHolder(var binding: ItemUseractionEmptyBinding) : RecyclerView.ViewHolder(binding.root)
-
 
 }
