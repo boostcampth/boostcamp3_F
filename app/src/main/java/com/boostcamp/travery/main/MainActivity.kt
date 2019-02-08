@@ -10,6 +10,7 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.ViewModelProviders
 import com.boostcamp.travery.Constants
@@ -38,13 +39,12 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), NavigationView.OnNavig
         super.onCreate(savedInstanceState)
         setContentView(viewDataBinding.root)
 
-        val viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
-        viewDataBinding.viewmodel = viewModel
+        viewDataBinding.viewmodel = ViewModelProviders.of(this).get(MainViewModel::class.java).apply {
+            setViewModelContract(this@MainActivity)
+        }
 
-        viewModel.loadCourseList()
-        viewModel.setViewModelContract(this)
-
-        setSupportActionBar(toolbar)
+        setSupportActionBar(toolbar as Toolbar)
+        title = ""
 
         fab.setOnClickListener {
             TedRx2Permission.with(this)
@@ -67,7 +67,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), NavigationView.OnNavig
         }
 
         ActionBarDrawerToggle(
-                this, drawer_layout, toolbar,
+                this, drawer_layout, toolbar as Toolbar,
                 R.string.navigation_drawer_open,
                 R.string.navigation_drawer_close
         ).also {
@@ -108,15 +108,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), NavigationView.OnNavig
             }
             R.id.nav_slideshow -> {
                 startActivity(Intent(this, UserActionSaveActivity::class.java))
-            }
-            R.id.nav_manage -> {
-
-            }
-            R.id.nav_share -> {
-
-            }
-            R.id.nav_send -> {
-
             }
         }
 

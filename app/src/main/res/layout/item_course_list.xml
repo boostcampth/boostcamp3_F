@@ -8,23 +8,18 @@
         <variable
             name="item"
             type="com.boostcamp.travery.data.model.Course" />
-
-        <variable
-            name="listener"
-            type="com.boostcamp.travery.OnItemClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="@{() -> listener.onItemClick(item)}"
         android:padding="10dp">
 
         <com.boostcamp.travery.custom.CircleImageView
             android:id="@+id/iv_map"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:mapImage="@{item.mapImage}"                                                                                  
+            android:mapImage="@{item.mapImage}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -59,16 +54,15 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginStart="5dp"
-            android:background="@drawable/bg_theme"
             android:gravity="center"
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
-            android:text="@{item.theme}"
             android:textColor="@android:color/white"
             android:textSize="10sp"
             app:layout_constraintBottom_toBottomOf="@id/tv_title"
             app:layout_constraintStart_toEndOf="@id/tv_title"
             app:layout_constraintTop_toTopOf="@id/tv_title"
+            app:theme="@{item.theme}"
             tools:text="테마" />
 
         <TextView

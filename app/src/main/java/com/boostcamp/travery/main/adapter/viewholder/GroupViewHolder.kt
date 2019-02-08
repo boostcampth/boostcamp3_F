@@ -1,4 +1,4 @@
-package com.boostcamp.travery.main.viewholder
+package com.boostcamp.travery.main.adapter.viewholder
 
 import com.boostcamp.travery.base.BaseViewHolder
 import com.boostcamp.travery.databinding.ItemCourseListGroupBinding
@@ -11,4 +11,4 @@ class GroupViewHolder(private val binding: ItemCourseListGroupBinding) : BaseVie
     }
 }
 
-data class GroupItem(val groupName: String)
+data class GroupItem(val date: Long)

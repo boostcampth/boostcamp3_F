@@ -2,7 +2,6 @@ package com.boostcamp.travery.utils
 
 import android.annotation.SuppressLint
 import android.graphics.drawable.Drawable
-import android.os.Handler
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -15,8 +14,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.boostcamp.travery.GlideApp
 import com.boostcamp.travery.R
+import com.boostcamp.travery.main.MainViewModel
+import com.boostcamp.travery.main.adapter.CourseListAdapter
 import com.boostcamp.travery.save.UserActionImageListAdapter
 import com.boostcamp.travery.save.UserActionSaveViewModel
+import com.boostcamp.travery.search.SearchResultViewModel
+import com.boostcamp.travery.search.UserActionSearchAdapter
 import com.boostcamp.travery.useractiondetail.UserActionDetailViewModel
 import com.boostcamp.travery.useractiondetail.UserActionImageAdapter
 import com.bumptech.glide.load.DataSource
@@ -34,15 +37,15 @@ object BindingUtils {
     fun setMapImage(imageView: ImageView, path: String) {
         if (!path.isEmpty()) {
             GlideApp.with(imageView.context)
-                .load(path)
-                .circleCrop()
-                .into(imageView)
+                    .load(path)
+                    .circleCrop()
+                    .into(imageView)
         } else {
             imageView.setImageDrawable(
-                ContextCompat.getDrawable(
-                    imageView.context,
-                    com.boostcamp.travery.R.mipmap.ic_launcher_round
-                )
+                    ContextCompat.getDrawable(
+                            imageView.context,
+                            com.boostcamp.travery.R.mipmap.ic_launcher_round
+                    )
             )
         }
     }
@@ -51,29 +54,18 @@ object BindingUtils {
     @BindingAdapter("image")
     fun setImage(imageView: ImageView, path: String?) {
         GlideApp.with(imageView.context)
-            .load(path)
-            .listener(object : RequestListener<Drawable> {
-                override fun onLoadFailed(
-                    e: GlideException?,
-                    model: Any?,
-                    target: Target<Drawable>?,
-                    isFirstResource: Boolean
-                ): Boolean {
-                    imageView.visibility = View.GONE
-                    return false
-                }
+                .load(path)
+                .listener(object : RequestListener<Drawable> {
+                    override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
+                        imageView.visibility = View.GONE
+                        return false
+                    }
 
-                override fun onResourceReady(
-                    resource: Drawable?,
-                    model: Any?,
-                    target: Target<Drawable>?,
-                    dataSource: DataSource?,
-                    isFirstResource: Boolean
-                ): Boolean {
-                    return false
-                }
-            })
-            .into(imageView)
+                    override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
+                        return false
+                    }
+                })
+                .into(imageView)
     }
 
     @SuppressLint("SimpleDateFormat")
@@ -88,9 +80,11 @@ object BindingUtils {
     @JvmStatic
     @BindingAdapter("bind:startTime", "bind:endTime")
     fun setTime(textView: TextView, startTime: Long, endTime: Long) {
-        val start = SimpleDateFormat("yyyy.MM.dd - kk:mm")
-        val end = SimpleDateFormat("kk:mm")
-        textView.text = "${start.format(Date(startTime))} ~ ${end.format(Date(endTime))}"
+        val start = SimpleDateFormat("yyyy.MM.dd - HH:mm")
+        val end = SimpleDateFormat("HH:mm")
+        textView.text = String.format(textView.context.resources.getString(R.string.string_place_holder_date,
+                start.format(Date(startTime)),
+                end.format(Date(endTime))))
     }
 
     @JvmStatic
@@ -99,7 +93,7 @@ object BindingUtils {
         recyclerView.layoutManager = LinearLayoutManager(recyclerView.context)
         recyclerView.adapter = adapter
         val dividerItemDecoration =
-            DividerItemDecoration(recyclerView.context, LinearLayoutManager(recyclerView.context).orientation)
+                DividerItemDecoration(recyclerView.context, LinearLayoutManager(recyclerView.context).orientation)
         recyclerView.addItemDecoration(dividerItemDecoration)
     }
 
@@ -107,8 +101,8 @@ object BindingUtils {
     @JvmStatic
     @BindingAdapter("setAdapter")
     fun bindMultiSnapRecyclerViewAdapter(
-        recyclerView: com.takusemba.multisnaprecyclerview.MultiSnapRecyclerView,
-        adapter: RecyclerView.Adapter<*>
+            recyclerView: com.takusemba.multisnaprecyclerview.MultiSnapRecyclerView,
+            adapter: RecyclerView.Adapter<*>
     ) {
         recyclerView.layoutManager = LinearLayoutManager(recyclerView.context)
         recyclerView.adapter = adapter
@@ -186,5 +180,57 @@ object BindingUtils {
 
     }
 
+    @JvmStatic
+    @BindingAdapter("listAdapter")
+    fun setAdapter(recyclerView: RecyclerView, viewModel: MainViewModel) {
+        val adapter = CourseListAdapter(viewModel.data).apply {
+            onItemClickListener = { item: Any -> viewModel.onItemClick(item) }
+        }
+        recyclerView.apply {
+            layoutManager = LinearLayoutManager(recyclerView.context)
+            this.adapter = adapter
+        }
+    }
 
+    @JvmStatic
+    @BindingAdapter("listAdapter")
+    fun setAdapter(recyclerView: RecyclerView, viewModel: SearchResultViewModel) {
+        val adapter = UserActionSearchAdapter(viewModel.data).apply {
+            onItemClickListener = { item: Any -> viewModel.onItemClick(item) }
+        }
+        recyclerView.apply {
+            layoutManager = LinearLayoutManager(recyclerView.context)
+            this.adapter = adapter
+        }
+    }
+
+    /**
+     * 선택한 테마에 맞추어 배경 변경(총 5가지 색상)
+     */
+    @JvmStatic
+    @BindingAdapter("theme")
+    fun setTheme(textView: TextView, theme: String) {
+        val string = textView.resources.getStringArray(R.array.theme_array)
+        textView.apply {
+            text = theme
+            background = when (theme) {
+                string[0] -> ContextCompat.getDrawable(textView.context, R.drawable.bg_theme_red)
+                string[1] -> ContextCompat.getDrawable(textView.context, R.drawable.bg_theme_pink)
+                string[2] -> ContextCompat.getDrawable(textView.context, R.drawable.bg_theme_deep_purple)
+                string[3] -> ContextCompat.getDrawable(textView.context, R.drawable.bg_theme_indigo)
+                else -> ContextCompat.getDrawable(textView.context, R.drawable.bg_theme_green)
+            }
+        }
+    }
+
+    @JvmStatic
+    @BindingAdapter("group")
+    fun setGroupTitle(textView: TextView, group: Long) {
+        val termDay = DateUtils.getTermDay(toMillis = group)
+        textView.text = when (termDay) {
+            0 -> textView.resources.getString(R.string.string_group_title_today)
+            1 -> textView.resources.getString(R.string.string_group_title_yesterday)
+            else -> DateUtils.getDateToString(group)
+        }
+    }
 }

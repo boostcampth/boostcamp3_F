@@ -2,17 +2,20 @@ package com.boostcamp.travery.main
 
 import android.app.Application
 import android.util.Log
-import com.boostcamp.travery.OnItemClickListener
+import androidx.databinding.ObservableArrayList
 import com.boostcamp.travery.base.BaseViewModel
 import com.boostcamp.travery.data.model.Course
-import com.boostcamp.travery.main.adapter.CourseListAdapter
-import com.boostcamp.travery.main.viewholder.GroupItem
+import com.boostcamp.travery.main.adapter.viewholder.GroupItem
 import com.boostcamp.travery.utils.DateUtils
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
-class MainViewModel(application: Application) : BaseViewModel(application), OnItemClickListener {
-    val adapter = CourseListAdapter(this)
+class MainViewModel(application: Application) : BaseViewModel(application) {
+    val data = ObservableArrayList<Any>()
+
+    init {
+        loadCourseList()
+    }
 
     private var contract: Contract? = null
 
@@ -24,16 +27,17 @@ class MainViewModel(application: Application) : BaseViewModel(application), OnIt
         this.contract = contract
     }
 
-    fun loadCourseList() {
-//        repository.insertDummyData()
+    private fun loadCourseList() {
         repository.getAllCourse()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .map {
-                    createGroup(it)
+                    createGroup(it.filter { item ->
+                        item.endTime != 0L
+                    })
                 }.subscribe(
                         {
-                            adapter.setItems(it)
+                            data.addAll(it)
                         },
                         {
                             Log.e("TAG", "List load error", it)
@@ -45,18 +49,18 @@ class MainViewModel(application: Application) : BaseViewModel(application), OnIt
         val result = ArrayList<Any>()
         var partition = -1
 
-        list.forEach { route ->
-            if (partition != DateUtils.getTermDay(toMillis = route.endTime)) {
-                result.add(GroupItem("${DateUtils.getDate(route.endTime)[2]}"))
+        list.forEach { course ->
+            if (partition != DateUtils.getTermDay(toMillis = course.endTime)) {
+                result.add(GroupItem(course.endTime))
             }
-            partition = DateUtils.getTermDay(toMillis = route.endTime)
-            result.add(route)
+            partition = DateUtils.getTermDay(toMillis = course.endTime)
+            result.add(course)
         }
 
         return result
     }
 
-    override fun onItemClick(item: Any) {
+    fun onItemClick(item: Any) {
         contract?.onItemClick(item)
     }
 }
