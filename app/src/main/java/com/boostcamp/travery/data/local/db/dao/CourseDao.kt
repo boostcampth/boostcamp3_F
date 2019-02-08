@@ -20,7 +20,7 @@ interface CourseDao {
     /**
      * 저장된 모든 경로 리스트 반환
      */
-    @Query("SELECT * FROM course")
+    @Query("SELECT * FROM course ORDER BY start_time DESC")
     fun loadAll(): List<Course>
 
     /**
