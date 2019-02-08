@@ -141,7 +141,7 @@ class MapTrackingService : Service() {
         secondTimer = Timer()
 
         try {
-            mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper())
+            mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null)
 
         } catch (ex: java.lang.SecurityException) {
             Log.i(TAG, "fail to request location update, ignore", ex)

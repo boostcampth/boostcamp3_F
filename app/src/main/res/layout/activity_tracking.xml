@@ -46,6 +46,7 @@
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:text="0"
+                app:visibility="@{viewmodel.isService}"
                 android:textColor="@color/colorAccent"
                 app:layout_constraintRight_toRightOf="@+id/btn_suggest"
                 app:layout_constraintTop_toTopOf="@+id/btn_suggest"/>
