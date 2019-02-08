@@ -72,7 +72,7 @@ class CourseDetailViewModel(application: Application) : BaseViewModel(applicatio
                     topActionList.addAll(1, it)
                     leftActionList.addAll(0, it)
                     markerList.value = topActionList
-                    curUseraction.value = arr[0]
+//                    curUseraction.value = arr[0]
                 })
     }
 

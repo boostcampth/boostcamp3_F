@@ -163,21 +163,7 @@ object BindingUtils {
     @JvmStatic
     @BindingAdapter("scrollTo")
     fun scrollTo(recyclerView: RecyclerView, position: Int) {
-        //리사이클러뷰의 최상단으로 scrollBy를 이용하여 하면 작동이 잘안되는 문제로
-        //position==0일때만 scrollToPosition을 사용
-//        if (position == 0) {
-//            recyclerView.scrollToPosition(0)
-//        } else {
-//            val top = (recyclerView.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition()
-//            val curTop = recyclerView.findViewHolderForAdapterPosition(top)?.itemView?.top ?: 0
-//            val positionTop = recyclerView.findViewHolderForAdapterPosition(position)?.itemView?.top
-//                    ?: 0
-//            recyclerView.scrollBy(0, positionTop - curTop)
-//        }
-
-        //scrollToPositionWithOffset 시 이동한 해당 아이템 값 노출이 안됨.
         (recyclerView.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(position, 0)
-
     }
 
     @JvmStatic
