@@ -22,7 +22,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="20dp">
+                android:padding="@dimen/activity_content_padding">
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tv_user_action_detail_title"
@@ -83,7 +83,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="20dp">
+                android:padding="@dimen/activity_content_padding">
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tv_user_action_hash_tag_title"
@@ -95,15 +95,13 @@
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
-                <com.nex3z.flowlayout.FlowLayout
-                    android:id="@+id/hash_tag_container"
+                <com.google.android.material.chip.ChipGroup
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:padding="10dp"
-                    app:flChildSpacing="10dp"
-                    app:flRowSpacing="5dp"
-                    app:hashTag="@{viewmodel.hashTagList}" />
+                    app:chipSpacing="5dp"
+                    app:flChildSpacing="20dp"
+                    app:hashTag="@{viewmodel.hashTagList}"/>
             </androidx.appcompat.widget.LinearLayoutCompat>
 
             <View
@@ -117,7 +115,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="20dp">
+                android:padding="@dimen/activity_content_padding">
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tv_image_list_title"
