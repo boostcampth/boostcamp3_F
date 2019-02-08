@@ -2,10 +2,12 @@ package com.boostcamp.travery.save
 
 import android.app.Application
 import androidx.databinding.ObservableArrayList
+import androidx.lifecycle.MutableLiveData
 import com.boostcamp.travery.base.BaseViewModel
 import com.boostcamp.travery.data.model.UserAction
 import io.reactivex.schedulers.Schedulers
 import java.util.*
+import kotlin.collections.ArrayList
 
 class UserActionSaveViewModel(application: Application) : BaseViewModel(application) {
     val imageList = ObservableArrayList<UserActionImage>()
@@ -14,8 +16,9 @@ class UserActionSaveViewModel(application: Application) : BaseViewModel(applicat
         get() = if (field.isEmpty()) "empty" else field
     private var content = ""
         get() = if (field.isEmpty()) "empty" else field
-    private var hashTag = ""
-        get() = if (field.isEmpty()) "empty" else field
+
+    val hashTag = MutableLiveData<String>()
+    private val hashTagList = ArrayList<String>()
 
     private var contract: UserActionSaveViewModel.Contract? = null
 
@@ -38,7 +41,7 @@ class UserActionSaveViewModel(application: Application) : BaseViewModel(applicat
                 UserAction(title,
                         content,
                         Date(System.currentTimeMillis()),
-                        hashTag,
+                        listToString(hashTagList, ' '),
                         imageList[0].filePath,
                         result,
                         latitude, longitude,
@@ -62,6 +65,23 @@ class UserActionSaveViewModel(application: Application) : BaseViewModel(applicat
     }
 
     fun onHashTagChange(body: CharSequence) {
-        this.hashTag = body.toString()
+        val count = body.count()
+        if (count > 0 && body[0] == '#') { // # 으로 시작할 경우 해시태그
+            // 마지막 문자가 ' '으로 끝날 경우, 해당 해시태그를 observe 하는 액티비티에게 변경사항 알림
+            if (body[count - 1] == ' ' || body[count - 1] == '\n') {
+                hashTag.value = body.substring(0, count - 1).also {
+                    hashTagList.add(it)
+                }
+            }
+        }
+    }
+
+    /**
+     * list("#안녕","#하세요","#반가워요") -> "#안녕 #하세요 #반가워요"
+     */
+    private fun listToString(list: List<String>, divider: Char): String {
+        return list.fold("") { acc, item ->
+            if (acc.isEmpty()) item else "$acc$divider$item"
+        }
     }
 }
