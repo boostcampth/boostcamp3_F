@@ -61,16 +61,17 @@
             app:setAdapter="@{viewModel.topAdapter}"
             app:scrollTo="@{viewModel.scrollTo}"
         />
-        
+
         <LinearLayout
             android:id="@+id/ll_useraction_info"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:background="@android:color/background_light"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="@+id/fragment_map"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/rv_useraction_leftlist">
+            app:layout_constraintStart_toStartOf="parent">
             <ImageView
                 android:id="@+id/iv_useraction_mainimg"
                 android:layout_width="match_parent"
