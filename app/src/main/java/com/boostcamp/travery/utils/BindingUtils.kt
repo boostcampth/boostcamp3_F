@@ -26,7 +26,11 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
 import com.nex3z.flowlayout.FlowLayout
+import kotlinx.android.synthetic.main.activity_save_user_action.*
+import kotlinx.android.synthetic.main.activity_save_user_action.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -145,18 +149,6 @@ object BindingUtils {
         }
     }
 
-    @JvmStatic
-    @BindingAdapter("hashTag")
-    fun setHashTag(flowLayout: FlowLayout, hashTagList: List<String>) {
-        hashTagList.forEach {
-            val tv = TextView(ContextThemeWrapper(flowLayout.context, R.style.BorderTextView)).apply {
-                text = it
-            }
-            (tv.parent as? ViewGroup)?.removeView(tv)
-            flowLayout.addView(tv)
-        }
-    }
-
     /**
      * 리사이클러뷰 해당 position이 리사이클러뷰의 최상단에 보이게 스크롤
      */
@@ -217,6 +209,25 @@ object BindingUtils {
             0 -> textView.resources.getString(R.string.string_group_title_today)
             1 -> textView.resources.getString(R.string.string_group_title_yesterday)
             else -> DateUtils.getDateToString(group)
+        }
+    }
+
+    /**
+     * listOf("#해시태그1","해시태그2","해시태그3") 형태로 들어오면, 각각을 Chip 으로 세팅하여 addView
+     * 이 메서드가 다시 호출되면 또 추가될 가능성이 있음.
+     */
+    @JvmStatic
+    @BindingAdapter("hashTag")
+    fun setHashTag(chipGroup: ChipGroup, hashTagList: List<String>) {
+        hashTagList.forEach { hashTag ->
+            Chip(chipGroup.context).apply {
+                text = hashTag
+                isClickable = true
+                isChipIconVisible = false
+                isCheckedIconVisible = false
+            }.also {
+                chipGroup.addView(it)
+            }
         }
     }
 }

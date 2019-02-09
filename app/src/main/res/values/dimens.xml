@@ -8,4 +8,7 @@
     <item name="normal_speed" type="dimen" format="float">100</item>
     <item name="high_speed" type="dimen" format="float">50</item>
     <item name="low_speed" type="dimen" format="float">120</item>
+
+    <dimen name="save_activity_keyline_margin_start">10dp</dimen>
+    <dimen name="activity_content_padding">10dp</dimen>
 </resources>

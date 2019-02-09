@@ -33,7 +33,7 @@
 
     <string name="string_et_course_add_hint">제목을 입력하세요(20자 이내)</string>
     <string name="string_et_course_add_content_hint">현재 코스를 한줄로 표현해주세요</string>
-    <string name="string_et_course_add_theme">테마를 선택해주세요</string>
+    <string name="string_et_course_add_theme">테마를 입력하세요</string>
     <string name="string_tv_course_add">테마</string>
     <string name="string_tv_date">날짜</string>
     <string name="string_save_menu">저장</string>
