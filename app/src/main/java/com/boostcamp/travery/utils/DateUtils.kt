@@ -18,7 +18,15 @@ object DateUtils {
     }
 
     fun getTermDay(fromMillis: Long = System.currentTimeMillis(), toMillis: Long): Int {
-        val oneDay = 1000 * 60 * 60 * 24L
-        return ((fromMillis - toMillis) / oneDay).toInt()
+        val fromDays = Calendar.getInstance(Locale.getDefault()).let {
+            it.timeInMillis = fromMillis
+            it.get(Calendar.DATE)
+        }
+        val toDays = Calendar.getInstance(Locale.getDefault()).let {
+            it.timeInMillis = toMillis
+            it.get(Calendar.DATE)
+        }
+
+        return Math.abs(toDays - fromDays)
     }
 }
