@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -11,12 +11,34 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar"/>
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.MaterialComponents.Light"/>
 
-    
     <style name="BorderTextView" parent="@android:style/Widget.TextView">
-        <item name="android:padding">10dp</item>
+        <item name="android:padding">5dp</item>
         <item name="android:background">@drawable/bg_hashtag</item>
+        <item name="android:layout_margin">5dp</item>
+    </style>
+
+    <style name="TitleTextView" parent="@android:style/Widget.TextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@android:color/holo_green_dark</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Chip.HashTag" parent="Base.Widget.MaterialComponents.Chip">
+        <item name="android:background">@drawable/bg_hashtag</item>
+        <item name="android:layout_margin">5dp</item>
+        <item name="chipIconVisible">false</item>
+        <item name="checkedIconVisible">false</item>
+        <item name="closeIconVisible">false</item>
+    </style>
+
+    <style name="Chip.Edit" parent="Base.Widget.MaterialComponents.Chip">
+        <item name="android:background">@drawable/bg_hashtag</item>
+        <item name="android:layout_margin">5dp</item>
+        <item name="android:clickable">true</item>
     </style>
 </resources>

@@ -5,7 +5,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.boostcamp.travery.Constants
 import com.boostcamp.travery.R
@@ -13,6 +15,7 @@ import com.boostcamp.travery.base.BaseActivity
 import com.boostcamp.travery.databinding.ActivitySaveUserActionBinding
 import com.boostcamp.travery.utils.toast
 import com.esafirm.imagepicker.features.ImagePicker
+import com.google.android.material.chip.Chip
 import com.tedpark.tedpermission.rx2.TedRx2Permission
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_save_user_action.*
@@ -30,13 +33,31 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
         setSupportActionBar(toolbar as Toolbar)
         title = ""
 
-//        viewModel = UserActionSaveViewModel(application)
         viewModel = ViewModelProviders.of(this).get(UserActionSaveViewModel::class.java)
         viewDataBinding.viewmodel = viewModel
 
         requestPermission()
 
         viewModel.setContract(this)
+
+        // 해시태그: MutableLiveData<String> 변화가 감지되면, Chip 생성 후 그룹에 추가
+        viewModel.hashTag.observe(this, Observer {
+            createChip(it)
+            et_hashtag.setText("")
+        })
+    }
+
+    private fun createChip(hashTag: String) {
+        Chip(this).apply {
+            text = hashTag
+            isCloseIconVisible = true
+            setOnCloseIconClickListener {
+                chip_group.removeView(this as View)
+                viewModel.removeHashTag((it as Chip).text as String)
+            }
+        }.also {
+            chip_group.addView(it as View, chip_group.childCount - 1)
+        }
     }
 
     private fun requestPermission() {
