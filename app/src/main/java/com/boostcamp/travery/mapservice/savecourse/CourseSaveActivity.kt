@@ -1,20 +1,15 @@
 package com.boostcamp.travery.mapservice.savecourse
 
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ArrayAdapter
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.ViewModelProviders
-import com.boostcamp.travery.Constants
 import com.boostcamp.travery.R
 import com.boostcamp.travery.base.BaseActivity
-import com.boostcamp.travery.data.model.Course
 import com.boostcamp.travery.databinding.ActivityCourseSaveBinding
 import com.boostcamp.travery.utils.DateUtils
-import com.boostcamp.travery.utils.FileUtils
-import com.google.android.gms.maps.model.LatLng
 import kotlinx.android.synthetic.main.activity_course_save.*
 
 class CourseSaveActivity : BaseActivity<ActivityCourseSaveBinding>() {
@@ -34,7 +29,7 @@ class CourseSaveActivity : BaseActivity<ActivityCourseSaveBinding>() {
     }
 
     private fun initView() {
-        tv_date_cur.text = DateUtils.getDateToString()
+        tv_date_cur.text = DateUtils.parseDateAsString()
 
         ArrayAdapter.createFromResource(
                 this,

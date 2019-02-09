@@ -13,8 +13,12 @@ object DateUtils {
         }
     }
 
-    fun getDateToString(date: Long = System.currentTimeMillis()): String {
-        return SimpleDateFormat(DATE_PATTERN, Locale.getDefault()).format(Date(date)).toString()
+    fun parseDateAsString(date: Long = System.currentTimeMillis(), pattern: String = DATE_PATTERN): String {
+        return SimpleDateFormat(pattern, Locale.getDefault()).format(Date(date)).toString()
+    }
+
+    fun parseDateAsString(date: Date, pattern: String = DATE_PATTERN): String {
+        return SimpleDateFormat(pattern, Locale.getDefault()).format(date).toString()
     }
 
     fun getTermDay(fromMillis: Long = System.currentTimeMillis(), toMillis: Long): Int {

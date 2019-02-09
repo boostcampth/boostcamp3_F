@@ -1,13 +1,9 @@
 package com.boostcamp.travery.utils
 
-import android.annotation.SuppressLint
 import android.graphics.drawable.Drawable
-import android.util.Log
 import android.view.View
-import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.view.ContextThemeWrapper
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -28,16 +24,10 @@ import com.bumptech.glide.load.MultiTransformation
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.bumptech.glide.load.resource.bitmap.TransformationUtils.centerCrop
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
-import com.google.android.material.shape.RoundedCornerTreatment
-import com.nex3z.flowlayout.FlowLayout
-import kotlinx.android.synthetic.main.activity_save_user_action.*
-import kotlinx.android.synthetic.main.activity_save_user_action.view.*
-import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -91,23 +81,18 @@ object BindingUtils {
                 .into(imageView)
     }
 
-    @SuppressLint("SimpleDateFormat")
     @JvmStatic
     @BindingAdapter("android:date")
     fun setDate(textView: TextView, date: Date) {
-        val dayTime = SimpleDateFormat("yyyy.MM.dd")
-        textView.text = dayTime.format(date)
+        textView.text = DateUtils.parseDateAsString(date, "yyyy.MM.dd")
     }
 
-    @SuppressLint("SimpleDateFormat")
     @JvmStatic
     @BindingAdapter("bind:startTime", "bind:endTime")
     fun setTime(textView: TextView, startTime: Long, endTime: Long) {
-        val start = SimpleDateFormat("yyyy.MM.dd - HH:mm")
-        val end = SimpleDateFormat("HH:mm")
         textView.text = String.format(textView.context.resources.getString(R.string.string_place_holder_date,
-                start.format(Date(startTime)),
-                end.format(Date(endTime))))
+            DateUtils.parseDateAsString(startTime, "yyyy.MM.dd - HH:mm"),
+            DateUtils.parseDateAsString(endTime, "HH:mm")))
     }
 
     @JvmStatic
@@ -119,7 +104,6 @@ object BindingUtils {
                 DividerItemDecoration(recyclerView.context, LinearLayoutManager(recyclerView.context).orientation)
         recyclerView.addItemDecoration(dividerItemDecoration)
     }
-
 
     @JvmStatic
     @BindingAdapter("setAdapter")
@@ -141,7 +125,6 @@ object BindingUtils {
             view.visibility = View.GONE
         }
     }
-
 
     @JvmStatic
     @BindingAdapter("imageAdapter")
@@ -216,17 +199,6 @@ object BindingUtils {
                 string[3] -> ContextCompat.getDrawable(textView.context, R.drawable.bg_theme_indigo)
                 else -> ContextCompat.getDrawable(textView.context, R.drawable.bg_theme_green)
             }
-        }
-    }
-
-    @JvmStatic
-    @BindingAdapter("group")
-    fun setGroupTitle(textView: TextView, group: Long) {
-        val termDay = DateUtils.getTermDay(toMillis = group)
-        textView.text = when (termDay) {
-            0 -> textView.resources.getString(R.string.string_group_title_today)
-            1 -> textView.resources.getString(R.string.string_group_title_yesterday)
-            else -> DateUtils.getDateToString(group)
         }
     }
 
