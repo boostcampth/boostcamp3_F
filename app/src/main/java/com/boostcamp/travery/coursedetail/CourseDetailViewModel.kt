@@ -106,6 +106,11 @@ class CourseDetailViewModel(application: Application) : BaseViewModel(applicatio
         }
     }
 
+    fun mapClick(){
+        //마커 클릭 하지 않았음을 알림.
+        isSelected.set(false)
+    }
+
 
 }
 

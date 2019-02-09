@@ -230,4 +230,42 @@ object BindingUtils {
             }
         }
     }
+
+
+    /**
+     * 선택한 방향으로 isAnimated 값에 따라 translation 애니메이션이 시작됨.
+     * 애니메이션이 끝나고 끝난자리에 고정됨.
+     *
+     * @param direction 애니메이션이 될 방향을 지정
+     * @param isAnimated true시 화면 밖으로 사라짐 down의 경우 true 시 나타남.
+     */
+    @JvmStatic
+    @BindingAdapter("bind:direction", "bind:isAnimated")
+    fun setTime(view: View, direction: String, isAnimated: Boolean) {
+        when (direction) {
+            "up" -> {
+                if (isAnimated) {
+                    view.animate().translationY(-view.height.toFloat()).alpha(0.0f).withLayer()
+                } else {
+                    view.animate().translationY(0.0f).alpha(1.0f).withLayer()
+                }
+            }
+            "left" -> {
+                if (isAnimated) {
+                    view.animate().translationX(-view.width.toFloat()).withLayer()
+                } else {
+                    view.animate().translationX(0.0f).withLayer()
+                }
+            }
+            "down" -> {
+                if (isAnimated) {
+                    view.visibility = View.VISIBLE
+                    view.animate().translationY(0.0f).withLayer()
+                } else {
+                    view.animate().translationY(view.height.toFloat()).withLayer()
+                }
+            }
+        }
+
+    }
 }

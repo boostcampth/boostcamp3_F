@@ -20,7 +20,7 @@ import com.google.android.gms.maps.model.*
 import kotlinx.android.synthetic.main.activity_course_detail.*
 
 
-class CourseDetailActivity : BaseActivity<ActivityCourseDetailBinding>(), OnMapReadyCallback, OnMarkerClickListener {
+class CourseDetailActivity : BaseActivity<ActivityCourseDetailBinding>(), OnMapReadyCallback {
     override val layoutResourceId: Int = R.layout.activity_course_detail
     private val viewModel by lazy {
         ViewModelProviders.of(this).get(CourseDetailViewModel::class.java)
@@ -65,18 +65,19 @@ class CourseDetailActivity : BaseActivity<ActivityCourseDetailBinding>(), OnMapR
      */
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
-        map.setOnMarkerClickListener(this)
+        map.setOnMarkerClickListener { marker ->
+            marker?.tag?.let { viewModel.markerClick(it as Int) }
+            false
+        }
+        map.setOnMapClickListener {
+            viewModel.mapClick()
+        }
         viewModel.loadUserActionList()
         observeViewmodel()
     }
 
-    override fun onMarkerClick(marker: Marker?): Boolean {
-        marker?.tag?.let { viewModel.markerClick(it as Int) }
 
-        return false
-    }
-
-    fun observeViewmodel() {
+    private fun observeViewmodel() {
 
         viewModel.latLngList.observe(this, Observer {
             // 경로의 폴리라인과 시작점 끝점 마크를 맵위에 표시.

@@ -38,6 +38,8 @@
             android:layout_width="66dp"
             android:layout_height="0dp"
             android:background="@android:color/background_light"
+            app:direction='@{"left"}'
+            app:isAnimated="@{viewModel.isSelected}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/rv_useraction_toplist"
@@ -53,6 +55,8 @@
             android:layout_height="90dp"
             android:background="@android:color/background_light"
             android:elevation="4dp"
+            app:direction='@{"up"}'
+            app:isAnimated="@{viewModel.isSelected}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbar"
@@ -69,6 +73,9 @@
             android:layout_marginStart="8dp"
             android:background="@android:color/background_light"
             android:orientation="vertical"
+            android:visibility="gone"
+            app:direction='@{"down"}'
+            app:isAnimated="@{viewModel.isSelected}"
             app:layout_constraintBottom_toBottomOf="@+id/fragment_map"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
