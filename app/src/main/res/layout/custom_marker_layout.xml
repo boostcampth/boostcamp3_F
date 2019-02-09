@@ -8,16 +8,18 @@
 
     <ImageView
         android:id="@+id/action_marker_image"
-        android:layout_width="63dp" android:layout_height="65dp"
+        android:layout_width="63dp"
+        android:layout_height="65dp"
         android:src="@drawable/marker"
         android:contentDescription="@null">
 
     </ImageView>
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/cv_action_image"
         android:layout_width="40dp"
         android:layout_height="46dp"
         android:layout_marginTop="5dp"
         android:layout_centerHorizontal="true"
+        android:src="@drawable/empty_action_image"
         />
 </RelativeLayout>
