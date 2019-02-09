@@ -1,5 +1,7 @@
 package com.boostcamp.travery.utils
 
+import android.animation.ObjectAnimator
+import android.annotation.SuppressLint
 import android.graphics.drawable.Drawable
 import android.view.View
 import android.widget.ImageView
@@ -119,8 +121,11 @@ object BindingUtils {
     @BindingAdapter("bind:visibility")
     fun setVisibility(view: View, value: Boolean) {
         if (value) {
-            view.requestFocus()
             view.visibility = View.VISIBLE
+            ObjectAnimator.ofFloat(view, "alpha", 0f,1f).apply {
+                duration = 700
+                start()
+            }
         } else {
             view.visibility = View.GONE
         }
