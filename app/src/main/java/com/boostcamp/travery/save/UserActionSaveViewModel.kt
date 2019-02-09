@@ -76,6 +76,10 @@ class UserActionSaveViewModel(application: Application) : BaseViewModel(applicat
         }
     }
 
+    fun removeHashTag(hashTag: String) {
+        hashTagList.remove(hashTag)
+    }
+
     /**
      * list("#안녕","#하세요","#반가워요") -> "#안녕 #하세요 #반가워요"
      */

@@ -53,6 +53,7 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
             isCloseIconVisible = true
             setOnCloseIconClickListener {
                 chip_group.removeView(this as View)
+                viewModel.removeHashTag((it as Chip).text as String)
             }
         }.also {
             chip_group.addView(it as View, chip_group.childCount - 1)
