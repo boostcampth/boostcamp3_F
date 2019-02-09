@@ -50,6 +50,7 @@ class CourseDetailViewModel(application: Application) : BaseViewModel(applicatio
 
     //코스에 대한 활동 리스트를 가져옴
     fun loadUserActionList() {
+
         addDisposable(repository.getUserActionForCourse(course)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -72,7 +73,6 @@ class CourseDetailViewModel(application: Application) : BaseViewModel(applicatio
                     topActionList.addAll(1, it)
                     leftActionList.addAll(0, it)
                     markerList.value = topActionList
-//                    curUseraction.value = arr[0]
                 })
     }
 

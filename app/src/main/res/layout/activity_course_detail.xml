@@ -71,7 +71,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:background="@android:color/background_light"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/bg_theme_white"
             android:orientation="vertical"
             android:visibility="gone"
             app:direction='@{"down"}'
@@ -82,19 +84,21 @@
             <ImageView
                 android:id="@+id/iv_useraction_mainimg"
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
-                app:image="@{viewModel.curUseraction.mainImage}"
+                android:layout_height="120dp"
+                app:roundedImage="@{viewModel.curUseraction.mainImage}"
             />
             <TextView
                 android:id="@+id/tv_useraction_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:ellipsize="end"
                 android:paddingLeft="10dp"
                 android:paddingTop="10dp"
                 android:paddingRight="10dp"
+                android:singleLine="true"
                 android:text="@{viewModel.curUseraction.title}"
-                android:textSize="18sp"
-                android:textStyle="bold"/>
+                android:textColor="@android:color/black"
+                android:textSize="20sp" android:textStyle="bold"/>
             <TextView
                 android:id="@+id/tv_useraction_hashtag"
                 android:layout_width="match_parent"

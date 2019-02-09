@@ -2,6 +2,7 @@ package com.boostcamp.travery.utils
 
 import android.annotation.SuppressLint
 import android.graphics.drawable.Drawable
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -23,11 +24,16 @@ import com.boostcamp.travery.search.UserActionSearchAdapter
 import com.boostcamp.travery.useractiondetail.UserActionDetailViewModel
 import com.boostcamp.travery.useractiondetail.UserActionImageAdapter
 import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.MultiTransformation
 import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.load.resource.bitmap.TransformationUtils.centerCrop
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
+import com.google.android.material.shape.RoundedCornerTreatment
 import com.nex3z.flowlayout.FlowLayout
 import kotlinx.android.synthetic.main.activity_save_user_action.*
 import kotlinx.android.synthetic.main.activity_save_user_action.view.*
@@ -69,6 +75,19 @@ object BindingUtils {
                         return false
                     }
                 })
+                .into(imageView)
+    }
+
+    /**
+     * 모서리가 둥근 이미지형태로 로드.
+     */
+    @JvmStatic
+    @BindingAdapter("roundedImage")
+    fun setRoundedImage(imageView: ImageView, path: String?) {
+        GlideApp.with(imageView.context)
+                .load(path)
+                .transform(MultiTransformation(CenterCrop(),RoundedCorners(10)))
+                .error(R.drawable.empty_image)
                 .into(imageView)
     }
 
@@ -262,7 +281,7 @@ object BindingUtils {
                     view.visibility = View.VISIBLE
                     view.animate().translationY(0.0f).withLayer()
                 } else {
-                    view.animate().translationY(view.height.toFloat()).withLayer()
+                    view.animate().translationY(view.height.toFloat()+8.toPx()).withLayer()
                 }
             }
         }
