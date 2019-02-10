@@ -3,13 +3,14 @@ package com.boostcamp.travery.mapservice.savecourse
 import android.app.Application
 import android.os.Bundle
 import android.view.View
-import com.boostcamp.travery.base.BaseViewModel
 import android.widget.AdapterView
 import androidx.databinding.ObservableField
 import com.boostcamp.travery.Constants
 import com.boostcamp.travery.R
+import com.boostcamp.travery.base.BaseViewModel
 import com.boostcamp.travery.data.model.Course
 import com.boostcamp.travery.data.model.TimeCode
+import com.boostcamp.travery.eventbus.EventBus
 import com.boostcamp.travery.utils.FileUtils
 import com.google.android.gms.maps.model.LatLng
 import io.reactivex.Completable
@@ -17,8 +18,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import org.json.JSONArray
 import org.json.JSONObject
-import java.lang.StringBuilder
-
 
 class CourseSaveViewModel(application: Application) : BaseViewModel(application) {
 
@@ -77,27 +76,30 @@ class CourseSaveViewModel(application: Application) : BaseViewModel(application)
                 )
                 )
             }.doOnComplete {
-                addDisposable(
-                        repository.updateCourse(
-                                Course(
-                                        title,
-                                        body,
-                                        when (theme.get()) {
-                                            getApplication<Application>().getString(R.string.string_input_theme) -> {
-                                                inputTheme
-                                            }
-                                            else -> {
-                                                theme.get() ?: ""
-                                            }
-                                        },
-                                        mCourse.startTime,
-                                        mCourse.endTime,
-                                        mCourse.distance,
-                                        mCourse.coordinate,
-                                        staticMapURL
-                                )
-                        ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe()
+                val course = Course(
+                    title,
+                    body,
+                    when (theme.get()) {
+                        getApplication<Application>().getString(R.string.string_input_theme) -> {
+                            inputTheme
+                        }
+                        else -> {
+                            theme.get() ?: ""
+                        }
+                    },
+                    mCourse.startTime,
+                    mCourse.endTime,
+                    mCourse.distance,
+                    mCourse.coordinate,
+                    staticMapURL
                 )
+
+                addDisposable(
+                        repository.updateCourse(course).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe()
+                )
+
+                // 코스 저장 이벤트 전달
+                EventBus.sendEvent(CourseSaveEvent(course))
             }.subscribe().dispose()
         }
     }
@@ -114,3 +116,5 @@ class CourseSaveViewModel(application: Application) : BaseViewModel(application)
         this.inputTheme = theme.toString()
     }
 }
+
+data class CourseSaveEvent(val course: Course)
