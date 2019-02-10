@@ -1,5 +1,6 @@
 package com.boostcamp.travery.mapservice
 
+import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
@@ -13,6 +14,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.*
 import com.boostcamp.travery.Constants
 import com.boostcamp.travery.R
@@ -90,7 +92,7 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
 
     fun stopService(v: View) {
         if (mapService.getSuggestList().size > 0) {
-            AlertDialog.Builder(this@TrackingActivity).apply {
+            AlertDialog.Builder(this@TrackingActivity, R.style.dialogTheme).apply {
                 setTitle(getString(R.string.suggestion_dialog_title))
                 setMessage(getString(R.string.suggestion_dialog_description))
                 setCancelable(true)
@@ -142,6 +144,7 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
     }
 
     fun saveUserAction(v: View) {
+        mapService.setCanSuggestFalse()
         startActivity(Intent(this, UserActionSaveActivity::class.java).apply {
             when (viewDataBinding.viewmodel?.getIsServiceState()) {
                 true -> {
@@ -178,6 +181,10 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
             .setOnItemClickListener { dialog, item, view, position ->
                 mMap.animateCamera(CameraUpdateFactory.newLatLng((item as Suggestion).location))
                 footer.visibility = View.VISIBLE
+                ObjectAnimator.ofFloat(footer, "alpha", 0f,1f).apply {
+                    duration = 500
+                    start()
+                }
                 if (suggestionMarker == null) {
                     suggestionMarker = mMap.addMarker(
                         MarkerOptions()
