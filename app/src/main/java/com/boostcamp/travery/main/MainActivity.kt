@@ -23,6 +23,7 @@ import com.boostcamp.travery.mapservice.TrackingActivity
 import com.boostcamp.travery.mapservice.savecourse.CourseSaveActivity
 import com.boostcamp.travery.useraction.save.UserActionSaveActivity
 import com.boostcamp.travery.search.SearchResultActivity
+import com.boostcamp.travery.useraction.list.UserActionListActivity
 import com.google.android.material.navigation.NavigationView
 import com.tedpark.tedpermission.rx2.TedRx2Permission
 import kotlinx.android.synthetic.main.activity_main.*
@@ -101,7 +102,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), NavigationView.OnNavig
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.nav_camera -> {
-                startActivity(Intent(this, CourseSaveActivity::class.java))
+                startActivity(Intent(this, UserActionListActivity::class.java))
             }
             R.id.nav_gallery -> {
                 startActivity(Intent(this, SearchResultActivity::class.java))
