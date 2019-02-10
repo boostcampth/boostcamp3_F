@@ -1,4 +1,4 @@
-package com.boostcamp.travery.save
+package com.boostcamp.travery.useraction.save
 
 import android.app.Application
 import androidx.databinding.ObservableArrayList

@@ -22,7 +22,7 @@ import com.boostcamp.travery.data.AppDataManager
 import com.boostcamp.travery.data.local.db.AppDbHelper
 import com.boostcamp.travery.data.model.Course
 import com.boostcamp.travery.mapservice.savecourse.CourseSaveActivity
-import com.boostcamp.travery.save.UserActionSaveActivity
+import com.boostcamp.travery.useraction.save.UserActionSaveActivity
 import com.boostcamp.travery.utils.toast
 import com.google.android.gms.maps.model.*
 import io.reactivex.Completable

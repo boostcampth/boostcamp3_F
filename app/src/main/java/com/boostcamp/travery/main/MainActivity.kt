@@ -21,7 +21,7 @@ import com.boostcamp.travery.data.model.Course
 import com.boostcamp.travery.databinding.ActivityMainBinding
 import com.boostcamp.travery.mapservice.TrackingActivity
 import com.boostcamp.travery.mapservice.savecourse.CourseSaveActivity
-import com.boostcamp.travery.save.UserActionSaveActivity
+import com.boostcamp.travery.useraction.save.UserActionSaveActivity
 import com.boostcamp.travery.search.SearchResultActivity
 import com.google.android.material.navigation.NavigationView
 import com.tedpark.tedpermission.rx2.TedRx2Permission

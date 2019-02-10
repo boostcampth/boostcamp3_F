@@ -7,7 +7,7 @@
 
         <variable
             name="viewmodel"
-            type="com.boostcamp.travery.useractiondetail.UserActionDetailViewModel" />
+            type="com.boostcamp.travery.useraction.detail.UserActionDetailViewModel" />
     </data>
 
     <androidx.core.widget.NestedScrollView
