@@ -260,7 +260,7 @@ object BindingUtils {
      */
     @JvmStatic
     @BindingAdapter("bind:direction", "bind:isAnimated")
-    fun setTime(view: View, direction: String, isAnimated: Boolean) {
+    fun setAnimation(view: View, direction: String, isAnimated: Boolean) {
         when (direction) {
             "up" -> {
                 if (isAnimated) {

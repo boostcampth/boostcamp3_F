@@ -73,11 +73,11 @@ class CourseDetailActivity : BaseActivity<ActivityCourseDetailBinding>(), OnMapR
             viewModel.mapClick()
         }
         viewModel.loadUserActionList()
-        observeViewmodel()
+        observeViewModel()
     }
 
 
-    private fun observeViewmodel() {
+    private fun observeViewModel() {
 
         viewModel.latLngList.observe(this, Observer {
             // 경로의 폴리라인과 시작점 끝점 마크를 맵위에 표시.
