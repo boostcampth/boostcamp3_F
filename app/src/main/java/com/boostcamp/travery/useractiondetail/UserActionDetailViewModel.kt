@@ -1,6 +1,7 @@
 package com.boostcamp.travery.useractiondetail
 
 import android.app.Application
+import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableField
 import com.boostcamp.travery.base.BaseViewModel
 import com.boostcamp.travery.data.model.UserAction
@@ -8,7 +9,7 @@ import java.util.regex.Pattern
 
 class UserActionDetailViewModel(application: Application) : BaseViewModel(application) {
     var userAction: UserAction? = null
-    val imageList = ArrayList<String>()
+    val imageList = ObservableArrayList<String>()
     val hashTagList = ArrayList<String>()
     val mainImage = ObservableField<String>()
 
