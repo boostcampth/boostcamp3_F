@@ -21,7 +21,7 @@ class UserActionImageAdapter(list: ObservableArrayList<String>) : ObservableRecy
     }
 
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
-        holder.bind(getItems()[position])
+        holder.bind(getItem(position))
     }
 
 
