@@ -7,6 +7,13 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
+
+    <style name="dialogTheme" parent="Theme.MaterialComponents.Light.Dialog">
+        <item name="android:textColor">@color/blackBlue</item>
+
+        <item name="android:windowBackground">@android:color/white</item>
+    </style>
+
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
