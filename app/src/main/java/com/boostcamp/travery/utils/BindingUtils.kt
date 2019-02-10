@@ -2,6 +2,7 @@ package com.boostcamp.travery.utils
 
 import android.annotation.SuppressLint
 import android.graphics.drawable.Drawable
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -23,11 +24,16 @@ import com.boostcamp.travery.search.UserActionSearchAdapter
 import com.boostcamp.travery.useractiondetail.UserActionDetailViewModel
 import com.boostcamp.travery.useractiondetail.UserActionImageAdapter
 import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.MultiTransformation
 import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.load.resource.bitmap.TransformationUtils.centerCrop
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
+import com.google.android.material.shape.RoundedCornerTreatment
 import com.nex3z.flowlayout.FlowLayout
 import kotlinx.android.synthetic.main.activity_save_user_action.*
 import kotlinx.android.synthetic.main.activity_save_user_action.view.*
@@ -69,6 +75,19 @@ object BindingUtils {
                         return false
                     }
                 })
+                .into(imageView)
+    }
+
+    /**
+     * 모서리가 둥근 이미지형태로 로드.
+     */
+    @JvmStatic
+    @BindingAdapter("roundedImage")
+    fun setRoundedImage(imageView: ImageView, path: String?) {
+        GlideApp.with(imageView.context)
+                .load(path)
+                .transform(MultiTransformation(CenterCrop(),RoundedCorners(10)))
+                .error(R.drawable.empty_image)
                 .into(imageView)
     }
 
@@ -229,5 +248,43 @@ object BindingUtils {
                 chipGroup.addView(it)
             }
         }
+    }
+
+
+    /**
+     * 선택한 방향으로 isAnimated 값에 따라 translation 애니메이션이 시작됨.
+     * 애니메이션이 끝나고 끝난자리에 고정됨.
+     *
+     * @param direction 애니메이션이 될 방향을 지정
+     * @param isAnimated true시 화면 밖으로 사라짐 down의 경우 true 시 나타남.
+     */
+    @JvmStatic
+    @BindingAdapter("bind:direction", "bind:isAnimated")
+    fun setAnimation(view: View, direction: String, isAnimated: Boolean) {
+        when (direction) {
+            "up" -> {
+                if (isAnimated) {
+                    view.animate().translationY(-view.height.toFloat()).alpha(0.0f).withLayer()
+                } else {
+                    view.animate().translationY(0.0f).alpha(1.0f).withLayer()
+                }
+            }
+            "left" -> {
+                if (isAnimated) {
+                    view.animate().translationX(-view.width.toFloat()).withLayer()
+                } else {
+                    view.animate().translationX(0.0f).withLayer()
+                }
+            }
+            "down" -> {
+                if (isAnimated) {
+                    view.visibility = View.VISIBLE
+                    view.animate().translationY(0.0f).withLayer()
+                } else {
+                    view.animate().translationY(view.height.toFloat()+8.toPx()).withLayer()
+                }
+            }
+        }
+
     }
 }
