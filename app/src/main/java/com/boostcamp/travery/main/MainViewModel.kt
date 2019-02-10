@@ -8,7 +8,9 @@ import com.boostcamp.travery.MyApplication
 import com.boostcamp.travery.R
 import com.boostcamp.travery.base.BaseViewModel
 import com.boostcamp.travery.data.model.Course
+import com.boostcamp.travery.eventbus.EventBus
 import com.boostcamp.travery.main.adapter.viewholder.GroupItem
+import com.boostcamp.travery.mapservice.savecourse.CourseSaveEvent
 import com.boostcamp.travery.utils.DateUtils
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -18,6 +20,9 @@ class MainViewModel(application: Application) : BaseViewModel(application) {
 
     init {
         loadCourseList()
+        EventBus.getEvents().ofType(CourseSaveEvent::class.java).subscribe {
+            addCourseItem(it.course)
+        }.also { addDisposable(it) }
     }
 
     private var contract: Contract? = null
@@ -73,6 +78,22 @@ class MainViewModel(application: Application) : BaseViewModel(application) {
     }
 
     private fun getResources(): Resources = getApplication<MyApplication>().resources
+
+    /**
+     * 리스트에서 그룹 아이템 제거
+     */
+    private fun removeGroup(list: List<Any>): MutableList<Course> {
+        return list.mapNotNull {
+            it as? Course
+        }.toMutableList()
+    }
+
+    private fun addCourseItem(course: Course) {
+        val list = removeGroup(data)
+        list.add(0, course)
+        data.clear()
+        data.addAll(createGroup(list))
+    }
 
     fun onItemClick(item: Any) {
         contract?.onItemClick(item)
