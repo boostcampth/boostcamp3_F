@@ -10,13 +10,17 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.MutableLiveData
 import com.boostcamp.travery.MyApplication
 import com.boostcamp.travery.base.BaseViewModel
+import com.boostcamp.travery.data.UserActionDataSource
 import com.boostcamp.travery.data.model.UserAction
+import com.boostcamp.travery.data.repository.UserActionRepository
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
 class UserActionListViewModel(application: Application) : BaseViewModel(application) {
     private var contract: Contract? = null
     private val curLocation = MutableLiveData<Location>()
+
+    private val userActionRepository = UserActionRepository.getInstance(application)
 
     fun getCurLocation() = curLocation
 
@@ -33,7 +37,7 @@ class UserActionListViewModel(application: Application) : BaseViewModel(applicat
     }
 
     private fun loadUserActions() {
-        repository.getAllUserAction()
+        userActionRepository.getAllUserAction()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {

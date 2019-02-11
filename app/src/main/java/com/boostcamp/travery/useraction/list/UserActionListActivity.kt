@@ -3,6 +3,7 @@ package com.boostcamp.travery.useraction.list
 
 import android.location.Location
 import android.os.Bundle
+import androidx.databinding.DataBindingUtil.setContentView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.boostcamp.travery.R
@@ -31,9 +32,7 @@ class UserActionListActivity : BaseActivity<ActivityUserActionListBinding>(),
     override val layoutResourceId: Int
         get() = com.boostcamp.travery.R.layout.activity_user_action_list
 
-    private val viewModel by lazy {
-        ViewModelProviders.of(this).get(UserActionListViewModel::class.java)
-    }
+    private var viewModel: UserActionListViewModel? = null
 
     private var googleMap: GoogleMap? = null
     private var curLocation: LatLng? = null
@@ -45,22 +44,24 @@ class UserActionListActivity : BaseActivity<ActivityUserActionListBinding>(),
         setContentView(viewDataBinding.root)
         (map as SupportMapFragment).getMapAsync(this)
 
-        viewModel.setContract(this)
+        viewModel = ViewModelProviders.of(this).get(UserActionListViewModel::class.java)
+
+        viewModel?.setContract(this)
 
         observeCurrentLocation()
 
         // 현재 위치 표시 및 카메라 이동
         btn_myLocation.setOnClickListener {
             marker?.remove()
-            viewModel.setCurrentLocation()
+            viewModel?.setCurrentLocation()
             curLocation?.let { loc -> moveCamera(loc) }
         }
     }
 
     // 현재 위치 받아오기
     private fun observeCurrentLocation() {
-        viewModel.setCurrentLocation()
-        viewModel.getCurLocation().observe(this, Observer {
+        viewModel?.setCurrentLocation()
+        viewModel?.getCurLocation()?.observe(this, Observer {
             curLocation = it.toLatLng().also { loc ->
                 marker = googleMap?.addMarker(
                         MarkerOptions()
@@ -97,7 +98,7 @@ class UserActionListActivity : BaseActivity<ActivityUserActionListBinding>(),
     }
 
     override fun onMapReady(map: GoogleMap) {
-        viewModel.setCurrentLocation()
+        viewModel?.setCurrentLocation()
 
         this.googleMap = map
         settingClustering()
@@ -144,7 +145,6 @@ class UserActionListActivity : BaseActivity<ActivityUserActionListBinding>(),
     }
 
     override fun onClusterItemClick(cluster: ClusterItemUserAction?): Boolean {
-
         return false
     }
 
