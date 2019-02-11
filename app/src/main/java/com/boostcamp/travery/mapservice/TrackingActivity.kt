@@ -311,6 +311,10 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
                     mapService.getTimeCodeList().forEach {
                         polylineOptions.add(it.coordinate)
                     }
+                    mapService.getUserActionPositionList().forEach {
+                        mMap.addMarker(MarkerOptions().position(it)
+                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_pin)))
+                    }
                 }.doOnComplete {
                     polyline = mMap.addPolyline(polylineOptions)
                 }.subscribe().dispose()
@@ -366,10 +370,17 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
         if (resultCode == RESULT_OK) {
             when (requestCode) {
                 Constants.REQUEST_CODE_USERACTION -> data?.let {
-                    mMap.addMarker(MarkerOptions().position(
-                            LatLng(it.getDoubleExtra(Constants.EXTRA_LATITUDE, 0.0),
-                                    it.getDoubleExtra(Constants.EXTRA_LONGITUDE, 0.0)))
-                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_pin)))
+                    if (viewDataBinding.viewmodel?.getIsServiceState() == true) {
+                        mMap.addMarker(MarkerOptions().position(
+                                LatLng(it.getDoubleExtra(Constants.EXTRA_LATITUDE, 0.0),
+                                        it.getDoubleExtra(Constants.EXTRA_LONGITUDE, 0.0)))
+                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_pin)))
+
+                        mapService.addUserActionPostionItem(LatLng(
+                                it.getDoubleExtra(Constants.EXTRA_LATITUDE, 0.0),
+                                it.getDoubleExtra(Constants.EXTRA_LONGITUDE, 0.0)
+                        ))
+                    }
                 }
             }
         }

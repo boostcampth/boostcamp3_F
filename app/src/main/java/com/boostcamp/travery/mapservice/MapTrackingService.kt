@@ -42,6 +42,7 @@ class MapTrackingService : Service() {
     private var lostLocationCnt = 0
 
     private val timeCodeList: ArrayList<TimeCode> = ArrayList()
+    private val userActionPositionList: ArrayList<LatLng> = ArrayList()
     private var canSuggest = true
     private val suggestList: ArrayList<Suggestion> = ArrayList()
     private val TAG = "MyLocationService"
@@ -246,6 +247,14 @@ class MapTrackingService : Service() {
 
     fun setCanSuggestFalse() {
         canSuggest = false
+    }
+
+    fun addUserActionPostionItem(position: LatLng){
+        userActionPositionList.add(position)
+    }
+
+    fun getUserActionPositionList(): ArrayList<LatLng> {
+        return userActionPositionList
     }
 
     override fun onBind(intent: Intent): IBinder? {
