@@ -31,6 +31,7 @@ import io.reactivex.schedulers.Schedulers
 import java.lang.ref.WeakReference
 import com.orhanobut.dialogplus.DialogPlus
 import android.view.Gravity
+import android.widget.BaseAdapter
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProviders
 import com.boostcamp.travery.base.BaseActivity
@@ -52,6 +53,7 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
     private var secondForView = 0
     private val viewHandler = ViewChangeHandler(this)
     private var isBound = false
+    private var suggestAdapter:BaseAdapter ?= null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -174,9 +176,9 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
     fun openSuggestDialog(v: View) {
         val list = mapService.getSuggestList()
         if (list.size == 0) return
-        val adapter = SuggestListAdapter(this@TrackingActivity, list)
+        suggestAdapter = SuggestListAdapter(this@TrackingActivity, list)
         val dialog = DialogPlus.newDialog(this@TrackingActivity)
-                .setAdapter(adapter)
+                .setAdapter(suggestAdapter)
                 .setGravity(Gravity.BOTTOM)
                 .setOnItemClickListener { dialog, item, view, position ->
                     mMap.animateCamera(CameraUpdateFactory.newLatLng((item as Suggestion).location))
@@ -267,6 +269,7 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
 
 
             override fun sendSuggestList(suggestList: ArrayList<Suggestion>) {
+                suggestAdapter?.notifyDataSetChanged()
                 showSuggestNoti(suggestList.size)
             }
             /* 서비스에서 데이터를 받아 메소드 호출 또는 핸들러로 전달 */
