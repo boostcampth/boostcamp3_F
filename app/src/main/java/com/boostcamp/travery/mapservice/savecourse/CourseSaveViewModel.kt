@@ -77,21 +77,21 @@ class CourseSaveViewModel(application: Application) : BaseViewModel(application)
                 )
             }.doOnComplete {
                 val course = Course(
-                    title,
-                    body,
-                    when (theme.get()) {
-                        getApplication<Application>().getString(R.string.string_input_theme) -> {
-                            inputTheme
-                        }
-                        else -> {
-                            theme.get() ?: ""
-                        }
-                    },
-                    mCourse.startTime,
-                    mCourse.endTime,
-                    mCourse.distance,
-                    mCourse.coordinate,
-                    staticMapURL
+                        title,
+                        body,
+                        when (theme.get()) {
+                            getApplication<Application>().getString(R.string.string_input_theme) -> {
+                                inputTheme
+                            }
+                            else -> {
+                                theme.get() ?: ""
+                            }
+                        },
+                        mCourse.startTime,
+                        mCourse.endTime,
+                        mCourse.distance,
+                        mCourse.coordinate,
+                        staticMapURL
                 )
 
                 addDisposable(

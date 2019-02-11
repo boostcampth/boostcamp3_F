@@ -15,8 +15,8 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class SuggestListAdapter(
-    context: Context,
-    private val suggestList: ArrayList<Suggestion>
+        context: Context,
+        private val suggestList: ArrayList<Suggestion>
 ) : BaseAdapter() {
 
     private val layoutInflater: LayoutInflater = LayoutInflater.from(context)
@@ -42,8 +42,8 @@ class SuggestListAdapter(
             view = layoutInflater.inflate(R.layout.item_suggest_list, parent, false)
 
             viewHolder = ViewHolder(
-                view.findViewById(R.id.tv_date),
-                view.findViewById(R.id.tv_title)
+                    view.findViewById(R.id.tv_date),
+                    view.findViewById(R.id.tv_title)
             )
             view.tag = viewHolder
         } else {
@@ -51,7 +51,8 @@ class SuggestListAdapter(
         }
         val start = SimpleDateFormat("yyyy.MM.dd - kk:mm", Locale.getDefault())
         val end = SimpleDateFormat("kk:mm", Locale.getDefault())
-        viewHolder.date.text = "${start.format(Date(suggestList[position].startTime))} ~ ${end.format(Date(suggestList[position].endTime))}"
+        viewHolder.date.text =
+                "${start.format(Date(suggestList[position].startTime))} ~ ${end.format(Date(suggestList[position].endTime))}"
         viewHolder.title.text = "${position + 1}번째 제안"
 
         return view!!
