@@ -8,4 +8,6 @@ object Constants {
     const val EXTRA_COURSE_CODE = "COURSE_CODE"
 
     const val EXTRA_USER_ACTION = "USER_ACTION"
+
+    const val REQUEST_CODE_USERACTION = 1004
 }

@@ -53,7 +53,7 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
     private var secondForView = 0
     private val viewHandler = ViewChangeHandler(this)
     private var isBound = false
-    private var suggestAdapter:BaseAdapter ?= null
+    private var suggestAdapter: BaseAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -147,7 +147,7 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
 
     fun saveUserAction(v: View) {
         mapService.setCanSuggestFalse()
-        startActivity(Intent(this, UserActionSaveActivity::class.java).apply {
+        startActivityForResult(Intent(this, UserActionSaveActivity::class.java).apply {
             when (viewDataBinding.viewmodel?.getIsServiceState()) {
                 true -> {
                     putExtra(Constants.EXTRA_LATITUDE, myLocationMarker.position.latitude)
@@ -159,7 +159,7 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
                 }
             }
             putExtra(Constants.EXTRA_COURSE_CODE, mapService.getStartTime())
-        })
+        }, Constants.REQUEST_CODE_USERACTION)
     }
 
     fun gotoMyLocation(v: View) {
@@ -209,11 +209,11 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
                     }
 
                     footer_save_button.setOnClickListener {
-                        startActivity(Intent(this, UserActionSaveActivity::class.java).apply {
+                        startActivityForResult(Intent(this, UserActionSaveActivity::class.java).apply {
                             putExtra(Constants.EXTRA_LATITUDE, suggestionMarker!!.position.latitude)
                             putExtra(Constants.EXTRA_LONGITUDE, suggestionMarker!!.position.longitude)
                             putExtra(Constants.EXTRA_COURSE_CODE, mapService.getStartTime())
-                        })
+                        }, Constants.REQUEST_CODE_USERACTION)
 
                         mapService.removeSuggestItem(position)
                         tv_seggest_num.text = mapService.getSuggestList().size.toString()
@@ -311,6 +311,10 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
                     mapService.getTimeCodeList().forEach {
                         polylineOptions.add(it.coordinate)
                     }
+                    mapService.getUserActionPositionList().forEach {
+                        mMap.addMarker(MarkerOptions().position(it)
+                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_pin)))
+                    }
                 }.doOnComplete {
                     polyline = mMap.addPolyline(polylineOptions)
                 }.subscribe().dispose()
@@ -359,6 +363,26 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
         if (isBound) {
             unbindService(mapTrackingServiceConnection)
             isBound = false
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (resultCode == RESULT_OK) {
+            when (requestCode) {
+                Constants.REQUEST_CODE_USERACTION -> data?.let {
+                    if (viewDataBinding.viewmodel?.getIsServiceState() == true) {
+                        mMap.addMarker(MarkerOptions().position(
+                                LatLng(it.getDoubleExtra(Constants.EXTRA_LATITUDE, 0.0),
+                                        it.getDoubleExtra(Constants.EXTRA_LONGITUDE, 0.0)))
+                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_pin)))
+
+                        mapService.addUserActionPostionItem(LatLng(
+                                it.getDoubleExtra(Constants.EXTRA_LATITUDE, 0.0),
+                                it.getDoubleExtra(Constants.EXTRA_LONGITUDE, 0.0)
+                        ))
+                    }
+                }
+            }
         }
     }
 }
