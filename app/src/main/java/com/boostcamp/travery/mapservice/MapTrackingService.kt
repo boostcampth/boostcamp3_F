@@ -10,12 +10,12 @@ import androidx.core.app.NotificationCompat
 import android.location.LocationManager
 import android.util.Log
 import android.content.Context
-import com.boostcamp.travery.main.MainActivity
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.model.LatLng
 import com.boostcamp.travery.R
 import java.util.*
 import android.os.*
+import androidx.core.app.TaskStackBuilder
 import com.boostcamp.travery.data.model.Suggestion
 import com.boostcamp.travery.data.model.TimeCode
 import kotlin.collections.ArrayList
@@ -55,11 +55,15 @@ class MapTrackingService : Service() {
     private var mCallback: ICallback? = null
     private val mLocationManager: LocationManager by lazy { getSystemService(Context.LOCATION_SERVICE) as LocationManager }
     private val notification: NotificationCompat.Builder by lazy {
-        val notificationIntent = Intent(this, MainActivity::class.java)
-        val pendingIntent = PendingIntent.getActivity(
-                this,
-                0, notificationIntent, 0
-        )
+        val notificationIntent = Intent(this, TrackingActivity::class.java)
+
+        val pendingIntent: PendingIntent? = TaskStackBuilder.create(this).run {
+            // Add the intent, which inflates the back stack
+            addNextIntentWithParentStack(notificationIntent)
+            // Get the PendingIntent containing the entire back stack
+            getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
+        }
+
         NotificationCompat.Builder(this, getString(R.string.notification_channel_id))
                 .setContentTitle(getString(R.string.service_title))
                 .setContentText(getString(R.string.service_message))

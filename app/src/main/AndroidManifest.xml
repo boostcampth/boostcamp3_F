@@ -34,6 +34,8 @@
 
         <activity
             android:name=".mapservice.TrackingActivity"
+            android:parentActivityName=".main.MainActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait">
         </activity>
         <activity android:name=".search.SearchResultActivity">
