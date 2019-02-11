@@ -1,6 +1,7 @@
 package com.boostcamp.travery.save
 
 import android.Manifest
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
@@ -86,7 +87,13 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
                         getDoubleExtra(Constants.EXTRA_LONGITUDE, 0.0),
                         getLongExtra(Constants.EXTRA_COURSE_CODE, 0)
                 )
+
+
             }
+            setResult(Activity.RESULT_OK, Intent().apply {
+                putExtra(Constants.EXTRA_LATITUDE, intent.getDoubleExtra(Constants.EXTRA_LATITUDE, 0.0))
+                putExtra(Constants.EXTRA_LONGITUDE, intent.getDoubleExtra(Constants.EXTRA_LONGITUDE, 0.0))
+            })
             finish()
             true
         }
