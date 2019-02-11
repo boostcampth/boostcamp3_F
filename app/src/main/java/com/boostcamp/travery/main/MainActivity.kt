@@ -132,7 +132,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), NavigationView.OnNavig
     }
 
     private fun showDialogForLocationServiceSetting() {
-        AlertDialog.Builder(this@MainActivity).apply {
+        AlertDialog.Builder(this@MainActivity, R.style.dialogTheme).apply {
             setTitle(getString(R.string.permission_dialog_gps_title))
             setMessage(getString(R.string.permission_dialog_gps_description))
             setCancelable(true)

@@ -1,5 +1,6 @@
 package com.boostcamp.travery.utils
 
+import android.animation.ObjectAnimator
 import android.graphics.drawable.Drawable
 import android.view.View
 import android.widget.ImageView
@@ -56,12 +57,23 @@ object BindingUtils {
         GlideApp.with(imageView.context)
                 .load(path)
                 .listener(object : RequestListener<Drawable> {
-                    override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
+                    override fun onLoadFailed(
+                            e: GlideException?,
+                            model: Any?,
+                            target: Target<Drawable>?,
+                            isFirstResource: Boolean
+                    ): Boolean {
                         imageView.visibility = View.GONE
                         return false
                     }
 
-                    override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
+                    override fun onResourceReady(
+                            resource: Drawable?,
+                            model: Any?,
+                            target: Target<Drawable>?,
+                            dataSource: DataSource?,
+                            isFirstResource: Boolean
+                    ): Boolean {
                         return false
                     }
                 })
@@ -76,7 +88,7 @@ object BindingUtils {
     fun setRoundedImage(imageView: ImageView, path: String?) {
         GlideApp.with(imageView.context)
                 .load(path)
-                .transform(MultiTransformation(CenterCrop(),RoundedCorners(10)))
+                .transform(MultiTransformation(CenterCrop(), RoundedCorners(10)))
                 .error(R.drawable.empty_image)
                 .into(imageView)
     }
@@ -90,9 +102,13 @@ object BindingUtils {
     @JvmStatic
     @BindingAdapter("bind:startTime", "bind:endTime")
     fun setTime(textView: TextView, startTime: Long, endTime: Long) {
-        textView.text = String.format(textView.context.resources.getString(R.string.string_place_holder_date,
-            DateUtils.parseDateAsString(startTime, "yyyy.MM.dd - HH:mm"),
-            DateUtils.parseDateAsString(endTime, "HH:mm")))
+        textView.text = String.format(
+                textView.context.resources.getString(
+                        R.string.string_place_holder_date,
+                        DateUtils.parseDateAsString(startTime, "yyyy.MM.dd - HH:mm"),
+                        DateUtils.parseDateAsString(endTime, "HH:mm")
+                )
+        )
     }
 
     @JvmStatic
@@ -119,8 +135,11 @@ object BindingUtils {
     @BindingAdapter("bind:visibility")
     fun setVisibility(view: View, value: Boolean) {
         if (value) {
-            view.requestFocus()
             view.visibility = View.VISIBLE
+            ObjectAnimator.ofFloat(view, "alpha", 0f, 1f).apply {
+                duration = 700
+                start()
+            }
         } else {
             view.visibility = View.GONE
         }
@@ -252,7 +271,7 @@ object BindingUtils {
                     view.visibility = View.VISIBLE
                     view.animate().translationY(0.0f).withLayer()
                 } else {
-                    view.animate().translationY(view.height.toFloat()+8.toPx()).withLayer()
+                    view.animate().translationY(view.height.toFloat() + 8.toPx()).withLayer()
                 }
             }
         }

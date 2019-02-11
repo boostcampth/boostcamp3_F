@@ -1,40 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.LinearLayoutCompat
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:orientation="horizontal"
-        android:layout_gravity="center"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:orientation="horizontal">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/footer_delete_button"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimaryDark">
+        android:layout_margin="10dp"
+        android:layout_weight="1"
+        android:background="@drawable/suggest_btn"
+        android:gravity="top|center"
+        android:padding="10dp"
+        android:text="@string/all_delete"
+        android:textColor="@color/ef_white"/>
 
     <androidx.appcompat.widget.AppCompatTextView
-            android:layout_width="0dp"
-            android:layout_margin="10dp"
-            android:textColor="@color/ef_white"
-            android:id="@+id/footer_delete_button"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/all_delete"
-            android:layout_weight="1"/>
+        android:id="@+id/footer_save_button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_weight="1"
+        android:background="@drawable/suggest_btn"
+        android:gravity="top|center"
+        android:padding="10dp"
+        android:text="@string/all_save"
+        android:textColor="@color/ef_white"/>
 
     <androidx.appcompat.widget.AppCompatTextView
-            android:layout_weight="1"
-            android:layout_margin="10dp"
-            android:textColor="@color/ef_white"
-            android:id="@+id/footer_save_button"
-            android:layout_width="0dp"
-            android:gravity="center"
-            android:text="@string/all_save"
-            android:layout_height="wrap_content"/>
-
-    <androidx.appcompat.widget.AppCompatTextView
-            android:layout_weight="1"
-            android:layout_margin="10dp"
-            android:textColor="@color/ef_white"
-            android:id="@+id/footer_cancel_button"
-            android:layout_width="0dp"
-            android:gravity="center"
-            android:text="@string/all_hold"
-            android:layout_height="wrap_content"/>
+        android:id="@+id/footer_cancel_button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_weight="1"
+        android:background="@drawable/suggest_btn"
+        android:gravity="top|center"
+        android:padding="10dp"
+        android:text="@string/all_hold"
+        android:textColor="@color/ef_white"/>
 
 </androidx.appcompat.widget.LinearLayoutCompat>
