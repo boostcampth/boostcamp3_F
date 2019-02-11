@@ -124,14 +124,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), NavigationView.OnNavig
         }
     }
 
-    private fun checkLocationServicesStatus(): Boolean {
-        val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-
-        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
-                LocationManager.NETWORK_PROVIDER
-        )
-    }
-
     private fun showDialogForLocationServiceSetting() {
         AlertDialog.Builder(this@MainActivity, R.style.dialogTheme).apply {
             setTitle(getString(R.string.permission_dialog_gps_title))

@@ -1,5 +1,8 @@
 package com.boostcamp.travery.base
 
+import android.content.Context
+import android.content.pm.ActivityInfo
+import android.location.LocationManager
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
@@ -10,10 +13,9 @@ import androidx.databinding.ViewDataBinding
 import com.boostcamp.travery.R
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.progressbar_loading.*
-import android.content.pm.ActivityInfo
 
 
-abstract class BaseActivity<T: ViewDataBinding> : AppCompatActivity() {
+abstract class BaseActivity<T : ViewDataBinding> : AppCompatActivity() {
     private var progressDialog: AppCompatDialog? = null
 
     abstract val layoutResourceId: Int
@@ -26,6 +28,14 @@ abstract class BaseActivity<T: ViewDataBinding> : AppCompatActivity() {
         viewDataBinding = DataBindingUtil.inflate(layoutInflater, layoutResourceId, null, false)
     }
 
+    protected fun checkLocationServicesStatus(): Boolean {
+        val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
+                LocationManager.NETWORK_PROVIDER
+        )
+    }
+
     fun onProgress(message: String?) {
         if (this.isFinishing) {
             return
@@ -34,19 +44,19 @@ abstract class BaseActivity<T: ViewDataBinding> : AppCompatActivity() {
             setProgress(message)
         } else {
             progressDialog = AppCompatDialog(this)
-                .apply {
-                    setCancelable(false)
-                    setContentView(R.layout.progressbar_loading)
-                    show()
-                }
+                    .apply {
+                        setCancelable(false)
+                        setContentView(R.layout.progressbar_loading)
+                        show()
+                    }
         }
 
         progressDialog?.let {
             it.findViewById<TextView>(R.id.tv_pregress_message)?.text = message
             val imageView = it.findViewById<ImageView>(R.id.iv_frame_loading) ?: return
             Glide.with(this)
-                .load(R.drawable.progress_bar)
-                .into(imageView)
+                    .load(R.drawable.progress_bar)
+                    .into(imageView)
         }
     }
 
