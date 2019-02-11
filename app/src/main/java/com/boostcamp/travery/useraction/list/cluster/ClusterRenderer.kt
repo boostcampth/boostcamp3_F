@@ -1,7 +1,6 @@
 package com.boostcamp.travery.useraction.list.cluster
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
@@ -10,13 +9,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.annotation.UiThread
 import androidx.core.content.ContextCompat
-import com.boostcamp.travery.GlideApp
 import com.boostcamp.travery.R
-import com.bumptech.glide.load.DataSource
-import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.request.RequestListener
-import com.bumptech.glide.request.RequestOptions
-import com.bumptech.glide.request.target.Target
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.MarkerOptions
