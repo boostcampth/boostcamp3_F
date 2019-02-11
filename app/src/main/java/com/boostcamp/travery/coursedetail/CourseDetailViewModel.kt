@@ -42,14 +42,15 @@ class CourseDetailViewModel(application: Application) : BaseViewModel(applicatio
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     tempList.add(it)
-                }, {}, { latLngList.value = tempList })
+                }, {}, { latLngList.value = tempList
+                    loadUserActionList()})
         )
 
         leftAdapter.onItemClickListener = { onUserActionClicked(it as Int) }
     }
 
     //코스에 대한 활동 리스트를 가져옴
-    fun loadUserActionList() {
+    private fun loadUserActionList() {
 
         addDisposable(repository.getUserActionForCourse(course)
                 .subscribeOn(Schedulers.io())

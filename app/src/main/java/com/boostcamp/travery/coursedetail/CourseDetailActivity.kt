@@ -72,7 +72,6 @@ class CourseDetailActivity : BaseActivity<ActivityCourseDetailBinding>(), OnMapR
         map.setOnMapClickListener {
             viewModel.mapClick()
         }
-        viewModel.loadUserActionList()
         observeViewModel()
     }
 
