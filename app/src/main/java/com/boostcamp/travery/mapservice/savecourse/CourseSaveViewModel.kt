@@ -38,8 +38,15 @@ class CourseSaveViewModel(application: Application) : BaseViewModel(application)
         val coordinates = JSONObject()
         val coordinateItem = JSONArray()
         val colms = JSONObject()
+
+        var marker = ""
+        if(timeCodeList.size >= 2) {
+            marker = "&markers=color:red%7C${timeCodeList[0].coordinate.latitude},${timeCodeList[0].coordinate.longitude}" +
+                    "&markers=color:blue%7C${timeCodeList.last().coordinate.latitude},${timeCodeList.last().coordinate.longitude}"
+        }
+
         val urlPath =
-                StringBuilder("https://maps.googleapis.com/maps/api/staticmap?size=100x100&path=color:0x0000ff|weight:5")
+                StringBuilder("https://maps.googleapis.com/maps/api/staticmap?size=200x200$marker&scale=2&path=weight:5%7Ccolor:0x02d864ff")
         for (timecode in timeCodeList) {
             val coordinate = JSONObject()
             coordinate.put("lat", timecode.coordinate.latitude)
