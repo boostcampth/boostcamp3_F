@@ -11,7 +11,6 @@ import androidx.lifecycle.MutableLiveData
 import com.boostcamp.travery.MyApplication
 import com.boostcamp.travery.base.BaseViewModel
 import com.boostcamp.travery.data.local.db.AppDatabase
-import com.boostcamp.travery.data.local.source.UserActionLocalDataSource
 import com.boostcamp.travery.data.model.UserAction
 import com.boostcamp.travery.data.repository.UserActionRepository
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -22,7 +21,7 @@ class UserActionListViewModel(application: Application) : BaseViewModel(applicat
     private val curLocation = MutableLiveData<Location>()
 
     private val userActionRepository =
-            UserActionRepository.getInstance(UserActionLocalDataSource.getInstance(AppDatabase.getInstance(application).daoUserAction()))
+            UserActionRepository.getInstance(AppDatabase.getInstance(application).daoUserAction())
 
     fun getCurLocation() = curLocation
 

@@ -1,6 +1,8 @@
 package com.boostcamp.travery.data.repository
 
 import com.boostcamp.travery.data.UserActionDataSource
+import com.boostcamp.travery.data.local.db.dao.UserActionDao
+import com.boostcamp.travery.data.local.source.UserActionLocalDataSource
 import com.boostcamp.travery.data.model.Course
 import com.boostcamp.travery.data.model.UserAction
 import io.reactivex.Flowable
@@ -16,10 +18,10 @@ class UserActionRepository private constructor(private val userActionDataSource:
         private var INSTANCE: UserActionRepository? = null
 
         @JvmStatic
-        fun getInstance(userActionDataSource: UserActionDataSource) = INSTANCE
+        fun getInstance(userActionDao: UserActionDao) = INSTANCE
                 ?: synchronized(this) {
                     INSTANCE
-                            ?: UserActionRepository(userActionDataSource).also { INSTANCE = it }
+                            ?: UserActionRepository(UserActionLocalDataSource.getInstance(userActionDao)).also { INSTANCE = it }
                 }
     }
 
