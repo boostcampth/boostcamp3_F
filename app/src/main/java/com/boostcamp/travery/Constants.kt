@@ -12,5 +12,7 @@ object Constants {
 
     const val EXTRA_USER_ACTION = "USER_ACTION"
 
+    const val SIGN_IN_GOOGLE = 900
+
     const val REQUEST_CODE_USERACTION = 1004
 }

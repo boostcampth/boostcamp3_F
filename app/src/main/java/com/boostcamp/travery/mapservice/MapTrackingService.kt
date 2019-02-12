@@ -15,6 +15,8 @@ import com.google.android.gms.maps.model.LatLng
 import com.boostcamp.travery.R
 import java.util.*
 import android.os.*
+import com.boostcamp.travery.data.AppDataManager
+import com.boostcamp.travery.data.local.db.AppDbHelper
 import androidx.core.app.TaskStackBuilder
 import com.boostcamp.travery.Constants
 import com.boostcamp.travery.data.model.Suggestion

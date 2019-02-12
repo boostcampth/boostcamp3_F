@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "1083342031787",
+    "firebase_url": "https://travery-d55b0.firebaseio.com",
+    "project_id": "travery-d55b0",
+    "storage_bucket": "travery-d55b0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1083342031787:android:81e7c09c799df67d",
+        "android_client_info": {
+          "package_name": "com.boostcamp.travery"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1083342031787-4gdd0i2v8kgmffmt7aikcedapms1949h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCvrq11uVgZwrpyM_-YhOPO8nROISVluuQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

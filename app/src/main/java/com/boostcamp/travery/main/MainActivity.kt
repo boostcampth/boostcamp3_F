@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.boostcamp.travery.Constants
 import com.boostcamp.travery.R
 import com.boostcamp.travery.base.BaseActivity
+import com.boostcamp.travery.community.LoginActivity
 import com.boostcamp.travery.coursedetail.CourseDetailActivity
 import com.boostcamp.travery.data.model.Course
 import com.boostcamp.travery.databinding.ActivityMainBinding
@@ -138,6 +139,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), NavigationView.OnNavig
             }
             R.id.nav_slideshow -> {
                 startActivity(Intent(this, UserActionSaveActivity::class.java))
+            }
+            R.id.nav_login -> {
+                startActivity(Intent(this, LoginActivity::class.java))
             }
             R.id.nav_save -> {
                 startActivity(Intent(this, CourseSaveActivity::class.java))
