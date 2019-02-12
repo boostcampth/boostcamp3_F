@@ -29,7 +29,7 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>() {
         setContentView(viewDataBinding.root)
 
         gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken("1083342031787-4gdd0i2v8kgmffmt7aikcedapms1949h.apps.googleusercontent.com")
+            .requestIdToken("932842954747-fld93ub0aj6i4hu2f0htdrm6ef1isgp5.apps.googleusercontent.com")
             .requestEmail()
             .build()
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso)

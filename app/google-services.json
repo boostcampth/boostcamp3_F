@@ -1,32 +1,79 @@
 {
   "project_info": {
-    "project_number": "1083342031787",
-    "firebase_url": "https://travery-d55b0.firebaseio.com",
-    "project_id": "travery-d55b0",
-    "storage_bucket": "travery-d55b0.appspot.com"
+    "project_number": "932842954747",
+    "firebase_url": "https://alime-156108.firebaseio.com",
+    "project_id": "alime-156108",
+    "storage_bucket": "alime-156108.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1083342031787:android:81e7c09c799df67d",
+        "mobilesdk_app_id": "1:932842954747:android:81e7c09c799df67d",
         "android_client_info": {
           "package_name": "com.boostcamp.travery"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1083342031787-4gdd0i2v8kgmffmt7aikcedapms1949h.apps.googleusercontent.com",
+          "client_id": "932842954747-apq8ksufsu740j1vumodpuqsli7vr46t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.boostcamp.travery",
+            "certificate_hash": "fb55b99a6ef87b51eaa534a58423cb8ad46a69ea"
+          }
+        },
+        {
+          "client_id": "932842954747-fld93ub0aj6i4hu2f0htdrm6ef1isgp5.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCvrq11uVgZwrpyM_-YhOPO8nROISVluuQ"
+          "current_key": "AIzaSyABEKsI1-glKYqKNeDa28_Y83Xaqu3T1CY"
         }
       ],
       "services": {
         "analytics_service": {
           "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "932842954747-fld93ub0aj6i4hu2f0htdrm6ef1isgp5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:932842954747:android:e6bd015771836cce",
+        "android_client_info": {
+          "package_name": "comgomsang.httpsgithub.Alime"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "932842954747-fld93ub0aj6i4hu2f0htdrm6ef1isgp5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyABEKsI1-glKYqKNeDa28_Y83Xaqu3T1CY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 2,
+          "analytics_property": {
+            "tracking_id": "UA-97858164-1"
+          }
         },
         "appinvite_service": {
           "status": 1,
