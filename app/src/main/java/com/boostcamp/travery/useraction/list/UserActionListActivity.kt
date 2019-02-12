@@ -3,7 +3,6 @@ package com.boostcamp.travery.useraction.list
 
 import android.location.Location
 import android.os.Bundle
-import androidx.databinding.DataBindingUtil.setContentView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.boostcamp.travery.R
@@ -54,20 +53,22 @@ class UserActionListActivity : BaseActivity<ActivityUserActionListBinding>(),
         btn_myLocation.setOnClickListener {
             marker?.remove()
             viewModel?.setCurrentLocation()
-            curLocation?.let { loc -> moveCamera(loc) }
+            curLocation?.let { loc -> googleMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 15f)) }
         }
     }
 
     // 현재 위치 받아오기
     private fun observeCurrentLocation() {
         viewModel?.setCurrentLocation()
+
         viewModel?.getCurLocation()?.observe(this, Observer {
             curLocation = it.toLatLng().also { loc ->
                 marker = googleMap?.addMarker(
                         MarkerOptions()
                                 .position(loc)
                                 .flat(true)
-                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.map_position_no_heading)))
+                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.map_position_no_heading))
+                )
             }
         })
     }
@@ -98,8 +99,6 @@ class UserActionListActivity : BaseActivity<ActivityUserActionListBinding>(),
     }
 
     override fun onMapReady(map: GoogleMap) {
-        viewModel?.setCurrentLocation()
-
         this.googleMap = map
         settingClustering()
     }
@@ -107,7 +106,13 @@ class UserActionListActivity : BaseActivity<ActivityUserActionListBinding>(),
     override fun onUserActionLoading(list: List<UserAction>) {
         if (list.isNotEmpty()) {
             list.forEach {
-                clusterManager?.addItem(ClusterItemUserAction(it.title, it.mainImage, LatLng(it.latitude, it.longitude)))
+                clusterManager?.addItem(
+                        ClusterItemUserAction(
+                                it.title,
+                                it.mainImage,
+                                LatLng(it.latitude, it.longitude)
+                        )
+                )
             }
 
             // 초기 화면 위치. 현재 위치를 읽어왔다면 현재위치, 그렇지 않은 경우 첫번째 활동 위치 기준

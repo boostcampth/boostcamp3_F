@@ -1,22 +1,21 @@
 package com.boostcamp.travery.data.local.source
 
-import android.content.Context
 import com.boostcamp.travery.data.UserActionDataSource
-import com.boostcamp.travery.data.local.db.AppDatabase
+import com.boostcamp.travery.data.local.db.dao.UserActionDao
 import com.boostcamp.travery.data.model.Course
 import com.boostcamp.travery.data.model.UserAction
 import io.reactivex.Flowable
 import io.reactivex.Observable
 
-class UserActionLocalDataSource private constructor(context: Context) : UserActionDataSource {
-    private val userActionDao by lazy { AppDatabase.getInstance(context).daoUserAction() }
+class UserActionLocalDataSource private constructor(private val userActionDao: UserActionDao) : UserActionDataSource {
 
     companion object {
         @Volatile
         private var INSTANCE: UserActionLocalDataSource? = null
 
-        fun getInstance(context: Context) = INSTANCE ?: synchronized(this) {
-            INSTANCE ?: UserActionLocalDataSource(context).also { INSTANCE = it }
+        @JvmStatic
+        fun getInstance(userActionDao: UserActionDao) = INSTANCE ?: synchronized(this) {
+            INSTANCE ?: UserActionLocalDataSource(userActionDao).also { INSTANCE = it }
         }
     }
 

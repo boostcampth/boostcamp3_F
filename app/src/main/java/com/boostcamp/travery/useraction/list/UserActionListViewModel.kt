@@ -10,7 +10,8 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.MutableLiveData
 import com.boostcamp.travery.MyApplication
 import com.boostcamp.travery.base.BaseViewModel
-import com.boostcamp.travery.data.UserActionDataSource
+import com.boostcamp.travery.data.local.db.AppDatabase
+import com.boostcamp.travery.data.local.source.UserActionLocalDataSource
 import com.boostcamp.travery.data.model.UserAction
 import com.boostcamp.travery.data.repository.UserActionRepository
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -20,7 +21,8 @@ class UserActionListViewModel(application: Application) : BaseViewModel(applicat
     private var contract: Contract? = null
     private val curLocation = MutableLiveData<Location>()
 
-    private val userActionRepository = UserActionRepository.getInstance(application)
+    private val userActionRepository =
+            UserActionRepository.getInstance(UserActionLocalDataSource.getInstance(AppDatabase.getInstance(application).daoUserAction()))
 
     fun getCurLocation() = curLocation
 
@@ -37,12 +39,13 @@ class UserActionListViewModel(application: Application) : BaseViewModel(applicat
     }
 
     private fun loadUserActions() {
-        userActionRepository.getAllUserAction()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    contract?.onUserActionLoading(it)
-                }.also { addDisposable(it) }
+        addDisposable(
+                userActionRepository.getAllUserAction()
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe {
+                            contract?.onUserActionLoading(it)
+                        })
     }
 
     fun setCurrentLocation() {
