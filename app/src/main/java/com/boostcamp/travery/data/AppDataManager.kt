@@ -93,11 +93,7 @@ class AppDataManager(private val context: Context, private val dbHelper: DbHelpe
         return dbHelper.getUserActionForCourse(course)
     }
 
-    override fun loadCourseCoordinate(fileName: String): Flowable<List<TimeCode>> {
-        return Flowable.fromCallable {
-            loadCoordinateListFromJsonFile(context, fileName)
-        }
-    }
+
 
     /**
      * 더미데이터 DB insert

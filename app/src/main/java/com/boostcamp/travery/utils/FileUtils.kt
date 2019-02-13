@@ -21,8 +21,7 @@ object FileUtils {
         }
     }
 
-    fun loadCoordinateListFromJsonFile(context: Context, fileName: String): List<TimeCode> {
-        val directory = context.filesDir
+    fun loadCoordinateListFromJsonFile(directory:File, fileName: String): List<TimeCode> {
         val file = File(directory, "$fileName.json")
         val timeCode = ArrayList<TimeCode>()
         val coordinateList = JSONObject(file.readText()).getJSONArray("coordinate")
