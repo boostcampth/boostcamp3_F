@@ -9,9 +9,10 @@
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/iv_save_useraction"
-        android:layout_width="120dp"
-        android:layout_height="100dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_margin="10dp"
+        android:scaleType="centerCrop"
         app:image="@{item}"
         tools:src="@drawable/ic_add_circle_black_24dp"/>
 </layout>
