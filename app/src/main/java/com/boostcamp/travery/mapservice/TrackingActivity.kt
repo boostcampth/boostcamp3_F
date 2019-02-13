@@ -16,6 +16,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.*
+import android.util.Log
 import com.boostcamp.travery.Constants
 import com.boostcamp.travery.R
 import com.boostcamp.travery.data.AppDataManager
@@ -33,6 +34,7 @@ import com.orhanobut.dialogplus.DialogPlus
 import android.view.Gravity
 import android.widget.BaseAdapter
 import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.boostcamp.travery.base.BaseActivity
 import com.boostcamp.travery.data.model.Suggestion
@@ -50,15 +52,17 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
     private var suggestionMarker: Marker? = null
     private var polyline: Polyline? = null
     private var polylineOptions: PolylineOptions = PolylineOptions()
-    private var secondForView = 0
-    private val viewHandler = ViewChangeHandler(this)
     private var isBound = false
     private var suggestAdapter: BaseAdapter? = null
+
+    private val viewModel by lazy {
+        ViewModelProviders.of(this).get(TrackingViewModel::class.java)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(viewDataBinding.root)
-        viewDataBinding.viewmodel = ViewModelProviders.of(this).get(TrackingViewModel::class.java)
+        viewDataBinding.viewmodel = viewModel
 
         val mapFragment = map_trackingActivity as SupportMapFragment
         mapFragment.getMapAsync(this)
@@ -72,6 +76,23 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
                 .width(10f)
 
         doBindService()
+
+        viewModel.curLocation.observe(this, Observer {
+            myLocationMarker.position = it
+
+            if (viewModel.getIsServiceState()) {
+                polylineOptions.add(it)
+                polyline?.remove()
+                polyline = mMap.addPolyline(polylineOptions)
+                mMap.animateCamera(CameraUpdateFactory.newLatLng(it))
+            }
+        })
+
+        viewModel.suggestionList.observe(this, Observer {
+            suggestAdapter?.notifyDataSetChanged()
+            Log.d("lolocation", it.size.toString())
+            showSuggestNoti(it.size)
+        })
     }
 
     override fun onDestroy() {
@@ -83,7 +104,7 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
         val serviceIntent = Intent(this, MapTrackingService::class.java)
         ContextCompat.startForegroundService(this, serviceIntent)
         //startRecordView()
-        viewDataBinding.viewmodel?.setIsServiceState(true)
+        viewModel.setIsServiceState(true)
         //isService = true
         polylineOptions = PolylineOptions()
                 .color(Color.BLUE)
@@ -93,7 +114,7 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
     }
 
     fun stopService(v: View) {
-        if (mapService.getSuggestList().size > 0) {
+        if (viewModel.getSuggestList().size > 0) {
             AlertDialog.Builder(this@TrackingActivity, R.style.dialogTheme).apply {
                 setTitle(getString(R.string.suggestion_dialog_title))
                 setMessage(getString(R.string.suggestion_dialog_description))
@@ -114,21 +135,21 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
 
     private fun startCourseSaveActivity() {
         dismissSuggestNoti()
-        if (mapService.getTotalDistance() >= 10) {
+        if (viewModel.totalDistance >= 10) {
             val saveIntent = Intent(this@TrackingActivity, CourseSaveActivity::class.java)
                     .apply {
-                        putParcelableArrayListExtra(Constants.EXTRA_COURSE_LOCATION_LIST, mapService.getTimeCodeList())
+                        putParcelableArrayListExtra(Constants.EXTRA_COURSE_LOCATION_LIST, viewModel.getTimeCodeList())
                         putExtra(
                                 Constants.EXTRA_COURSE,
                                 Course(
                                         "",
                                         "",
                                         "",
-                                        mapService.getStartTime(),
-                                        mapService.getEndTime(),
-                                        mapService.getTotalDistance(),
-                                        mapService.getStartTime().toString(),
-                                        mapService.getStartTime().toString()
+                                        viewModel.startTime,
+                                        System.currentTimeMillis(),
+                                        viewModel.totalDistance,
+                                        viewModel.startTime.toString(),
+                                        viewModel.startTime.toString()
                                 )
                         )
                     }
@@ -148,7 +169,7 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
     fun saveUserAction(v: View) {
         mapService.setCanSuggestFalse()
         startActivityForResult(Intent(this, UserActionSaveActivity::class.java).apply {
-            when (viewDataBinding.viewmodel?.getIsServiceState()) {
+            when (viewModel.getIsServiceState()) {
                 true -> {
                     putExtra(Constants.EXTRA_LATITUDE, myLocationMarker.position.latitude)
                     putExtra(Constants.EXTRA_LONGITUDE, myLocationMarker.position.longitude)
@@ -158,8 +179,9 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
                     putExtra(Constants.EXTRA_LONGITUDE, mMap.cameraPosition.target.longitude)
                 }
             }
-            putExtra(Constants.EXTRA_COURSE_CODE, mapService.getStartTime())
+            putExtra(Constants.EXTRA_COURSE_CODE, viewModel.startTime)
         }, Constants.REQUEST_CODE_USERACTION)
+
     }
 
     fun gotoMyLocation(v: View) {
@@ -172,9 +194,8 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
         suggestionMarker = null
     }
 
-    @SuppressLint("ResourceAsColor")
     fun openSuggestDialog(v: View) {
-        val list = mapService.getSuggestList()
+        val list = viewModel.getSuggestList()
         if (list.size == 0) return
         suggestAdapter = SuggestListAdapter(this@TrackingActivity, list)
         val dialog = DialogPlus.newDialog(this@TrackingActivity)
@@ -182,6 +203,7 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
                 .setGravity(Gravity.BOTTOM)
                 .setOnItemClickListener { dialog, item, view, position ->
                     mMap.animateCamera(CameraUpdateFactory.newLatLng((item as Suggestion).location))
+
                     footer.visibility = View.VISIBLE
                     ObjectAnimator.ofFloat(footer, "alpha", 0f, 1f).apply {
                         duration = 500
@@ -202,8 +224,8 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
                     }
 
                     footer_delete_button.setOnClickListener {
-                        mapService.removeSuggestItem(position)
-                        tv_seggest_num.text = mapService.getSuggestList().size.toString()
+                        viewModel.removeSuggestItem(position)
+                        tv_seggest_num.text = viewModel.getSuggestList().size.toString()
                         if (tv_seggest_num.text == "0") dismissSuggestNoti()
                         removeSuggestionMarker()
                     }
@@ -212,11 +234,11 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
                         startActivityForResult(Intent(this, UserActionSaveActivity::class.java).apply {
                             putExtra(Constants.EXTRA_LATITUDE, suggestionMarker!!.position.latitude)
                             putExtra(Constants.EXTRA_LONGITUDE, suggestionMarker!!.position.longitude)
-                            putExtra(Constants.EXTRA_COURSE_CODE, mapService.getStartTime())
+                            putExtra(Constants.EXTRA_COURSE_CODE, viewModel.startTime)
                         }, Constants.REQUEST_CODE_USERACTION)
 
-                        mapService.removeSuggestItem(position)
-                        tv_seggest_num.text = mapService.getSuggestList().size.toString()
+                        viewModel.removeSuggestItem(position)
+                        tv_seggest_num.text = viewModel.getSuggestList().size.toString()
                         if (tv_seggest_num.text == "0") dismissSuggestNoti()
                         removeSuggestionMarker()
                     }
@@ -228,38 +250,9 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
         dialog.show()
     }
 
-    private class ViewChangeHandler(activity: TrackingActivity) : Handler() {
-        private val mActivity: WeakReference<TrackingActivity> = WeakReference(activity)
-        override fun handleMessage(msg: Message) {
-            val activity = mActivity.get()
-            activity?.handleSecondMessage(msg)
-        }
-    }
-
-    private fun handleSecondMessage(msg: Message) {
-        tv_text.text = setIntToTime(secondForView)
-    }
-
     private var mapTrackingServiceConnection: ServiceConnection = object : ServiceConnection {
 
         private val mCallback = object : MapTrackingService.ICallback {
-            override fun sendLocation(location: LatLng, accuracy: Float) {
-                myLocationMarker.position = location
-                //arrayPoints.add(locate)
-                tv_acc.text = accuracy.toString()
-
-                if (viewDataBinding.viewmodel?.getIsServiceState() == true) {
-                    polylineOptions.add(location)
-                    polyline?.remove()
-                    polyline = mMap.addPolyline(polylineOptions)
-                    mMap.animateCamera(CameraUpdateFactory.newLatLng(location))
-                }
-            }
-
-            override fun sendSecond(second: Int) {
-                secondForView = second
-                viewHandler.sendMessage(viewHandler.obtainMessage())
-            }
 
             override fun saveInitCourse(startTime: Long) {
                 AppDataManager(application, AppDbHelper.getInstance(application)).saveCourse(
@@ -267,11 +260,6 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
                 ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe()
             }
 
-
-            override fun sendSuggestList(suggestList: ArrayList<Suggestion>) {
-                suggestAdapter?.notifyDataSetChanged()
-                showSuggestNoti(suggestList.size)
-            }
             /* 서비스에서 데이터를 받아 메소드 호출 또는 핸들러로 전달 */
         }
 
@@ -285,7 +273,7 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
             mapService = mb.service // 서비스가 제공하는 메소드 호출하여
             mapService.registerCallback(mCallback)
             // 서비스쪽 객체를 전달받을수 있슴
-            viewDataBinding.viewmodel?.setIsServiceState(mapService.isRunning)
+            viewModel.setIsServiceState(mapService.isRunning)
 
             val location = mapService.getLastLocation()
             //서울 위치
@@ -306,12 +294,12 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
             }
 
             //서비스가 돌고 있을 때
-            if (viewDataBinding.viewmodel?.getIsServiceState() == true) {
+            if (viewModel.getIsServiceState()) {
                 Completable.fromAction {
-                    mapService.getTimeCodeList().forEach {
+                    viewModel.getTimeCodeList().forEach {
                         polylineOptions.add(it.coordinate)
                     }
-                    mapService.getUserActionPositionList().forEach {
+                    viewModel.userActionLocateList.forEach {
                         mMap.addMarker(MarkerOptions().position(it)
                                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_pin)))
                     }
@@ -319,13 +307,13 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
                     polyline = mMap.addPolyline(polylineOptions)
                 }.subscribe().dispose()
 
-                showSuggestNoti(mapService.getSuggestList().size)
+                showSuggestNoti(viewModel.getSuggestList().size)
             }
         }
 
         override fun onServiceDisconnected(name: ComponentName) {
             // 서비스와 연결이 끊겼을 때 호출되는 메서드
-            viewDataBinding.viewmodel?.setIsServiceState(false)
+            viewModel.setIsServiceState(false)
         }
     }
 
@@ -339,16 +327,6 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
     private fun dismissSuggestNoti() {
         btn_suggest.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_add_alert_black_24dp))
         tv_seggest_num.text = "0"
-    }
-
-    private fun setIntToTime(timeInt: Int): String {
-
-        var min = timeInt / 60
-        val hour = min / 60
-        val sec = timeInt % 60
-        min %= 60
-
-        return "${String.format("%02d", hour)}:${String.format("%02d", min)}:${String.format("%02d", sec)}"
     }
 
     private fun doBindService() {
@@ -376,7 +354,7 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
                                         it.getDoubleExtra(Constants.EXTRA_LONGITUDE, 0.0)))
                                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_pin)))
 
-                        mapService.addUserActionPostionItem(LatLng(
+                        viewModel.addUserActionLocate(LatLng(
                                 it.getDoubleExtra(Constants.EXTRA_LATITUDE, 0.0),
                                 it.getDoubleExtra(Constants.EXTRA_LONGITUDE, 0.0)
                         ))
