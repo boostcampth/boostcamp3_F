@@ -46,7 +46,6 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
         get() = R.layout.activity_tracking
 
     lateinit var mapService: MapTrackingService
-    //var isService = false
     private lateinit var mMap: GoogleMap
     private lateinit var myLocationMarker: Marker
     private var suggestionMarker: Marker? = null
@@ -97,7 +96,6 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
         val serviceIntent = Intent(this, MapTrackingService::class.java)
         ContextCompat.startForegroundService(this, serviceIntent)
         //startRecordView()
-        viewModel.setIsServiceState(true)
         //isService = true
         polylineOptions = PolylineOptions()
                 .color(Color.BLUE)
@@ -237,36 +235,16 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
 
     private var mapTrackingServiceConnection: ServiceConnection = object : ServiceConnection {
 
-        private val mCallback = object : MapTrackingService.ICallback {
-
-            override fun saveInitCourse(startTime: Long) {
-                AppDataManager(application, AppDbHelper.getInstance(application)).saveCourse(
-                        Course(startTime = startTime)
-                ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe()
-            }
-
-            /* 서비스에서 데이터를 받아 메소드 호출 또는 핸들러로 전달 */
-        }
-
         override fun onServiceConnected(
                 name: ComponentName,
-                service: IBinder
-        ) {
+                service: IBinder) {
             // 서비스와 연결되었을 때 호출되는 메서드
             // 서비스 객체를 전역변수로 저장
             val mb = service as MapTrackingService.LocalBinder
             mapService = mb.service // 서비스가 제공하는 메소드 호출하여
-            mapService.registerCallback(mCallback)
-            // 서비스쪽 객체를 전달받을수 있슴
-            viewModel.setIsServiceState(mapService.isRunning)
 
-            val location = mapService.getLastLocation()
-            //서울 위치
-
-            if (location != null) {
-                val lat = location.latitude
-                val lng = location.longitude
-                val myLocation = LatLng(lat, lng)
+            mapService.getLastLocation()?.let {
+                val myLocation = LatLng(it.latitude, it.longitude)
                 myLocationMarker.position = myLocation
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 15f))
             }
@@ -289,7 +267,7 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
 
         override fun onServiceDisconnected(name: ComponentName) {
             // 서비스와 연결이 끊겼을 때 호출되는 메서드
-            viewModel.setIsServiceState(false)
+            Log.d("loloser", "disconnect")
         }
     }
 

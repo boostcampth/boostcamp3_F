@@ -40,7 +40,7 @@ class CourseSaveViewModel(application: Application) : BaseViewModel(application)
         val colms = JSONObject()
 
         var marker = ""
-        if(timeCodeList.size >= 2) {
+        if (timeCodeList.size >= 2) {
             marker = "&markers=color:red%7C${timeCodeList[0].coordinate.latitude},${timeCodeList[0].coordinate.longitude}" +
                     "&markers=color:blue%7C${timeCodeList.last().coordinate.latitude},${timeCodeList.last().coordinate.longitude}"
         }
@@ -79,8 +79,7 @@ class CourseSaveViewModel(application: Application) : BaseViewModel(application)
             Completable.fromAction {
                 FileUtils.saveJsonFile(
                         getApplication(), mCourse.startTime.toString(), makeCoordinateJson(
-                        it.getParcelableArrayList<TimeCode>(Constants.EXTRA_COURSE_LOCATION_LIST)!!
-                )
+                        it.getParcelableArrayList<TimeCode>(Constants.EXTRA_COURSE_LOCATION_LIST)!!)
                 )
             }.doOnComplete {
                 val course = Course(

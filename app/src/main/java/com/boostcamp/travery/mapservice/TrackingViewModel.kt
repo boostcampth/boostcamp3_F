@@ -1,16 +1,18 @@
 package com.boostcamp.travery.mapservice
 
 import android.app.Application
-import android.location.Location
-import android.util.Log
 import android.widget.BaseAdapter
 import androidx.databinding.ObservableBoolean
 import com.boostcamp.travery.base.BaseViewModel
 import androidx.databinding.ObservableField
-import androidx.databinding.ObservableInt
 import androidx.lifecycle.MutableLiveData
-import com.boostcamp.travery.data.model.Suggestion
+import com.boostcamp.travery.data.AppDataManager
+import com.boostcamp.travery.data.local.db.AppDbHelper
+import com.boostcamp.travery.data.model.Course
 import com.boostcamp.travery.data.model.TimeCode
+import com.boostcamp.travery.data.repository.MapTrackingRepository
+import com.boostcamp.travery.data.repository.ServiceStartEvent
+import com.boostcamp.travery.eventbus.EventBus
 import com.google.android.gms.maps.model.LatLng
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -23,7 +25,6 @@ class TrackingViewModel(application: Application) : BaseViewModel(application) {
     val isService = ObservableBoolean(false)
     val curLocation = MutableLiveData<LatLng>()
     var suggestCountString = ObservableField<String>("0")
-    //val suggestionList = MutableLiveData<ArrayList<Suggestion>>()
     val totalDistance by lazy { mapTrackingRepository.getTotalDistance() }
     val startTime by lazy { mapTrackingRepository.getStartTime() }
     val userActionLocateList by lazy { mapTrackingRepository.getUserActionLocateList() }
@@ -53,8 +54,20 @@ class TrackingViewModel(application: Application) : BaseViewModel(application) {
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe {
                             secondString.set(setIntToTime(it))
-                        })
+                        }
+        )
 
+        addDisposable(
+                EventBus.getEvents().ofType(ServiceStartEvent::class.java).subscribe {
+                    if (it.startTime != 0L) {
+                        saveInitCourse(it.startTime)
+                        isService.set(true)
+                    } else {
+                        isService.set(false)
+                        secondString.set("")
+                    }
+                }
+        )
         if (mapTrackingRepository.getStartTime() != 0L)
             isService.set(true)
     }
@@ -73,9 +86,11 @@ class TrackingViewModel(application: Application) : BaseViewModel(application) {
         return mapTrackingRepository.getTimeCodeList()
     }
 
-    /*fun getSuggestList(): ArrayList<Suggestion> {
-        return mapTrackingRepository.getSuggestList()
-    }*/
+    private fun saveInitCourse(startTime: Long) {
+        AppDataManager(getApplication(), AppDbHelper.getInstance(getApplication())).saveCourse(
+                Course(startTime = startTime)
+        ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe()
+    }
 
     fun removeSuggestItem(position: Int) {
         mapTrackingRepository.removeSuggestItem(position)
@@ -85,15 +100,11 @@ class TrackingViewModel(application: Application) : BaseViewModel(application) {
         return isService.get()
     }
 
-    fun setIsServiceState(boolean: Boolean) {
-        isService.set(boolean)
-    }
-
-    fun addUserActionLocate(locate: LatLng){
+    fun addUserActionLocate(locate: LatLng) {
         mapTrackingRepository.addUserActionLocate(locate)
     }
 
-    fun getSuggestAdapter(): BaseAdapter{
+    fun getSuggestAdapter(): BaseAdapter {
         suggestAdapter = SuggestListAdapter(mapTrackingRepository.getSuggestList())
         return suggestAdapter!!
     }
