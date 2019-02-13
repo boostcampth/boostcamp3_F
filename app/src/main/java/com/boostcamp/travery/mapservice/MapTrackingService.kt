@@ -18,7 +18,6 @@ import android.os.*
 import androidx.core.app.TaskStackBuilder
 import com.boostcamp.travery.data.model.Suggestion
 import com.boostcamp.travery.data.model.TimeCode
-import kotlin.collections.ArrayList
 
 
 @SuppressLint("Registered")
@@ -40,12 +39,10 @@ class MapTrackingService : Service() {
     private val UPDATE_INTERVAL_MS: Long = 2500  // 1초
     private val FASTEST_UPDATE_INTERVAL_MS: Long = 1500 //
 
-    private val userActionPositionList: ArrayList<LatLng> = ArrayList()
     private var lostLocationCnt = 0
     //private val timeCodeList: ArrayList<TimeCode> = ArrayList()
     var isRunning = false
     private var canSuggest = true
-    private val suggestList: ArrayList<Suggestion> = ArrayList()
     private var startTime: Long? = null
     private var second: Int = 0
 
@@ -173,6 +170,11 @@ class MapTrackingService : Service() {
 
         secondTimer.schedule(SecondTimer(), 1000, 1000)
 
+        getLastKnownLocation()?.let {
+            mapTrackingRepository.addTimeCode(TimeCode(LatLng(it.latitude, it.longitude), it.time))
+        }
+
+
         startTime = System.currentTimeMillis()
         mapTrackingRepository.setStartTime(startTime ?: 0L)
         mCallback?.saveInitCourse(startTime ?: System.currentTimeMillis())
@@ -189,9 +191,6 @@ class MapTrackingService : Service() {
             if (bestLocation == null || mLocation.accuracy < bestLocation.accuracy) {
                 bestLocation = mLocation
             }
-        }
-        if (isRunning && bestLocation != null) {
-            //timeCodeList.add(TimeCode(LatLng(bestLocation.latitude, bestLocation.longitude), bestLocation.time))
         }
         return bestLocation
     }

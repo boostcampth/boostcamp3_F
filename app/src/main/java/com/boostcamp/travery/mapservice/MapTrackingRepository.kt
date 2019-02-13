@@ -12,7 +12,8 @@ class MapTrackingRepository {
     private val timeCode : PublishSubject<TimeCode> = PublishSubject.create()
 
     private val suggestList = ArrayList<Suggestion>()
-    private val suggest : PublishSubject<Suggestion> = PublishSubject.create()
+    private val suggest : PublishSubject<Int> = PublishSubject.create()
+    private var suggestListSize = 0
 
     private val second : PublishSubject<Int> = PublishSubject.create()
 
@@ -69,8 +70,12 @@ class MapTrackingRepository {
         this.startTime = startTime
     }
 
-    fun getSuggest(): Observable<Suggestion> {
+    fun getSuggest(): Observable<Int> {
         return suggest
+    }
+
+    fun getSuggestListSize(): Int{
+        return suggestListSize
     }
 
     fun getSuggestList(): ArrayList<Suggestion> {
@@ -80,25 +85,32 @@ class MapTrackingRepository {
     fun addSuggest(suggest: Suggestion) {
         if(startTime != 0L)
             suggestList.add(suggest)
-        this.suggest.onNext(suggest)
+        suggestListSize++
+        this.suggest.onNext(suggestListSize)
     }
 
     fun removeSuggestItem(position: Int) {
         suggestList.removeAt(position)
+        suggestListSize--
+        this.suggest.onNext(suggestListSize)
     }
 
     fun clearData() {
         timeCodeList.clear()
         suggestList.clear()
+        userActionLocateList.clear()
+
         startTime = 0L
         totalDistance = 0L
+        suggestListSize = 0
+        this.suggest.onNext(suggestListSize)
     }
 
     fun addUserActionLocate(locate: LatLng){
         userActionLocateList.add(locate)
     }
 
-    fun getUsetActionLocateList(): ArrayList<LatLng>{
+    fun getUserActionLocateList(): ArrayList<LatLng>{
         return userActionLocateList
     }
 }

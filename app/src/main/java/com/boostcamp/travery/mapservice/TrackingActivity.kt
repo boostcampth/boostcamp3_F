@@ -53,7 +53,6 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
     private var polyline: Polyline? = null
     private var polylineOptions: PolylineOptions = PolylineOptions()
     private var isBound = false
-    private var suggestAdapter: BaseAdapter? = null
 
     private val viewModel by lazy {
         ViewModelProviders.of(this).get(TrackingViewModel::class.java)
@@ -87,12 +86,6 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
                 mMap.animateCamera(CameraUpdateFactory.newLatLng(it))
             }
         })
-
-        viewModel.suggestionList.observe(this, Observer {
-            suggestAdapter?.notifyDataSetChanged()
-            Log.d("lolocation", it.size.toString())
-            showSuggestNoti(it.size)
-        })
     }
 
     override fun onDestroy() {
@@ -114,7 +107,7 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
     }
 
     fun stopService(v: View) {
-        if (viewModel.getSuggestList().size > 0) {
+        if (viewModel.suggestCountString.get()?.toInt() ?: 0 > 0) {
             AlertDialog.Builder(this@TrackingActivity, R.style.dialogTheme).apply {
                 setTitle(getString(R.string.suggestion_dialog_title))
                 setMessage(getString(R.string.suggestion_dialog_description))
@@ -134,7 +127,6 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
     }
 
     private fun startCourseSaveActivity() {
-        dismissSuggestNoti()
         if (viewModel.totalDistance >= 10) {
             val saveIntent = Intent(this@TrackingActivity, CourseSaveActivity::class.java)
                     .apply {
@@ -195,11 +187,8 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
     }
 
     fun openSuggestDialog(v: View) {
-        val list = viewModel.getSuggestList()
-        if (list.size == 0) return
-        suggestAdapter = SuggestListAdapter(this@TrackingActivity, list)
         val dialog = DialogPlus.newDialog(this@TrackingActivity)
-                .setAdapter(suggestAdapter)
+                .setAdapter(viewModel.getSuggestAdapter())
                 .setGravity(Gravity.BOTTOM)
                 .setOnItemClickListener { dialog, item, view, position ->
                     mMap.animateCamera(CameraUpdateFactory.newLatLng((item as Suggestion).location))
@@ -225,8 +214,6 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
 
                     footer_delete_button.setOnClickListener {
                         viewModel.removeSuggestItem(position)
-                        tv_seggest_num.text = viewModel.getSuggestList().size.toString()
-                        if (tv_seggest_num.text == "0") dismissSuggestNoti()
                         removeSuggestionMarker()
                     }
 
@@ -238,8 +225,6 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
                         }, Constants.REQUEST_CODE_USERACTION)
 
                         viewModel.removeSuggestItem(position)
-                        tv_seggest_num.text = viewModel.getSuggestList().size.toString()
-                        if (tv_seggest_num.text == "0") dismissSuggestNoti()
                         removeSuggestionMarker()
                     }
                     dialog.dismiss()
@@ -277,18 +262,11 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
 
             val location = mapService.getLastLocation()
             //서울 위치
-            var myLocation = LatLng(37.56, 126.97)
-            myLocationMarker = mMap.addMarker(
-                    MarkerOptions()
-                            .position(myLocation)
-                            .flat(true)
-                            .anchor(0.5f, 0.5f)
-                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.map_position_no_heading))
-            )
+
             if (location != null) {
                 val lat = location.latitude
                 val lng = location.longitude
-                myLocation = LatLng(lat, lng)
+                val myLocation = LatLng(lat, lng)
                 myLocationMarker.position = myLocation
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 15f))
             }
@@ -306,8 +284,6 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
                 }.doOnComplete {
                     polyline = mMap.addPolyline(polylineOptions)
                 }.subscribe().dispose()
-
-                showSuggestNoti(viewModel.getSuggestList().size)
             }
         }
 
@@ -317,19 +293,16 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
         }
     }
 
-    private fun showSuggestNoti(listSize: Int) {
-        if (listSize > 0) {
-            btn_suggest.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_add_alert_red_24dp))
-            tv_seggest_num.text = listSize.toString()
-        }
-    }
-
-    private fun dismissSuggestNoti() {
-        btn_suggest.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_add_alert_black_24dp))
-        tv_seggest_num.text = "0"
-    }
-
     private fun doBindService() {
+        val myLocation = LatLng(37.56, 126.97)
+        myLocationMarker = mMap.addMarker(
+                MarkerOptions()
+                        .position(myLocation)
+                        .flat(true)
+                        .anchor(0.5f, 0.5f)
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.map_position_no_heading))
+        )
+
         bindService(
                 Intent(this, MapTrackingService::class.java),
                 mapTrackingServiceConnection, Context.BIND_AUTO_CREATE
@@ -348,7 +321,7 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
         if (resultCode == RESULT_OK) {
             when (requestCode) {
                 Constants.REQUEST_CODE_USERACTION -> data?.let {
-                    if (viewDataBinding.viewmodel?.getIsServiceState() == true) {
+                    if (viewModel.getIsServiceState()) {
                         mMap.addMarker(MarkerOptions().position(
                                 LatLng(it.getDoubleExtra(Constants.EXTRA_LATITUDE, 0.0),
                                         it.getDoubleExtra(Constants.EXTRA_LONGITUDE, 0.0)))

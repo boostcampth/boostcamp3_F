@@ -3,8 +3,11 @@ package com.boostcamp.travery.mapservice
 import android.app.Application
 import android.location.Location
 import android.util.Log
+import android.widget.BaseAdapter
+import androidx.databinding.ObservableBoolean
 import com.boostcamp.travery.base.BaseViewModel
 import androidx.databinding.ObservableField
+import androidx.databinding.ObservableInt
 import androidx.lifecycle.MutableLiveData
 import com.boostcamp.travery.data.model.Suggestion
 import com.boostcamp.travery.data.model.TimeCode
@@ -17,24 +20,30 @@ class TrackingViewModel(application: Application) : BaseViewModel(application) {
 
     private val mapTrackingRepository = MapTrackingRepository.getInstance()
     var secondString = ObservableField<String>("")
-    val isService = ObservableField<Boolean>(false)
+    val isService = ObservableBoolean(false)
     val curLocation = MutableLiveData<LatLng>()
-    val suggestionList = MutableLiveData<ArrayList<Suggestion>>()
+    var suggestCountString = ObservableField<String>("0")
+    //val suggestionList = MutableLiveData<ArrayList<Suggestion>>()
     val totalDistance by lazy { mapTrackingRepository.getTotalDistance() }
     val startTime by lazy { mapTrackingRepository.getStartTime() }
-    val userActionLocateList by lazy { mapTrackingRepository.getUsetActionLocateList() }
+    val userActionLocateList by lazy { mapTrackingRepository.getUserActionLocateList() }
+    private var suggestAdapter: BaseAdapter? = null
 
     init {
+
         addDisposable(
                 mapTrackingRepository.getTimeCode().subscribe {
                     curLocation.value = it.coordinate
                 }
         )
 
+        suggestCountString.set(mapTrackingRepository.getSuggestListSize().toString())
+
         addDisposable(
                 mapTrackingRepository.getSuggest().subscribe {
-                    Log.d("lolocation", mapTrackingRepository.getSuggestList().toString())
-                    suggestionList.value = mapTrackingRepository.getSuggestList()
+                    //suggestionList.value = mapTrackingRepository.getSuggestList()
+                    suggestCountString.set(it.toString())
+                    suggestAdapter?.notifyDataSetChanged()
                 }
         )
 
@@ -64,16 +73,16 @@ class TrackingViewModel(application: Application) : BaseViewModel(application) {
         return mapTrackingRepository.getTimeCodeList()
     }
 
-    fun getSuggestList(): ArrayList<Suggestion> {
+    /*fun getSuggestList(): ArrayList<Suggestion> {
         return mapTrackingRepository.getSuggestList()
-    }
+    }*/
 
     fun removeSuggestItem(position: Int) {
         mapTrackingRepository.removeSuggestItem(position)
     }
 
     fun getIsServiceState(): Boolean {
-        return isService.get() ?: false
+        return isService.get()
     }
 
     fun setIsServiceState(boolean: Boolean) {
@@ -82,5 +91,10 @@ class TrackingViewModel(application: Application) : BaseViewModel(application) {
 
     fun addUserActionLocate(locate: LatLng){
         mapTrackingRepository.addUserActionLocate(locate)
+    }
+
+    fun getSuggestAdapter(): BaseAdapter{
+        suggestAdapter = SuggestListAdapter(mapTrackingRepository.getSuggestList())
+        return suggestAdapter!!
     }
 }

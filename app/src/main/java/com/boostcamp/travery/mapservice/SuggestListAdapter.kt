@@ -15,11 +15,8 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class SuggestListAdapter(
-        context: Context,
         private val suggestList: ArrayList<Suggestion>
 ) : BaseAdapter() {
-
-    private val layoutInflater: LayoutInflater = LayoutInflater.from(context)
 
     override fun getCount(): Int {
         return suggestList.size
@@ -39,7 +36,7 @@ class SuggestListAdapter(
         var view: View? = convertView
 
         if (view == null) {
-            view = layoutInflater.inflate(R.layout.item_suggest_list, parent, false)
+            view = LayoutInflater.from(parent.context).inflate(R.layout.item_suggest_list, parent, false)
 
             viewHolder = ViewHolder(
                     view.findViewById(R.id.tv_date),
