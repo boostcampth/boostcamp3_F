@@ -21,9 +21,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
-        <activity android:name=".useractiondetail.UserActionDetailActivity">
+        <activity android:name=".useraction.list.UserActionListActivity">
         </activity>
-        <activity android:name=".save.UserActionSaveActivity">
+        <activity android:name=".useraction.detail.UserActionDetailActivity">
+        </activity>
+        <activity android:name=".useraction.save.UserActionSaveActivity">
         </activity>
         <activity android:name=".mapservice.savecourse.CourseSaveActivity">
         </activity>

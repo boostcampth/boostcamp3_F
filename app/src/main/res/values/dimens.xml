@@ -11,4 +11,7 @@
 
     <dimen name="save_activity_keyline_margin_start">10dp</dimen>
     <dimen name="activity_content_padding">10dp</dimen>
+
+    <dimen name="custom_profile_image">50dp</dimen>
+    <dimen name="custom_profile_padding">2dp</dimen>
 </resources>

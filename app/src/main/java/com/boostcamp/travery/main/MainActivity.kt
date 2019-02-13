@@ -2,9 +2,7 @@ package com.boostcamp.travery.main
 
 
 import android.Manifest
-import android.content.Context
 import android.content.Intent
-import android.location.LocationManager
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -20,9 +18,9 @@ import com.boostcamp.travery.coursedetail.CourseDetailActivity
 import com.boostcamp.travery.data.model.Course
 import com.boostcamp.travery.databinding.ActivityMainBinding
 import com.boostcamp.travery.mapservice.TrackingActivity
-import com.boostcamp.travery.mapservice.savecourse.CourseSaveActivity
-import com.boostcamp.travery.save.UserActionSaveActivity
 import com.boostcamp.travery.search.SearchResultActivity
+import com.boostcamp.travery.useraction.list.UserActionListActivity
+import com.boostcamp.travery.useraction.save.UserActionSaveActivity
 import com.google.android.material.navigation.NavigationView
 import com.tedpark.tedpermission.rx2.TedRx2Permission
 import kotlinx.android.synthetic.main.activity_main.*
@@ -101,7 +99,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), NavigationView.OnNavig
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.nav_camera -> {
-                startActivity(Intent(this, CourseSaveActivity::class.java))
+                onProgress(resources.getString(R.string.progress_bar_message))
+                startActivity(Intent(this, UserActionListActivity::class.java))
             }
             R.id.nav_gallery -> {
                 startActivity(Intent(this, SearchResultActivity::class.java))
@@ -121,14 +120,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), NavigationView.OnNavig
                 putExtra(Constants.EXTRA_COURSE, item)
             })
         }
-    }
-
-    private fun checkLocationServicesStatus(): Boolean {
-        val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-
-        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
-                LocationManager.NETWORK_PROVIDER
-        )
     }
 
     private fun showDialogForLocationServiceSetting() {
@@ -151,7 +142,13 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), NavigationView.OnNavig
         when (requestCode) {
             GPS_ENABLE_REQUEST_CODE ->
                 //사용자가 GPS 활성 시켰는지 검사
-                if (checkLocationServicesStatus()) { }
+                if (checkLocationServicesStatus()) {
+                }
         }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        offProgress()
     }
 }

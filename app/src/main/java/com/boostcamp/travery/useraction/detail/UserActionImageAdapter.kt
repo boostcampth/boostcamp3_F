@@ -1,4 +1,4 @@
-package com.boostcamp.travery.useractiondetail
+package com.boostcamp.travery.useraction.detail
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

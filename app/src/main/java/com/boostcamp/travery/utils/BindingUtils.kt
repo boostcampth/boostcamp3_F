@@ -14,12 +14,12 @@ import com.boostcamp.travery.GlideApp
 import com.boostcamp.travery.R
 import com.boostcamp.travery.main.MainViewModel
 import com.boostcamp.travery.main.adapter.CourseListAdapter
-import com.boostcamp.travery.save.UserActionImageListAdapter
-import com.boostcamp.travery.save.UserActionSaveViewModel
+import com.boostcamp.travery.useraction.save.UserActionImageListAdapter
+import com.boostcamp.travery.useraction.save.UserActionSaveViewModel
 import com.boostcamp.travery.search.SearchResultViewModel
 import com.boostcamp.travery.search.UserActionSearchAdapter
-import com.boostcamp.travery.useractiondetail.UserActionDetailViewModel
-import com.boostcamp.travery.useractiondetail.UserActionImageAdapter
+import com.boostcamp.travery.useraction.detail.UserActionDetailViewModel
+import com.boostcamp.travery.useraction.detail.UserActionImageAdapter
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.MultiTransformation
 import com.bumptech.glide.load.engine.GlideException
