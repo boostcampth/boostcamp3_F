@@ -63,4 +63,5 @@
 
     <string name="string_group_title_today">Today</string>
     <string name="string_group_title_yesterday">Yesterday</string>
+    <string name="string_zero">0</string>
 </resources>
