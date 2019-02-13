@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <import type="android.view.View"/>
-        <variable name="viewmodel"
-                  type="com.boostcamp.travery.mapservice.TrackingViewModel"/>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewmodel"
+            type="com.boostcamp.travery.mapservice.TrackingViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -17,17 +20,11 @@
         <fragment
             android:id="@+id/map_trackingActivity"
             android:name="com.google.android.gms.maps.SupportMapFragment"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/include"
-            tools:context=".MapsActivity"/>
-
-        <include
-            android:id="@+id/include"
-            layout="@layout/toolbar"/>
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:context=".MapsActivity" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/btn_suggest"
@@ -36,21 +33,21 @@
             android:layout_margin="10dp"
             android:onClick="openSuggestDialog"
             android:src="@drawable/ic_add_alert_black_24dp"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/include"
-            app:visibility="@{viewmodel.isService}"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:visibility="@{viewmodel.isService}" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_seggest_num"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="0"
+            android:text="@string/string_zero"
             android:textColor="@color/colorAccent"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:layout_constraintRight_toRightOf="@+id/btn_suggest"
+            app:layout_constraintEnd_toEndOf="@+id/btn_suggest"
             app:layout_constraintTop_toTopOf="@+id/btn_suggest"
-            app:visibility="@{viewmodel.isService}"/>
+            app:visibility="@{viewmodel.isService}" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/img_midMarker"
@@ -59,54 +56,51 @@
             android:layout_marginTop="20dp"
             android:src="@drawable/plan_smarker_start"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:visibility="@{!viewmodel.isService}"/>
+            app:visibility="@{!viewmodel.isService}" />
 
         <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/btn_myLocation"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:layout_marginBottom="40dp"
             android:background="@drawable/map_current_button"
             android:onClick="gotoMyLocation"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/btn_save_action"
+            app:layout_constraintStart_toStartOf="@id/btn_save_action"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.8"/>
+            app:layout_constraintVertical_bias="0.87" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/btn_play"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
+            android:layout_marginBottom="@dimen/fab_margin"
             android:onClick="startService"
             android:src="@drawable/ic_directions_run_black_24dp"
-            app:tint="@color/ef_white"
-            app:backgroundTint="@color/whiteBlue"
+            app:backgroundTint="@color/colorAccentLight"
             app:fabCustomSize="90dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:maxImageSize="60dp"
-            app:visibility="@{!viewmodel.isService}"
-            tools:ignore="MissingConstraints"/>
+            app:tint="@color/ef_white"
+            app:visibility="@{!viewmodel.isService}" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/btn_save_action"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="30dp"
+            android:layout_margin="@dimen/fab_margin"
             android:onClick="saveUserAction"
             android:src="@drawable/ic_add_white_24dp"
-            app:tint="@color/ef_white"
-            app:backgroundTint="@color/whiteBlue"
+            app:backgroundTint="@color/colorAccentLight"
             app:fabSize="normal"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            tools:ignore="MissingConstraints"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:tint="@color/ef_white" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/btn_stop"
@@ -116,15 +110,14 @@
             android:onClick="stopService"
             android:src="@drawable/ic_stop_black_24dp"
             android:visibility="gone"
-            app:tint="@color/ef_white"
-            app:backgroundTint="@color/whiteBlue"
+            app:backgroundTint="@color/colorAccent"
             app:fabCustomSize="90dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:maxImageSize="60dp"
-            app:visibility="@{viewmodel.isService}"
-            tools:ignore="MissingConstraints"/>
+            app:tint="@color/ef_white"
+            app:visibility="@{viewmodel.isService}" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_text"
@@ -132,11 +125,11 @@
             android:layout_height="wrap_content"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_stop"
-            app:visibility="@{viewmodel.isService}"/>
+            android:layout_marginBottom="5dp"
+            app:layout_constraintBottom_toTopOf="@id/btn_play"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:visibility="@{viewmodel.isService}" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_acc"
@@ -145,7 +138,7 @@
             android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintRight_toRightOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <include
             android:id="@+id/footer"
@@ -154,10 +147,10 @@
             android:layout_height="wrap_content"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.6"/>
+            app:layout_constraintVertical_bias="0.6" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
