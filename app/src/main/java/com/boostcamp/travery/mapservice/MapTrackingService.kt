@@ -39,7 +39,6 @@ class MapTrackingService : Service() {
 
 
     private var lostLocationCnt = 0
-    //private val timeCodeList: ArrayList<TimeCode> = ArrayList()
     var isRunning = false
     private var canSuggest = true
     private var second: Int = 0
@@ -89,7 +88,6 @@ class MapTrackingService : Service() {
                         val locate = LatLng(location.latitude, location.longitude)
                         mapTrackingRepository.addTotalDistance(location.distanceTo(exLocation))
                         mapTrackingRepository.addTimeCode(TimeCode(locate, location.time))
-                        //mCallback?.sendLocation(locate, location.accuracy)
 
                         exLocation = location
 
@@ -99,14 +97,12 @@ class MapTrackingService : Service() {
                         } else {//1.5초에서 2.5초에 한번 씩 데이터가 들어옴
                             //200번 쌓이면 5분
                             if (lostLocationCnt > 1 && canSuggest) {
-                                Log.d("lolott", "제안 추가")
                                 mapTrackingRepository.addSuggest(Suggestion(
                                         LatLng(
                                                 standardLocation.latitude,
                                                 standardLocation.longitude
                                         ), standardLocation.time, location.time
                                 ))
-                                //mCallback?.sendSuggestList(suggestList)
                             }
                             standardLocation = location
                             canSuggest = true

@@ -45,7 +45,6 @@ class MapTrackingRepository {
         if (startTime != 0L)
             timeCodeList.add(timeCode)
         this.timeCode.onNext(timeCode)
-        //Log.d("lolocation",timeCode.toString())
     }
 
     fun setSecond(second: Int) {

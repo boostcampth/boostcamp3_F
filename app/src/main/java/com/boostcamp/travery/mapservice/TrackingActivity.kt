@@ -95,8 +95,6 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
     fun startService(v: View) {
         val serviceIntent = Intent(this, MapTrackingService::class.java)
         ContextCompat.startForegroundService(this, serviceIntent)
-        //startRecordView()
-        //isService = true
         polylineOptions = PolylineOptions()
                 .color(Color.BLUE)
                 .geodesic(true)
@@ -267,7 +265,6 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
 
         override fun onServiceDisconnected(name: ComponentName) {
             // 서비스와 연결이 끊겼을 때 호출되는 메서드
-            Log.d("loloser", "disconnect")
         }
     }
 
