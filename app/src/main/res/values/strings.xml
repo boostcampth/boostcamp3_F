@@ -64,4 +64,8 @@
     <string name="string_group_title_today">Today</string>
     <string name="string_group_title_yesterday">Yesterday</string>
     <string name="string_zero">0</string>
+
+    <string name="string_useraction_search_hint">관심있는 활동 검색</string>
+
+    <string name="action_search">검색</string>
 </resources>

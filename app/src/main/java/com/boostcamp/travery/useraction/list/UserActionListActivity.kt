@@ -29,7 +29,7 @@ class UserActionListActivity : BaseActivity<ActivityUserActionListBinding>(),
         ClusterManager.OnClusterItemClickListener<ClusterItemUserAction>,
         ClusterManager.OnClusterItemInfoWindowClickListener<ClusterItemUserAction> {
     override val layoutResourceId: Int
-        get() = com.boostcamp.travery.R.layout.activity_user_action_list
+        get() = R.layout.activity_user_action_list
 
     private var viewModel: UserActionListViewModel? = null
 

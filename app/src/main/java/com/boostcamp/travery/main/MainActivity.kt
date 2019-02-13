@@ -6,11 +6,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.ViewGroup
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.RecyclerView
 import com.boostcamp.travery.Constants
 import com.boostcamp.travery.R
 import com.boostcamp.travery.base.BaseActivity
@@ -27,8 +29,10 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 
 class MainActivity : BaseActivity<ActivityMainBinding>(), NavigationView.OnNavigationItemSelectedListener,
-        MainViewModel.Contract {
-    private val GPS_ENABLE_REQUEST_CODE = 2001
+    MainViewModel.Contract {
+    companion object {
+        private const val GPS_ENABLE_REQUEST_CODE = 2001
+    }
 
     override val layoutResourceId: Int
         get() = R.layout.activity_main
@@ -41,39 +45,65 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), NavigationView.OnNavig
             setViewModelContract(this@MainActivity)
         }
 
-        setSupportActionBar(toolbar as Toolbar)
-        title = ""
+        setSupportActionBar(toolBar as Toolbar)
+        supportActionBar?.title = ""
 
-        fab.setOnClickListener {
-            TedRx2Permission.with(this)
-                    .setRationaleTitle(getString(R.string.permission_title))
-                    .setRationaleMessage(getString(R.string.permission_message)) // "we need permission for read contact and find your location"
-                    .setPermissions(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
-                    .request()
-                    .subscribe({ tedPermissionResult ->
-                        if (tedPermissionResult.isGranted) {
-                            if (!checkLocationServicesStatus()) {
-                                showDialogForLocationServiceSetting()
-                            } else {
-                                val intent = Intent(this@MainActivity, TrackingActivity::class.java)
-                                startActivity(intent)
-                            }
-                        } else {
-                            //"Permission Denied\n" + tedPermissionResult.deniedPermissions.toString().toast()
-                        }
-                    }, { })
-        }
+        initFab()
+        initFabAnimation()
 
         ActionBarDrawerToggle(
-                this, drawer_layout, toolbar as Toolbar,
-                R.string.navigation_drawer_open,
-                R.string.navigation_drawer_close
+            this, drawer_layout, toolBar as Toolbar,
+            R.string.navigation_drawer_open,
+            R.string.navigation_drawer_close
         ).also {
             drawer_layout.addDrawerListener(it)
             it.syncState()
         }
 
         nav_view.setNavigationItemSelectedListener(this)
+    }
+
+    private fun initFab() {
+        fab.setOnClickListener {
+            TedRx2Permission.with(this)
+                .setRationaleTitle(getString(R.string.permission_title))
+                .setRationaleMessage(getString(R.string.permission_message)) // "we need permission for read contact and find your location"
+                .setPermissions(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
+                .request()
+                .subscribe({ tedPermissionResult ->
+                    if (tedPermissionResult.isGranted) {
+                        if (!checkLocationServicesStatus()) {
+                            showDialogForLocationServiceSetting()
+                        } else {
+                            val intent = Intent(this@MainActivity, TrackingActivity::class.java)
+                            startActivity(intent)
+                        }
+                    } else {
+                        //"Permission Denied\n" + tedPermissionResult.deniedPermissions.toString().toast()
+                    }
+                }, { })
+        }
+    }
+
+    private fun initFabAnimation() {
+        rv_course_list.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            private var isScrollUp = false
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                val dy =
+                if (newState != RecyclerView.SCROLL_STATE_IDLE && isScrollUp) {
+                    (fab.height + (fab.layoutParams as ViewGroup.MarginLayoutParams).bottomMargin).toFloat()
+                } else {
+                    0F
+                }
+
+                fab.clearAnimation()
+                fab.animate().translationY(dy).start()
+            }
+
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                isScrollUp = dy > 0
+            }
+        })
     }
 
     override fun onBackPressed() {
