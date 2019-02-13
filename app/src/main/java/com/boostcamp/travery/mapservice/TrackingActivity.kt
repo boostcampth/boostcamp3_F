@@ -150,7 +150,7 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
 
         val serviceIntent = Intent(this, MapTrackingService::class.java)
         stopService(serviceIntent)
-
+        removeSuggestionMarker()
         mMap.clear()
 
         doBindService()
