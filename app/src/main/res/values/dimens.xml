@@ -14,4 +14,7 @@
 
     <dimen name="custom_profile_image">50dp</dimen>
     <dimen name="custom_profile_padding">2dp</dimen>
+
+    <dimen name="chip_group_child_spacing">5dp</dimen>
+    <dimen name="chip_group_child_spacing_vertical">10dp</dimen>
 </resources>

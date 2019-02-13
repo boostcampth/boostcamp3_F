@@ -49,7 +49,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "androidx.appcompat:appcompat:$androidx_version"
-    implementation "androidx.media:media:1.0.0"
+    implementation "androidx.media:media:1.0.1"
     implementation "androidx.legacy:legacy-support-v4:1.0.0"
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha3'
     implementation "com.google.android.material:material:1.1.0-alpha02"
@@ -88,7 +88,7 @@ dependencies {
     implementation 'com.facebook.stetho:stetho:1.5.0'
 
     //googleMap
-    implementation 'com.google.android.gms:play-services-maps:16.0.0'
+    implementation 'com.google.android.gms:play-services-maps:16.1.0'
     implementation 'com.google.android.gms:play-services-location:16.0.0'
     implementation 'com.google.maps.android:android-maps-utils:0.5'
 
@@ -102,10 +102,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
 
     // Image picker
-    implementation 'com.github.esafirm.android-image-picker:rximagepicker:1.13.1'
-
-    // flow layout library
-    implementation "com.nex3z:flow-layout:1.2.4"
+    implementation 'com.github.esafirm.android-image-picker:imagepicker:1.13.1'
 
     //dialog motion library
     implementation 'com.orhanobut:dialogplus:1.11@aar'
