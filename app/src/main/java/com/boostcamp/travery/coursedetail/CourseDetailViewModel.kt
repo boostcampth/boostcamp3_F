@@ -110,8 +110,8 @@ class CourseDetailViewModel(application: Application) : BaseViewModel(applicatio
         eventListener?.onItemClick(userAction)
     }
 
-    fun setEventListener(eventListener: ViewModelEventListener){
-        this.eventListener=eventListener
+    fun setEventListener(eventListener: ViewModelEventListener) {
+        this.eventListener = eventListener
     }
 }
 

@@ -126,7 +126,7 @@ object BindingUtils {
     @JvmStatic
     @BindingAdapter("setAdapter")
     fun bindMultiSnapRecyclerViewAdapter(recyclerView: com.takusemba.multisnaprecyclerview.MultiSnapRecyclerView, adapter: RecyclerView.Adapter<*>) {
-        recyclerView.layoutManager = LinearLayoutManager(recyclerView.context,LinearLayoutManager.HORIZONTAL,false)
+        recyclerView.layoutManager = LinearLayoutManager(recyclerView.context, LinearLayoutManager.HORIZONTAL, false)
         recyclerView.adapter = adapter
     }
 

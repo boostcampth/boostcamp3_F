@@ -40,8 +40,8 @@ class CourseDetailActivity : BaseActivity<ActivityCourseDetailBinding>(), OnMapR
         rv_useraction_list.setOnSnapListener { viewModel.updateCurUseraction(it) }
         viewModel.setEventListener(object : CourseDetailViewModel.ViewModelEventListener {
             override fun onItemClick(item: Any) {
-                if(item is UserAction){
-                    startActivity(Intent(this@CourseDetailActivity,UserActionDetailActivity::class.java).apply { putExtra(EXTRA_USER_ACTION,item) })
+                if (item is UserAction) {
+                    startActivity(Intent(this@CourseDetailActivity, UserActionDetailActivity::class.java).apply { putExtra(EXTRA_USER_ACTION, item) })
                 }
             }
         })
