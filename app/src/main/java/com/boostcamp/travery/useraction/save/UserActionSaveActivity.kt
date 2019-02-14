@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.os.Environment
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -20,10 +21,14 @@ import com.google.android.material.chip.Chip
 import com.tedpark.tedpermission.rx2.TedRx2Permission
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_save_user_action.*
+import java.io.File
+
 
 class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), UserActionSaveViewModel.Contract {
     lateinit var viewModel: UserActionSaveViewModel
     private val compositeDisposable = CompositeDisposable()
+
+    private var filePath: String? = null
 
     override val layoutResourceId: Int
         get() = R.layout.activity_save_user_action
@@ -46,6 +51,13 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
             createChip(it)
             et_hashtag.setText("")
         })
+
+        filePath = Environment.getExternalStorageDirectory().absolutePath + File.separator + getString(R.string.app_name)
+        File(filePath).run {
+            if (!exists()) {
+                mkdirs()
+            }
+        }
     }
 
     private fun createChip(hashTag: String) {
@@ -62,16 +74,17 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
     }
 
     private fun requestPermission() {
-        TedRx2Permission.with(this)
-                .setRationaleTitle(getString(R.string.permission_title))
-                .setRationaleMessage(getString(R.string.permission_message_select_image))
-                .setPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
-                .request()
-                .subscribe({ tedPermissionResult ->
-                    if (!tedPermissionResult.isGranted) {
-                        getString(R.string.permission_denied) + tedPermissionResult.deniedPermissions.toString().toast(this)
-                    }
-                }, { }).also { compositeDisposable.add(it) }
+        compositeDisposable.add(
+                TedRx2Permission.with(this)
+                        .setRationaleTitle(getString(R.string.permission_title))
+                        .setRationaleMessage(getString(R.string.permission_message_select_image))
+                        .setPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
+                        .request()
+                        .subscribe({ tedPermissionResult ->
+                            if (!tedPermissionResult.isGranted) {
+                                getString(R.string.permission_denied) + tedPermissionResult.deniedPermissions.toString().toast(this)
+                            }
+                        }, { }))
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -88,7 +101,6 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
                         getLongExtra(Constants.EXTRA_COURSE_CODE, 0)
                 )
 
-
             }
             setResult(Activity.RESULT_OK, Intent().apply {
                 putExtra(Constants.EXTRA_LATITUDE, intent.getDoubleExtra(Constants.EXTRA_LATITUDE, 0.0))
@@ -103,8 +115,9 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
 
     override fun saveSelectedImage() {
         ImagePicker.create(this)
-                .imageDirectory(getString(R.string.app_name))
-                .single()
+                .imageDirectory(filePath)
+                .folderMode(true)
+                .toolbarFolderTitle(getString(R.string.string_folder_title))
                 .start()
     }
 
@@ -112,6 +125,7 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
         if (ImagePicker.shouldHandle(requestCode, resultCode, data)) {
             ImagePicker.getImages(data).forEach {
                 rv_save_useraction_image_list.scrollToPosition(viewModel.imageList.size)
+
                 viewModel.imageList.add(viewModel.imageList.size - 1, UserActionImage(it.path))
             }
         }
