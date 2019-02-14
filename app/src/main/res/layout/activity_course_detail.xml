@@ -29,85 +29,27 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/rv_useraction_toplist"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar"
             tools:context=".MapsActivity"/>
 
-        <com.takusemba.multisnaprecyclerview.MultiSnapRecyclerView
-
-            android:id="@+id/rv_useraction_leftlist"
-            android:layout_width="66dp"
-            android:layout_height="0dp"
-            android:background="@android:color/background_light"
-            app:direction='@{"left"}'
-            app:isAnimated="@{viewModel.isSelected}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/rv_useraction_toplist"
-            app:msrv_gravity="start"
-            app:msrv_snap_count="1"
-            app:setAdapter="@{viewModel.leftAdapter}"
-            app:scrollTo="@{viewModel.scrollTo}"
-        />
 
         <com.takusemba.multisnaprecyclerview.MultiSnapRecyclerView
-            android:id="@+id/rv_useraction_toplist"
-            android:layout_width="0dp"
-            android:layout_height="90dp"
-            android:background="@android:color/background_light"
-            android:elevation="4dp"
-            app:direction='@{"up"}'
-            app:isAnimated="@{viewModel.isSelected}"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar"
-            app:msrv_gravity="start"
-            app:msrv_snap_count="1"
-            app:setAdapter="@{viewModel.topAdapter}"
-            app:scrollTo="@{viewModel.scrollTo}"
-        />
-
-        <LinearLayout
-            android:id="@+id/ll_useraction_info"
+            android:id="@+id/rv_useraction_list"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:background="@drawable/bg_theme_white"
-            android:orientation="vertical"
-            android:visibility="gone"
+            android:clipToPadding="false"
+            android:orientation="horizontal"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
             app:direction='@{"down"}'
-            app:isAnimated="@{viewModel.isSelected}"
-            app:layout_constraintBottom_toBottomOf="@+id/fragment_map"
+            app:isAnimated="@{viewModel.isAnimated}"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
-            <ImageView
-                android:id="@+id/iv_useraction_mainimg"
-                android:layout_width="match_parent"
-                android:layout_height="120dp"
-                app:roundedImage="@{viewModel.curUseraction.mainImage}"
-            />
-            <TextView
-                android:id="@+id/tv_useraction_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:paddingLeft="10dp"
-                android:paddingTop="10dp"
-                android:paddingRight="10dp"
-                android:singleLine="true"
-                android:text="@{viewModel.curUseraction.title}"
-                android:textColor="@android:color/black"
-                android:textSize="20sp" android:textStyle="bold"/>
-            <TextView
-                android:id="@+id/tv_useraction_hashtag"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:paddingBottom="10dp"
-                android:text="@{viewModel.curUseraction.hashTag}"/>
-        </LinearLayout>
+            app:layout_constraintStart_toStartOf="parent"
+            app:msrv_gravity="start"
+            app:msrv_snap_count="1"
+            app:scrollTo="@{viewModel.scrollTo}"
+            app:setAdapter="@{viewModel.userActionListAdapter}"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

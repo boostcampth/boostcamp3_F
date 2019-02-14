@@ -8,11 +8,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.boostcamp.travery.R
 import com.boostcamp.travery.base.ObservableRecyclerViewAdapter
 import com.boostcamp.travery.data.model.UserAction
-import com.boostcamp.travery.databinding.ItemUseractionDetailToplistBinding
-import com.boostcamp.travery.databinding.ItemUseractionEmptyBinding
+import com.boostcamp.travery.databinding.ItemUseractionDetailBinding
+import com.boostcamp.travery.databinding.ItemUseractionEndpointBinding
 import com.boostcamp.travery.utils.toImage
 
-class UserActionTopListAdapter(userActionList: ObservableList<UserAction>) :
+class UserActionListAdapter(userActionList: ObservableList<UserAction>) :
         ObservableRecyclerViewAdapter<UserAction, RecyclerView.ViewHolder>(userActionList) {
     companion object {
         const val TYPE_ACTION = 0
@@ -21,9 +21,9 @@ class UserActionTopListAdapter(userActionList: ObservableList<UserAction>) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == TYPE_ACTION) {
-            ActivityViewHolder(ItemUseractionDetailToplistBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+            ActivityViewHolder(ItemUseractionDetailBinding.inflate(LayoutInflater.from(parent.context), parent, false))
         } else {
-            ActivityEmptyViewHolder(ItemUseractionEmptyBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+            ActivityEmptyViewHolder(ItemUseractionEndpointBinding.inflate(LayoutInflater.from(parent.context), parent, false))
         }
     }
 
@@ -32,22 +32,22 @@ class UserActionTopListAdapter(userActionList: ObservableList<UserAction>) :
         if (holder is ActivityEmptyViewHolder) {
             //아이템이 0번째라면 시작 이미지
             if (position == 0) {
-                holder.binding.ivEndpoint.setImageResource(R.drawable.start)
+                holder.binding.ivEndpoint.setImageResource(R.drawable.ic_map_start)
             } else {
-                holder.binding.ivEndpoint.setImageResource(R.drawable.finish)
+                holder.binding.ivEndpoint.setImageResource(R.drawable.ic_map_arrive)
             }
-            holder.binding.userAction = getItem(position)
+            holder.binding.item = getItem(position)
             holder.binding.executePendingBindings()
         } else if (holder is ActivityViewHolder) {
+            holder.binding.root.setOnClickListener { onItemClickListener?.invoke(getItem(position)) }
             val tens = position % 100 / 10
             val units = position % 10
             holder.binding.ivTens.setImageResource(tens.toImage())
             holder.binding.ivUnits.setImageResource(units.toImage())
-            holder.binding.userAction = getItem(position)
+            holder.binding.item = getItem(position)
             Log.e("USER", getItem(position).toString())
             holder.binding.executePendingBindings()
         }
-
     }
 
 
@@ -60,9 +60,9 @@ class UserActionTopListAdapter(userActionList: ObservableList<UserAction>) :
     }
 
     //기록된 활동들에 대한 뷰홀더
-    class ActivityViewHolder(var binding: ItemUseractionDetailToplistBinding) : RecyclerView.ViewHolder(binding.root)
+    class ActivityViewHolder(var binding: ItemUseractionDetailBinding) : RecyclerView.ViewHolder(binding.root)
 
     //시작점과 끝점 아이템을 위한 뷰홀더
-    class ActivityEmptyViewHolder(var binding: ItemUseractionEmptyBinding) : RecyclerView.ViewHolder(binding.root)
+    class ActivityEmptyViewHolder(var binding: ItemUseractionEndpointBinding) : RecyclerView.ViewHolder(binding.root)
 
 }

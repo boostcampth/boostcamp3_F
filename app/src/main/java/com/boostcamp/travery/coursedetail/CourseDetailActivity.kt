@@ -1,19 +1,21 @@
 package com.boostcamp.travery.coursedetail
 
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.RecyclerView
 import com.boostcamp.travery.Constants
+import com.boostcamp.travery.Constants.EXTRA_USER_ACTION
 import com.boostcamp.travery.R
 import com.boostcamp.travery.base.BaseActivity
+import com.boostcamp.travery.data.model.UserAction
 import com.boostcamp.travery.databinding.ActivityCourseDetailBinding
+import com.boostcamp.travery.useraction.detail.UserActionDetailActivity
 import com.boostcamp.travery.utils.CustomMarker
 import com.boostcamp.travery.utils.toPx
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
@@ -35,8 +37,14 @@ class CourseDetailActivity : BaseActivity<ActivityCourseDetailBinding>(), OnMapR
         val mapFragment = fragment_map as SupportMapFragment
         mapFragment.getMapAsync(this)
         setupBindings(savedInstanceState)
-
-
+        rv_useraction_list.setOnSnapListener { viewModel.updateCurUseraction(it) }
+        viewModel.setEventListener(object : CourseDetailViewModel.ViewModelEventListener {
+            override fun onItemClick(item: Any) {
+                if (item is UserAction) {
+                    startActivity(Intent(this@CourseDetailActivity, UserActionDetailActivity::class.java).apply { putExtra(EXTRA_USER_ACTION, item) })
+                }
+            }
+        })
     }
 
     private fun setupBindings(savedInstanceState: Bundle?) {
@@ -46,16 +54,7 @@ class CourseDetailActivity : BaseActivity<ActivityCourseDetailBinding>(), OnMapR
                 ?: viewModel.init(intent.getParcelableExtra(Constants.EXTRA_COURSE))
         viewDataBinding.viewModel = viewModel
         viewDataBinding.setLifecycleOwner(this)
-        //상단 리사이클러뷰 터치 막기
-        rv_useraction_toplist.setOnTouchListener { v, event -> true }
-        //화면상 좌 리사이클러뷰 스크롤
-        rv_useraction_leftlist.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                //화면상 왼쪽 리사이클러뷰를 스크롤시 상단 아이템도 바뀌여야하므로 스크롤
-                rv_useraction_toplist.scrollBy(0, dy)
-            }
-        })
-        rv_useraction_leftlist.setOnSnapListener { viewModel.updateCurUseraction(it) }
+
     }
 
     /**
@@ -103,7 +102,7 @@ class CourseDetailActivity : BaseActivity<ActivityCourseDetailBinding>(), OnMapR
             }
         })
         viewModel.curUseraction.observe(this, Observer {
-            map.moveCamera(CameraUpdateFactory.newLatLng(LatLng(it.latitude, it.longitude)))
+            map.animateCamera(CameraUpdateFactory.newLatLng(LatLng(it.latitude, it.longitude)))
         })
     }
 
