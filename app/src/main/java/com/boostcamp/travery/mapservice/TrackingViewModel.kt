@@ -6,8 +6,8 @@ import androidx.databinding.ObservableBoolean
 import com.boostcamp.travery.base.BaseViewModel
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
-import com.boostcamp.travery.data.AppDataManager
-import com.boostcamp.travery.data.local.db.AppDbHelper
+import com.boostcamp.travery.data.CourseRepository
+import com.boostcamp.travery.data.local.db.AppDatabase
 import com.boostcamp.travery.data.model.Course
 import com.boostcamp.travery.data.model.TimeCode
 import com.boostcamp.travery.data.repository.MapTrackingRepository
@@ -21,6 +21,12 @@ import io.reactivex.schedulers.Schedulers
 class TrackingViewModel(application: Application) : BaseViewModel(application) {
 
     private val mapTrackingRepository = MapTrackingRepository.getInstance()
+    private val courseRepository = CourseRepository.getInstance(
+            AppDatabase.getInstance(application).daoCourse(),
+            AppDatabase.getInstance(application).daoUserAction(),
+            application.filesDir
+    )
+
     var secondString = ObservableField<String>("")
     val isService = ObservableBoolean(false)
     val curLocation = MutableLiveData<LatLng>()
@@ -87,7 +93,7 @@ class TrackingViewModel(application: Application) : BaseViewModel(application) {
     }
 
     private fun saveInitCourse(startTime: Long) {
-        AppDataManager(getApplication(), AppDbHelper.getInstance(getApplication())).saveCourse(
+        courseRepository.saveCourse(
                 Course(startTime = startTime)
         ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe()
     }

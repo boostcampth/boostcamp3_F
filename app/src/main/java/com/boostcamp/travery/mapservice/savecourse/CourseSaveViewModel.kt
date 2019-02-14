@@ -8,6 +8,8 @@ import androidx.databinding.ObservableField
 import com.boostcamp.travery.Constants
 import com.boostcamp.travery.R
 import com.boostcamp.travery.base.BaseViewModel
+import com.boostcamp.travery.data.CourseRepository
+import com.boostcamp.travery.data.local.db.AppDatabase
 import com.boostcamp.travery.data.model.Course
 import com.boostcamp.travery.data.model.TimeCode
 import com.boostcamp.travery.eventbus.EventBus
@@ -32,6 +34,12 @@ class CourseSaveViewModel(application: Application) : BaseViewModel(application)
 
     val theme = ObservableField<String>("")
     lateinit var staticMapURL: String
+
+    private val courseRepository = CourseRepository.getInstance(
+            AppDatabase.getInstance(application).daoCourse(),
+            AppDatabase.getInstance(application).daoUserAction(),
+            application.filesDir
+    )
 
     private fun makeCoordinateJson(timeCodeList: ArrayList<TimeCode>): JSONObject {
 
@@ -101,7 +109,7 @@ class CourseSaveViewModel(application: Application) : BaseViewModel(application)
                 )
 
                 addDisposable(
-                        repository.updateCourse(course).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe()
+                        courseRepository.updateCourse(course).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe()
                 )
 
                 // 코스 저장 이벤트 전달
