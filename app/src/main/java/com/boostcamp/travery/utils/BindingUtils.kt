@@ -117,8 +117,8 @@ object BindingUtils {
 
     @JvmStatic
     @BindingAdapter("android:date")
-    fun setDate(textView: TextView, date: Date) {
-        textView.text = DateUtils.parseDateAsString(date, "yyyy.MM.dd")
+    fun setDate(textView: TextView, date: Date?) {
+        date?.let{textView.text = DateUtils.parseDateAsString(date, "yyyy.MM.dd")}
     }
 
     @JvmStatic

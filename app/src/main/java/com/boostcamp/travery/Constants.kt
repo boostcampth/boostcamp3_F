@@ -4,6 +4,8 @@ object Constants {
     const val UPDATE_INTERVAL_MS: Long = 2500  // 1초
     const val FASTEST_UPDATE_INTERVAL_MS: Long = 1500 //
 
+    const val FIREBASE_ITEM: String = "userAction_item"
+
     const val EXTRA_COURSE_LOCATION_LIST = "ROUTE_LOCATION_LIST"
     const val EXTRA_COURSE = "COURSE"
     const val EXTRA_LATITUDE = "LATITUDE"
