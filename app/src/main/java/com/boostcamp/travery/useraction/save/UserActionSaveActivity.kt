@@ -12,6 +12,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.boostcamp.travery.Constants
+import com.boostcamp.travery.R
 import com.boostcamp.travery.base.BaseActivity
 import com.boostcamp.travery.databinding.ActivitySaveUserActionBinding
 import com.boostcamp.travery.utils.toast
@@ -21,9 +22,6 @@ import com.tedpark.tedpermission.rx2.TedRx2Permission
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_save_user_action.*
 import java.io.File
-import java.io.FileInputStream
-import java.io.FileOutputStream
-import java.nio.channels.FileChannel
 
 
 class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), UserActionSaveViewModel.Contract {
@@ -33,7 +31,7 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
     private var filePath: String? = null
 
     override val layoutResourceId: Int
-        get() = com.boostcamp.travery.R.layout.activity_save_user_action
+        get() = R.layout.activity_save_user_action
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,7 +52,7 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
             et_hashtag.setText("")
         })
 
-        filePath = Environment.getExternalStorageDirectory().absolutePath + File.separator + getString(com.boostcamp.travery.R.string.app_name)
+        filePath = Environment.getExternalStorageDirectory().absolutePath + File.separator + getString(R.string.app_name)
         File(filePath).run {
             if (!exists()) {
                 mkdirs()
@@ -78,24 +76,24 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
     private fun requestPermission() {
         compositeDisposable.add(
                 TedRx2Permission.with(this)
-                        .setRationaleTitle(getString(com.boostcamp.travery.R.string.permission_title))
-                        .setRationaleMessage(getString(com.boostcamp.travery.R.string.permission_message_select_image))
+                        .setRationaleTitle(getString(R.string.permission_title))
+                        .setRationaleMessage(getString(R.string.permission_message_select_image))
                         .setPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
                         .request()
                         .subscribe({ tedPermissionResult ->
                             if (!tedPermissionResult.isGranted) {
-                                getString(com.boostcamp.travery.R.string.permission_denied) + tedPermissionResult.deniedPermissions.toString().toast(this)
+                                getString(R.string.permission_denied) + tedPermissionResult.deniedPermissions.toString().toast(this)
                             }
                         }, { }))
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(com.boostcamp.travery.R.menu.activity_course_add_menu, menu)
+        menuInflater.inflate(R.menu.activity_course_add_menu, menu)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem?) = when (item?.itemId) {
-        com.boostcamp.travery.R.id.menu_course_save -> {
+        R.id.menu_course_save -> {
             with(intent) {
                 viewModel.saveUserAction(
                         getDoubleExtra(Constants.EXTRA_LATITUDE, 0.0),
@@ -119,7 +117,7 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
         ImagePicker.create(this)
                 .imageDirectory(filePath)
                 .folderMode(true)
-                .toolbarFolderTitle(getString(com.boostcamp.travery.R.string.string_folder_title))
+                .toolbarFolderTitle(getString(R.string.string_folder_title))
                 .start()
     }
 
