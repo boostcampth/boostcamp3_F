@@ -36,21 +36,22 @@
             android:layout_margin="10dp"
             android:onClick="openSuggestDialog"
             android:src="@drawable/ic_add_alert_black_24dp"
+            app:tint="@color/colorAccent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/include"
-            app:visibility="@{viewmodel.isService}"/>
+            app:visibility='@{!viewmodel.suggestCountString.equals("0")}'/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_seggest_num"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="0"
+            android:text="@{viewmodel.suggestCountString}"
             android:textColor="@color/colorAccent"
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintRight_toRightOf="@+id/btn_suggest"
             app:layout_constraintTop_toTopOf="@+id/btn_suggest"
-            app:visibility="@{viewmodel.isService}"/>
+            app:visibility='@{!viewmodel.suggestCountString.equals("0")}'/>
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/img_midMarker"
@@ -132,6 +133,7 @@
             android:layout_height="wrap_content"
             android:textSize="16sp"
             android:textStyle="bold"
+            android:text="@{viewmodel.secondString}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
