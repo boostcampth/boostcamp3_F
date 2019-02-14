@@ -66,13 +66,13 @@ class CourseDetailViewModel(application: Application) : BaseViewModel(applicatio
     private fun loadUserActionList() {
         val start = UserAction(
                 "산뜻한 출발",
-                latitude = latLngList.value!![0].latitude,
-                longitude = latLngList.value!![0].longitude
+                latitude = latLngList.value?.let { it[0].latitude}?:.0,
+                longitude = latLngList.value?.let { it[0].longitude}?:.0
         )
         val end = UserAction(
                 "도오착",
-                latitude = latLngList.value!![latLngList.value!!.size - 1].latitude,
-                longitude = latLngList.value!![latLngList.value!!.size - 1].longitude
+                latitude = latLngList.value?.let { it[it.size-1].latitude}?:.0,
+                longitude = latLngList.value?.let { it[it.size-1].longitude}?:.0
         )
 
         addDisposable(
