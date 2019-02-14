@@ -20,10 +20,12 @@ import com.boostcamp.travery.search.SearchResultViewModel
 import com.boostcamp.travery.search.UserActionSearchAdapter
 import com.boostcamp.travery.useraction.detail.UserActionDetailViewModel
 import com.boostcamp.travery.useraction.detail.UserActionImageAdapter
+import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.MultiTransformation
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
@@ -123,11 +125,8 @@ object BindingUtils {
 
     @JvmStatic
     @BindingAdapter("setAdapter")
-    fun bindMultiSnapRecyclerViewAdapter(
-            recyclerView: com.takusemba.multisnaprecyclerview.MultiSnapRecyclerView,
-            adapter: RecyclerView.Adapter<*>
-    ) {
-        recyclerView.layoutManager = LinearLayoutManager(recyclerView.context)
+    fun bindMultiSnapRecyclerViewAdapter(recyclerView: com.takusemba.multisnaprecyclerview.MultiSnapRecyclerView, adapter: RecyclerView.Adapter<*>) {
+        recyclerView.layoutManager = LinearLayoutManager(recyclerView.context,LinearLayoutManager.HORIZONTAL,false)
         recyclerView.adapter = adapter
     }
 
@@ -175,7 +174,7 @@ object BindingUtils {
     @JvmStatic
     @BindingAdapter("scrollTo")
     fun scrollTo(recyclerView: RecyclerView, position: Int) {
-        (recyclerView.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(position, 0)
+        recyclerView.smoothScrollToPosition(position)
     }
 
     @JvmStatic
@@ -268,10 +267,10 @@ object BindingUtils {
             }
             "down" -> {
                 if (isAnimated) {
-                    view.visibility = View.VISIBLE
-                    view.animate().translationY(0.0f).withLayer()
-                } else {
                     view.animate().translationY(view.height.toFloat() + 8.toPx()).withLayer()
+                } else {
+                    view.animate().translationY(0.0f).withLayer()
+
                 }
             }
         }
