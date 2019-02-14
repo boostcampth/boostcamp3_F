@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
 import androidx.core.content.ContextCompat
+import androidx.databinding.ObservableArrayList
 import androidx.lifecycle.MutableLiveData
 import com.boostcamp.travery.MyApplication
 import com.boostcamp.travery.base.BaseViewModel
@@ -19,6 +20,8 @@ import io.reactivex.schedulers.Schedulers
 class UserActionListViewModel(application: Application) : BaseViewModel(application) {
     private var contract: Contract? = null
     private val curLocation = MutableLiveData<Location>()
+
+    val userActionList = ObservableArrayList<UserAction>()
 
     private val userActionRepository =
             UserActionRepository.getInstance(AppDatabase.getInstance(application).daoUserAction())
@@ -44,6 +47,9 @@ class UserActionListViewModel(application: Application) : BaseViewModel(applicat
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe {
                             contract?.onUserActionLoading(it)
+
+                            userActionList.clear()
+                            userActionList.addAll(it)
                         })
     }
 
@@ -61,13 +67,12 @@ class UserActionListViewModel(application: Application) : BaseViewModel(applicat
         val providers = locationManager.getProviders(true)
         var bestLocation: Location? = null
 
-        PackageManager.PERMISSION_GRANTED.let { isGranted ->
-            if (fineLocPerm == isGranted && courseLocPerm == isGranted) {
-                for (provider in providers) {
-                    val mLocation = locationManager.getLastKnownLocation(provider) ?: continue
-                    if (bestLocation == null || mLocation.accuracy < bestLocation!!.accuracy) {
-                        bestLocation = mLocation
-                    }
+        val isGranted = PackageManager.PERMISSION_GRANTED
+        if (fineLocPerm == isGranted && courseLocPerm == isGranted) {
+            for (provider in providers) {
+                val mLocation = locationManager.getLastKnownLocation(provider) ?: continue
+                if (bestLocation == null || mLocation.accuracy < bestLocation.accuracy) {
+                    bestLocation = mLocation
                 }
             }
         }

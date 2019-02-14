@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.boostcamp.travery">
+    package="com.boostcamp.travery">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-permission android:name=" android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name=" android.permission.FOREGROUND_SERVICE" />
 
-    <uses-feature android:name="android.hardware.location.gps"/>
+    <uses-feature android:name="android.hardware.location.gps" />
 
     <application
         android:name=".MyApplication"
@@ -21,44 +21,36 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
-        <activity android:name=".useraction.list.UserActionListActivity">
-        </activity>
-        <activity android:name=".useraction.detail.UserActionDetailActivity">
-        </activity>
-        <activity android:name=".useraction.save.UserActionSaveActivity">
-        </activity>
-        <activity android:name=".mapservice.savecourse.CourseSaveActivity">
-        </activity>
+        <activity android:name=".useraction.list.UserActionFeedActivity"></activity>
+        <activity android:name=".useraction.list.UserActionListActivity"></activity>
+        <activity android:name=".useraction.detail.UserActionDetailActivity"></activity>
+        <activity android:name=".useraction.save.UserActionSaveActivity"></activity>
+        <activity android:name=".mapservice.savecourse.CourseSaveActivity"></activity>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key"/>
+            android:value="@string/google_maps_key" />
 
         <activity
             android:name=".mapservice.TrackingActivity"
-            android:parentActivityName=".main.MainActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity android:name=".search.SearchResultActivity">
-        </activity>
+            android:parentActivityName=".main.MainActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".search.SearchResultActivity"></activity>
+        <activity android:name=".main.MainActivity"></activity>
+        <activity android:name=".coursedetail.CourseDetailActivity" />
         <activity
-            android:name=".main.MainActivity"
-        >
-
-        </activity>
-        <activity android:name=".coursedetail.CourseDetailActivity"/>
-        <activity android:name=".SplashActivity"
-                  android:theme="@style/AppTheme.NoActionBar.Fullscreen">
+            android:name=".SplashActivity"
+            android:theme="@style/AppTheme.NoActionBar.Fullscreen">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.VIEW" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <service android:name=".mapservice.MapTrackingService"/>
+        <service android:name=".mapservice.MapTrackingService" />
     </application>
 
 </manifest>
