@@ -70,4 +70,6 @@
     <string name="action_search">검색</string>
     <string name="action_edit">수정</string>
     <string name="string_temp_useraction_detail_location">서울시 강남구 역삼동 1234</string>
+
+    <string name="string_folder_title">Folder</string>
 </resources>

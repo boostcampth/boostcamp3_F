@@ -6,11 +6,17 @@ import androidx.lifecycle.MutableLiveData
 import com.boostcamp.travery.base.BaseViewModel
 import com.boostcamp.travery.data.model.UserAction
 import io.reactivex.schedulers.Schedulers
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
+import java.nio.channels.FileChannel
 import java.util.*
 import kotlin.collections.ArrayList
 
 class UserActionSaveViewModel(application: Application) : BaseViewModel(application) {
     val imageList = ObservableArrayList<UserActionImage>()
+
+    private val dirPath = application.filesDir
 
     private var title = ""
         get() = if (field.isEmpty()) "empty" else field
@@ -31,25 +37,27 @@ class UserActionSaveViewModel(application: Application) : BaseViewModel(applicat
     }
 
     fun saveUserAction(latitude: Double, longitude: Double, courseCode: Long) {
-        // 사진 경로 리스트 저장. 구분자 : ,
 
-        val result = imageList.subList(0, imageList.size - 1).fold("") { acc, item ->
-            if (acc.isEmpty()) item.filePath else "$acc,${item.filePath}"
+        val fileList = createFileList()
+
+        // 사진 경로 리스트 저장. 구분자 : ,
+        val result = fileList.subList(1, fileList.size).fold("") { acc, item ->
+            if (acc.isEmpty()) item.absolutePath else "$acc,${item.absolutePath}"
         }
 
-        repository.saveUserAction(
+        addDisposable(repository.saveUserAction(
                 UserAction(title,
                         content,
                         Date(System.currentTimeMillis()),
                         listToString(hashTagList, ' '),
-                        imageList[0].filePath,
+                        fileList[0].absolutePath,
                         result,
                         latitude, longitude,
                         when (courseCode) {
                             0L -> null
                             else -> courseCode
                         })
-        ).subscribeOn(Schedulers.io()).subscribe().also { addDisposable(it) }
+        ).subscribeOn(Schedulers.io()).subscribe())
     }
 
     fun onAddItemClick() {
@@ -87,5 +95,52 @@ class UserActionSaveViewModel(application: Application) : BaseViewModel(applicat
         return list.fold("") { acc, item ->
             if (acc.isEmpty()) item else "$acc$divider$item"
         }
+    }
+
+    private fun copyFile(sourceFile: File, destFile: File) {
+        if (!sourceFile.exists()) {
+            return
+        }
+
+        // 양쪽 채널을 열어서 파일 복제
+        val source: FileChannel? = FileInputStream(sourceFile).channel
+        val destination: FileChannel? = FileOutputStream(destFile).channel
+
+        source?.apply {
+            destination?.transferFrom(this, 0, this.size())
+        }?.close()
+
+        destination?.run { close() }
+    }
+
+    private fun createFileList(): List<File> {
+
+        // 폴더가 존재하지않을 경우 생성
+        if (!dirPath.exists()) {
+            dirPath.mkdirs()
+        }
+
+        // 이미지리스트 개수 만큼 내부 저장소에 복사할 File 객체 생성
+        // 파일 이름은 현재시간.jpg
+        val fileList = imageList.subList(0, imageList.size - 1).map {
+            val name = it.filePath.split("/").let { list ->
+                list[list.size - 1]
+            }
+            File(dirPath, name)
+        }
+
+        // 파일 복사
+        fileList.forEachIndexed { i, file ->
+            try {
+                if (!file.exists()) {
+                    file.createNewFile()
+                    copyFile(File(imageList[i].filePath), file)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+
+        return fileList
     }
 }
