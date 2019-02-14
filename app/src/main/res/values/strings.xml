@@ -30,8 +30,8 @@
     <string name="suggestion_dialog_description">확인하지 않은 활동 추가 제안이 남아 있습니다. 제안을 무시하고 저장하시겠습니까?
     </string>
 
-    <string name="service_title">Example Service</string>
-    <string name="service_message">활동 기록 중 입니다.</string>
+    <string name="service_title">Travery Service</string>
+    <string name="service_message">활동을 기록하고 있습니다.</string>
 
     <string name="string_et_course_add_hint">제목을 입력하세요(20자 이내)</string>
     <string name="string_et_course_add_content_hint">현재 코스를 한줄로 표현해주세요</string>
