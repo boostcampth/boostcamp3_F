@@ -2,7 +2,6 @@ package com.boostcamp.travery.useraction.detail
 
 import android.app.Application
 import androidx.databinding.ObservableArrayList
-import androidx.databinding.ObservableField
 import com.boostcamp.travery.base.BaseViewModel
 import com.boostcamp.travery.data.model.UserAction
 import java.util.regex.Pattern
@@ -11,12 +10,11 @@ class UserActionDetailViewModel(application: Application) : BaseViewModel(applic
     var userAction: UserAction? = null
     val imageList = ObservableArrayList<String>()
     val hashTagList = ArrayList<String>()
-    val mainImage = ObservableField<String>()
 
     fun init(userAction: UserAction) {
         this.userAction = userAction
 
-        mainImage.set(userAction.mainImage)
+        imageList.add(userAction.mainImage)
         imageList.addAll(parseImageList(userAction.subImage))
         hashTagList.addAll(parseHashTag(userAction.hashTag))
     }
@@ -35,7 +33,7 @@ class UserActionDetailViewModel(application: Application) : BaseViewModel(applic
 
     fun onItemClick(item: Any) {
         if (item is String) {
-            mainImage.set(item)
+
         }
     }
 }

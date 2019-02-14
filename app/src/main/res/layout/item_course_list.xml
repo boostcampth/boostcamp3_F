@@ -10,74 +10,84 @@
             type="com.boostcamp.travery.data.model.Course" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:background="?attr/selectableItemBackground">
+        android:layout_margin="5dp"
+        app:cardCornerRadius="10dp">
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/iv_map"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:mapImage="@{item.mapImage}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:src="@mipmap/ic_launcher" />
-
-        <TextView
-            android:id="@+id/tv_date"
-            android:layout_width="wrap_content"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="10dp"
-            android:textSize="13sp"
-            app:endTime="@{item.endTime}"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:startTime="@{item.startTime}"
-            tools:text="오전 10:00 ~ 오후 10:00" />
+            android:background="?attr/selectableItemBackground"
+            android:padding="10dp">
 
-        <TextView
-            android:id="@+id/tv_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@{item.title}"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@id/tv_date"
-            app:layout_constraintTop_toBottomOf="@id/tv_date"
-            tools:text="커넥트재단 부스트캠프" />
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_map"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:mapImage="@{item.mapImage}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:src="@mipmap/ic_launcher" />
 
-        <TextView
-            android:id="@+id/tv_theme"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_marginStart="5dp"
-            android:gravity="center"
-            android:paddingStart="5dp"
-            android:paddingEnd="5dp"
-            android:textColor="@android:color/white"
-            android:textSize="10sp"
-            app:layout_constraintBottom_toBottomOf="@id/tv_title"
-            app:layout_constraintStart_toEndOf="@id/tv_title"
-            app:layout_constraintTop_toTopOf="@id/tv_title"
-            app:theme="@{item.theme}"
-            tools:text="테마" />
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="10dp"
+                android:textSize="13sp"
+                app:endTime="@{item.endTime}"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:startTime="@{item.startTime}"
+                tools:text="오전 10:00 ~ 오후 10:00" />
 
-        <TextView
-            android:id="@+id/tv_hashTag"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:maxLines="1"
-            android:text="@{item.body}"
-            android:textSize="13sp"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_map"
-            app:layout_constraintStart_toStartOf="@id/tv_title"
-            app:layout_constraintTop_toBottomOf="@id/tv_title"
-            tools:text="여기 해시태그 자리인데...ㅠㅠ" />
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{item.title}"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@id/tv_date"
+                app:layout_constraintTop_toBottomOf="@id/tv_date"
+                android:layout_marginTop="5dp"
+                tools:text="커넥트재단 부스트캠프" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_theme"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_marginStart="5dp"
+                android:gravity="center"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
+                android:textColor="@android:color/white"
+                android:textSize="10sp"
+                app:layout_constraintBottom_toBottomOf="@id/tv_title"
+                app:layout_constraintStart_toEndOf="@id/tv_title"
+                app:layout_constraintTop_toTopOf="@id/tv_title"
+                app:theme="@{item.theme}"
+                tools:text="테마" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_hashTag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:maxLines="1"
+                android:text="@{item.body}"
+                android:textSize="13sp"
+                android:layout_marginTop="5dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@id/tv_title"
+                app:layout_constraintTop_toBottomOf="@id/tv_title"
+                tools:text="여기 해시태그 자리인데...ㅠㅠ" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
 </layout>

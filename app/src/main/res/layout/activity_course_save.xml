@@ -43,7 +43,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:background="#DBDBDB"
+                android:background="@drawable/bg_textfield"
                 android:hint="@string/string_et_course_add_content_hint"
                 android:inputType="text|textMultiLine"
                 android:maxLength="40"

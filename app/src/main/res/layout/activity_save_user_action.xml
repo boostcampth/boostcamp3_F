@@ -19,111 +19,117 @@
             android:id="@+id/toolbar"
             layout="@layout/toolbar" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="@dimen/activity_content_padding">
+            android:layout_height="match_parent">
 
-            <androidx.appcompat.widget.AppCompatEditText
-                android:id="@+id/et_title"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:hint="@string/string_et_course_add_hint"
-                android:inputType="text|textMultiLine"
-                android:maxLength="20"
-                android:onTextChanged="@{(text, start, before, count) -> viewmodel.onTitleChange(text)}"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <androidx.appcompat.widget.AppCompatEditText
-                android:id="@+id/et_content"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:background="#DBDBDB"
-                android:gravity="top|start"
-                android:hint="@string/string_et_content_hint"
-                android:inputType="text|textMultiLine"
-                android:onTextChanged="@{(text, start, before, count) -> viewmodel.onContentChange(text)}"
-                android:padding="10dp"
-                app:layout_constraintEnd_toEndOf="@id/et_title"
-                app:layout_constraintStart_toStartOf="@id/et_title"
-                app:layout_constraintTop_toBottomOf="@id/et_title" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_theme"
-                style="@style/TitleTextView"
-                android:layout_marginStart="@dimen/save_activity_keyline_margin_start"
-                android:layout_marginTop="20dp"
-                android:text="@string/string_tv_useraction_hashtag"
-                app:layout_constraintStart_toStartOf="@id/et_title"
-                app:layout_constraintTop_toBottomOf="@id/et_content" />
-
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/chip_group"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                app:chipSpacing="10dp"
-                app:layout_constraintStart_toStartOf="@id/tv_theme"
-                app:layout_constraintTop_toBottomOf="@id/tv_theme">
+                android:layout_height="match_parent"
+                android:padding="@dimen/activity_content_padding">
 
-                <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-                    android:id="@+id/et_hashtag"
-                    android:layout_width="wrap_content"
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/et_title"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:background="@null"
-                    android:hint="@string/string_et_useraction_hashtag"
-                    android:onTextChanged="@{(text, start, before, count) -> viewmodel.onHashTagChange(text)}"
-                    android:textColor="@android:color/black"
-                    android:textSize="18sp"
+                    android:layout_marginTop="10dp"
+                    android:hint="@string/string_et_course_add_hint"
                     android:inputType="text|textMultiLine"
                     android:maxLength="20"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
+                    android:onTextChanged="@{(text, start, before, count) -> viewmodel.onTitleChange(text)}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/et_content"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/bg_textfield"
+                    android:gravity="top|start"
+                    android:hint="@string/string_et_content_hint"
+                    android:inputType="text|textMultiLine"
+                    android:onTextChanged="@{(text, start, before, count) -> viewmodel.onContentChange(text)}"
+                    android:padding="10dp"
+                    app:layout_constraintEnd_toEndOf="@id/et_title"
+                    app:layout_constraintStart_toStartOf="@id/et_title"
+                    app:layout_constraintTop_toBottomOf="@id/et_title" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_theme"
+                    style="@style/TitleTextView"
+                    android:layout_marginStart="@dimen/save_activity_keyline_margin_start"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/string_tv_useraction_hashtag"
+                    app:layout_constraintStart_toStartOf="@id/et_title"
+                    app:layout_constraintTop_toBottomOf="@id/et_content" />
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/chip_group"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    app:chipSpacing="10dp"
                     app:layout_constraintStart_toStartOf="@id/tv_theme"
-                    app:layout_constraintTop_toBottomOf="@id/tv_theme" />
-            </com.google.android.material.chip.ChipGroup>
+                    app:layout_constraintTop_toBottomOf="@id/tv_theme">
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/et_hashtag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:hint="@string/string_et_useraction_hashtag"
+                        android:inputType="text|textMultiLine"
+                        android:maxLength="20"
+                        android:onTextChanged="@{(text, start, before, count) -> viewmodel.onHashTagChange(text)}"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp"
+                        android:textColor="@android:color/black"
+                        android:textSize="18sp"
+                        app:layout_constraintStart_toStartOf="@id/tv_theme"
+                        app:layout_constraintTop_toBottomOf="@id/tv_theme" />
+                </com.google.android.material.chip.ChipGroup>
 
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_location"
-                style="@style/TitleTextView"
-                android:layout_marginStart="@dimen/save_activity_keyline_margin_start"
-                android:layout_marginTop="20dp"
-                android:text="@string/string_tv_location"
-                app:layout_constraintStart_toStartOf="@id/et_title"
-                app:layout_constraintTop_toBottomOf="@id/chip_group" />
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_location"
+                    style="@style/TitleTextView"
+                    android:layout_marginStart="@dimen/save_activity_keyline_margin_start"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/string_tv_location"
+                    app:layout_constraintStart_toStartOf="@id/et_title"
+                    app:layout_constraintTop_toBottomOf="@id/chip_group" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_location_cur"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:textSize="18sp"
-                app:layout_constraintStart_toStartOf="@id/tv_location"
-                app:layout_constraintTop_toBottomOf="@id/tv_location"
-                tools:text="강남구 역삼동 테헤란로 부캠쓰" />
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_location_cur"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:textSize="18sp"
+                    app:layout_constraintStart_toStartOf="@id/tv_location"
+                    app:layout_constraintTop_toBottomOf="@id/tv_location"
+                    tools:text="강남구 역삼동 테헤란로 부캠쓰" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_image"
-                style="@style/TitleTextView"
-                android:layout_marginStart="@dimen/save_activity_keyline_margin_start"
-                android:layout_marginTop="40dp"
-                android:text="@string/string_tv_image"
-                app:layout_constraintStart_toStartOf="@id/et_title"
-                app:layout_constraintTop_toBottomOf="@id/tv_location_cur" />
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_image"
+                    style="@style/TitleTextView"
+                    android:layout_marginStart="@dimen/save_activity_keyline_margin_start"
+                    android:layout_marginTop="40dp"
+                    android:text="@string/string_tv_image"
+                    app:layout_constraintStart_toStartOf="@id/et_title"
+                    app:layout_constraintTop_toBottomOf="@id/tv_location_cur" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_save_useraction_image_list"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                app:imageAdapter="@{viewmodel}"
-                app:layout_constraintTop_toBottomOf="@id/tv_image" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_save_useraction_image_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="130dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    app:imageAdapter="@{viewmodel}"
+                    app:layout_constraintTop_toBottomOf="@id/tv_image"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
     </androidx.appcompat.widget.LinearLayoutCompat>
 </layout>
