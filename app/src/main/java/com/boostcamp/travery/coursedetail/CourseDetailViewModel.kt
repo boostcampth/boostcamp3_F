@@ -1,14 +1,12 @@
 package com.boostcamp.travery.coursedetail
 
 import android.app.Application
-import android.util.Log
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableInt
 import androidx.lifecycle.MutableLiveData
-import com.boostcamp.travery.MyApplication
 import com.boostcamp.travery.base.BaseViewModel
-import com.boostcamp.travery.data.CourseDetailRepository
+import com.boostcamp.travery.data.CourseRepository
 import com.boostcamp.travery.data.local.db.AppDatabase
 import com.boostcamp.travery.data.model.Course
 import com.boostcamp.travery.data.model.TimeCode
@@ -21,7 +19,11 @@ import io.reactivex.schedulers.Schedulers
 class CourseDetailViewModel(application: Application) : BaseViewModel(application) {
     private lateinit var course: Course
     private val courseDetailRepository =
-        CourseDetailRepository.getInstance(AppDatabase.getInstance(application).daoUserAction())
+        CourseRepository.getInstance(
+            AppDatabase.getInstance(application).daoCourse(),
+            AppDatabase.getInstance(application).daoUserAction(),
+            application.filesDir
+        )
     private val leftActionList = ObservableArrayList<UserAction>()
     private val topActionList = ObservableArrayList<UserAction>()
     private val timeCodeList = ArrayList<TimeCode>()
@@ -38,8 +40,7 @@ class CourseDetailViewModel(application: Application) : BaseViewModel(applicatio
         this.course = course
         val tempList = ArrayList<LatLng>()
         //저장소로부터 TimeCode리스트를 받아 ViewModel의 TimeCode리스트와 LatLng리스트로 저장
-        addDisposable(courseDetailRepository.loadCourseCoordinate(
-            getApplication<MyApplication>().filesDir, course.startTime.toString())
+        addDisposable(courseDetailRepository.loadCoordinateListFromJsonFile(course.startTime.toString())
             .flatMap { timeList ->
                 timeCodeList.addAll(timeList)
                 Flowable.fromIterable(timeList)
