@@ -6,6 +6,8 @@ import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableInt
 import androidx.lifecycle.MutableLiveData
 import com.boostcamp.travery.base.BaseViewModel
+import com.boostcamp.travery.data.CourseRepository
+import com.boostcamp.travery.data.local.db.AppDatabase
 import com.boostcamp.travery.data.model.Course
 import com.boostcamp.travery.data.model.TimeCode
 import com.boostcamp.travery.data.model.UserAction
@@ -16,6 +18,12 @@ import io.reactivex.schedulers.Schedulers
 
 class CourseDetailViewModel(application: Application) : BaseViewModel(application) {
     private lateinit var course: Course
+    private val courseDetailRepository =
+        CourseRepository.getInstance(
+            AppDatabase.getInstance(application).daoCourse(),
+            AppDatabase.getInstance(application).daoUserAction(),
+            application.filesDir
+        )
     private val leftActionList = ObservableArrayList<UserAction>()
     private val topActionList = ObservableArrayList<UserAction>()
     private val timeCodeList = ArrayList<TimeCode>()
@@ -32,18 +40,20 @@ class CourseDetailViewModel(application: Application) : BaseViewModel(applicatio
         this.course = course
         val tempList = ArrayList<LatLng>()
         //저장소로부터 TimeCode리스트를 받아 ViewModel의 TimeCode리스트와 LatLng리스트로 저장
-        addDisposable(repository.loadCourseCoordinate(course.startTime.toString())
-                .flatMap { timeList ->
-                    timeCodeList.addAll(timeList)
-                    Flowable.fromIterable(timeList)
-                }
-                .flatMap { timeCode -> Flowable.just(timeCode.coordinate) }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    tempList.add(it)
-                }, {}, { latLngList.value = tempList
-                    loadUserActionList()})
+        addDisposable(courseDetailRepository.loadCoordinateListFromJsonFile(course.startTime.toString())
+            .flatMap { timeList ->
+                timeCodeList.addAll(timeList)
+                Flowable.fromIterable(timeList)
+            }
+            .flatMap { timeCode -> Flowable.just(timeCode.coordinate) }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                tempList.add(it)
+            }, {}, {
+                latLngList.value = tempList
+                loadUserActionList()
+            })
         )
 
         leftAdapter.onItemClickListener = { onUserActionClicked(it as Int) }
@@ -52,29 +62,29 @@ class CourseDetailViewModel(application: Application) : BaseViewModel(applicatio
     //코스에 대한 활동 리스트를 가져옴
     private fun loadUserActionList() {
 
-        addDisposable(repository.getUserActionForCourse(course)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    //TODO 임시로 출발지와 도착지 title 설정
-                    val arr: Array<UserAction?> = arrayOf(
-                            UserAction(
-                                    "산뜻한 출발",
-                                    latitude = latLngList.value!![0].latitude,
-                                    longitude = latLngList.value!![0].longitude
-                            ),
-                            UserAction(
-                                    "도오착",
-                                    latitude = latLngList.value!![latLngList.value!!.size - 1].latitude,
-                                    longitude = latLngList.value!![latLngList.value!!.size - 1].longitude
-                            )
+        addDisposable(courseDetailRepository.getUserActionForCourse(course)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+                //TODO 임시로 출발지와 도착지 title 설정
+                val arr: Array<UserAction?> = arrayOf(
+                    UserAction(
+                        "산뜻한 출발",
+                        latitude = latLngList.value!![0].latitude,
+                        longitude = latLngList.value!![0].longitude
+                    ),
+                    UserAction(
+                        "도오착",
+                        latitude = latLngList.value!![latLngList.value!!.size - 1].latitude,
+                        longitude = latLngList.value!![latLngList.value!!.size - 1].longitude
                     )
-                    leftActionList.addAll(arr)
-                    topActionList.addAll(arr)
-                    topActionList.addAll(1, it)
-                    leftActionList.addAll(0, it)
-                    markerList.value = topActionList
-                })
+                )
+                leftActionList.addAll(arr)
+                topActionList.addAll(arr)
+                topActionList.addAll(1, it)
+                leftActionList.addAll(0, it)
+                markerList.value = topActionList
+            })
     }
 
     fun onUserActionClicked(position: Int) {
@@ -107,11 +117,10 @@ class CourseDetailViewModel(application: Application) : BaseViewModel(applicatio
         }
     }
 
-    fun mapClick(){
+    fun mapClick() {
         //마커 클릭 하지 않았음을 알림.
         isSelected.set(false)
     }
-
 
 }
 

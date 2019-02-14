@@ -32,4 +32,11 @@ data class UserAction(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "seq")
     var seq: Int? = null
+
+    override fun equals(other: Any?): Boolean {
+        if(other is UserAction){
+            return this.seq==other.seq
+        }
+        return super.equals(other)
+    }
 }

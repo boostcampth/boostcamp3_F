@@ -9,5 +9,4 @@ import io.reactivex.Flowable
 interface DataManager : DbHelper, ApiHelper, PreferHelper {
     fun insertDummyData()
 
-    fun loadCourseCoordinate(fileName: String): Flowable<List<TimeCode>>
 }

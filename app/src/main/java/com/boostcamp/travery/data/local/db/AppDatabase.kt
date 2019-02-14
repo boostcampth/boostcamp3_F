@@ -17,13 +17,17 @@ import com.boostcamp.travery.data.model.UserAction
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
     companion object {
-        private var appDatabase: AppDatabase? = null
+        private var INSTANCE: AppDatabase? = null
+
         fun getInstance(context: Context): AppDatabase {
-            if (appDatabase == null) {
-                appDatabase = Room.databaseBuilder(context, AppDatabase::class.java, "travery")
+            if (INSTANCE == null) {
+                synchronized(AppDatabase::class){
+
+                }
+                INSTANCE = Room.databaseBuilder(context, AppDatabase::class.java, "travery")
                     .build()
             }
-            return appDatabase as AppDatabase
+            return INSTANCE as AppDatabase
         }
     }
 

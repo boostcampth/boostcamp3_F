@@ -1,27 +1,27 @@
 package com.boostcamp.travery.utils
 
-import android.content.Context
 import android.graphics.Bitmap
-import android.util.Log
 import com.boostcamp.travery.data.model.TimeCode
 import com.google.android.gms.maps.model.LatLng
 import org.json.JSONObject
 import java.io.File
 
-object FileUtils {
-    fun saveJsonFile(context: Context, fileName: String, jsonObj: JSONObject) {
-        context.openFileOutput("$fileName.json", Context.MODE_PRIVATE).use {
+object NewFileUtils {
+    fun saveJsonFile(directory: File, fileName: String, jsonObj: JSONObject) {
+        val file = File(directory, "$fileName.json")
+        file.outputStream().use {
             it.write(jsonObj.toString().toByteArray())
         }
     }
 
-    fun saveImageFile(context: Context, fileName: String, bitmap: Bitmap) {
-        context.openFileOutput("$fileName.jpg", Context.MODE_PRIVATE).use {
+    fun saveImageFile(directory: File, fileName: String, bitmap: Bitmap) {
+        val file = File(directory, "$fileName.jpg")
+        file.outputStream().use {
             it.write(bitmap.ninePatchChunk)
         }
     }
 
-    fun loadCoordinateListFromJsonFile(directory:File, fileName: String): List<TimeCode> {
+    fun loadCoordinateListFromJsonFile(directory: File, fileName: String): List<TimeCode> {
         val file = File(directory, "$fileName.json")
         val timeCode = ArrayList<TimeCode>()
         val coordinateList = JSONObject(file.readText()).getJSONArray("coordinate")
@@ -32,8 +32,7 @@ object FileUtils {
         return timeCode
     }
 
-    fun deleteCourseFile(context: Context, fileName: String) {
-        val directory = context.filesDir
+    fun deleteCourseFile(directory: File, fileName: String) {
         val fileList = File(directory, "").listFiles()
 
         for (i in 0 until fileList.size) {
