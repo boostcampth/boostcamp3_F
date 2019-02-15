@@ -51,5 +51,6 @@ data class FireUserAction(
     var subImage: String="",
     var latitude: Double,
     var longitude: Double,
-    var like:Int = 0
+    var like:Int = 0,
+    val ketId: String
 )

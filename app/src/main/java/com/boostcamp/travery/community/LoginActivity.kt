@@ -4,15 +4,20 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.boostcamp.travery.Constants
 import com.boostcamp.travery.R
 import com.boostcamp.travery.base.BaseActivity
 import com.boostcamp.travery.databinding.ActivityLoginBinding
+import com.boostcamp.travery.utils.toast
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.model.LatLng
+import kotlinx.android.synthetic.main.activity_login.*
 import java.security.AccessController.getContext
 
 
@@ -33,6 +38,18 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>() {
             .requestEmail()
             .build()
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
+
+        viewDataBinding.viewmodel?.loginSuccessString?.observe(this, Observer {
+            when(it){
+                "success" -> finish()
+                else -> it.toast(this)
+            }
+        })
+
+        sign_in_button.setOnClickListener {
+            val signInIntent = mGoogleSignInClient.signInIntent
+            startActivityForResult(signInIntent, Constants.SIGN_IN_GOOGLE)
+        }
     }
 
     override fun onStart() {
@@ -40,12 +57,6 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>() {
         viewDataBinding.viewmodel?.getCurrentUser()?.let{
             //로그인이 되어 있을 때 view 처리
         }
-    }
-
-    fun signIn(view: View){
-        Log.d("lologin","터치됨")
-        val signInIntent = mGoogleSignInClient.signInIntent
-        startActivityForResult(signInIntent, Constants.SIGN_IN_GOOGLE)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
