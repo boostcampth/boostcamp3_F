@@ -2,7 +2,6 @@ package com.boostcamp.travery.utils
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.util.Log
 import com.boostcamp.travery.data.model.TimeCode
 import com.google.android.gms.maps.model.LatLng
 import org.json.JSONObject
