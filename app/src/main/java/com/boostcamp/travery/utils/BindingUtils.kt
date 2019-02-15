@@ -14,18 +14,18 @@ import com.boostcamp.travery.GlideApp
 import com.boostcamp.travery.R
 import com.boostcamp.travery.main.MainViewModel
 import com.boostcamp.travery.main.adapter.CourseListAdapter
-import com.boostcamp.travery.useraction.save.UserActionImageListAdapter
-import com.boostcamp.travery.useraction.save.UserActionSaveViewModel
 import com.boostcamp.travery.search.SearchResultViewModel
 import com.boostcamp.travery.search.UserActionSearchAdapter
 import com.boostcamp.travery.useraction.detail.UserActionDetailViewModel
 import com.boostcamp.travery.useraction.detail.UserActionImageAdapter
-import com.bumptech.glide.Glide
+import com.boostcamp.travery.useraction.list.UserActionListAdapter
+import com.boostcamp.travery.useraction.list.UserActionListViewModel
+import com.boostcamp.travery.useraction.save.UserActionImageListAdapter
+import com.boostcamp.travery.useraction.save.UserActionSaveViewModel
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.MultiTransformation
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
-import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
@@ -239,7 +239,6 @@ object BindingUtils {
         }
     }
 
-
     /**
      * 선택한 방향으로 isAnimated 값에 따라 translation 애니메이션이 시작됨.
      * 애니메이션이 끝나고 끝난자리에 고정됨.
@@ -275,5 +274,16 @@ object BindingUtils {
             }
         }
 
+    }
+
+    @JvmStatic
+    @BindingAdapter("listAdapter")
+    fun setAdapter(recyclerView: RecyclerView, viewModel: UserActionListViewModel) {
+        val adapter = UserActionListAdapter(viewModel.mUserActionList)
+
+        recyclerView.apply {
+            layoutManager = LinearLayoutManager(recyclerView.context)
+            this.adapter = adapter
+        }
     }
 }
