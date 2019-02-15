@@ -72,6 +72,7 @@
                     android:padding="5dp"
                     app:chipSpacing="@dimen/chip_group_child_spacing"
                     app:chipSpacingVertical="@dimen/chip_group_child_spacing_vertical"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@id/tv_theme"
                     app:layout_constraintTop_toBottomOf="@id/tv_theme">
 
@@ -107,10 +108,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
+                    android:layout_marginEnd="10dp"
                     android:textSize="18sp"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@id/tv_location"
                     app:layout_constraintTop_toBottomOf="@id/tv_location"
-                    tools:text="강남구 역삼동 테헤란로 부캠쓰" />
+                    tools:text="강남구 역삼동 테헤란로 부캠쓰zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzㅋㅋㅋㅋㅋㅋㅋㅋㅋ" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tv_image"
@@ -128,8 +131,8 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
                     app:imageAdapter="@{viewmodel}"
-                    app:layout_constraintTop_toBottomOf="@id/tv_image"
-                    app:layout_constraintBottom_toBottomOf="parent"/>
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_image" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.core.widget.NestedScrollView>
     </androidx.appcompat.widget.LinearLayoutCompat>

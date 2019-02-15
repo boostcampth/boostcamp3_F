@@ -1,7 +1,9 @@
 package com.boostcamp.travery.useraction.save
 
 import android.app.Application
+import android.location.Geocoder
 import androidx.databinding.ObservableArrayList
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.boostcamp.travery.Injection
 import com.boostcamp.travery.base.BaseViewModel
@@ -13,11 +15,12 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class UserActionSaveViewModel(application: Application) : BaseViewModel(application) {
-    val imageList = ObservableArrayList<UserActionImage>()
-
+    private val userActionRepository = Injection.provideCourseRepository(application)
     private val dirPath = application.filesDir
 
-    private val userActionRepository = Injection.provideCourseRepository(application)
+    val imageList = ObservableArrayList<UserActionImage>()
+    private val geoCoder = Geocoder(application)
+    private var address = MutableLiveData<String>()
 
     private var title = ""
         get() = if (field.isEmpty()) "empty" else field
@@ -37,11 +40,25 @@ class UserActionSaveViewModel(application: Application) : BaseViewModel(applicat
         this.view = view
     }
 
+    fun setAddress(latitude: Double, longitude: Double): LiveData<String> {
+        // Geocode 변환
+        Thread(Runnable {
+            try {
+                address.postValue(geoCoder.getFromLocation(latitude, longitude, 1)[0].getAddressLine(0))
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }).start()
+        return address
+    }
+
     fun saveUserAction(latitude: Double, longitude: Double, courseCode: Long) {
 
+        // 이미지리스트 개수 만큼 내부 저장소에 복사할 File 객체 리스트 생성
         val fileList = createFileList()
 
-        // 사진 경로 리스트 저장. 구분자 : ,
+        // 사진 경로 리스트 복사
+        // 구분자 : ,
         val result = fileList.subList(1, fileList.size).fold("") { acc, item ->
             if (acc.isEmpty()) item.absolutePath else "$acc,${item.absolutePath}"
         }
@@ -57,7 +74,7 @@ class UserActionSaveViewModel(application: Application) : BaseViewModel(applicat
                         when (courseCode) {
                             0L -> null
                             else -> courseCode
-                        })
+                        }, address.value ?: "")
         ).subscribeOn(Schedulers.io()).subscribe())
     }
 
@@ -105,8 +122,6 @@ class UserActionSaveViewModel(application: Application) : BaseViewModel(applicat
             dirPath.mkdirs()
         }
 
-        // 이미지리스트 개수 만큼 내부 저장소에 복사할 File 객체 생성
-        // 파일 이름은 현재시간.jpg
         val fileList = imageList.subList(0, imageList.size - 1).map {
             val name = it.filePath.split("/").let { list ->
                 list[list.size - 1]

@@ -39,15 +39,24 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
 
         requestPermission()
 
-        viewModel = ViewModelProviders.of(this).get(UserActionSaveViewModel::class.java)
-        viewModel.setView(this)
-        viewDataBinding.viewmodel = viewModel
+        viewModel = ViewModelProviders.of(this).get(UserActionSaveViewModel::class.java).apply {
+            viewDataBinding.viewmodel = this
+            setView(this@UserActionSaveActivity)
 
-        // 해시태그: MutableLiveData<String> 변화가 감지되면, Chip 생성 후 그룹에 추가
-        viewModel.hashTag.observe(this, Observer {
-            createChip(it)
-            et_hashtag.setText("")
-        })
+            // 해시태그: MutableLiveData<String> 변화가 감지되면, Chip 생성 후 그룹에 추가
+            hashTag.observe(this@UserActionSaveActivity, Observer {
+                createChip(it)
+                et_hashtag.setText("")
+            })
+
+            // 주소 세팅 및 observe
+            setAddress(intent.getDoubleExtra(Constants.EXTRA_LATITUDE, 0.0),
+                    intent.getDoubleExtra(Constants.EXTRA_LONGITUDE, 0.0))
+                    .observe(this@UserActionSaveActivity, Observer {
+                        tv_location_cur.text = it
+                    })
+        }
+
     }
 
     private fun createChip(hashTag: String) {

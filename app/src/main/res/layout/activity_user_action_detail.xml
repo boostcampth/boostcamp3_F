@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
         <variable
             name="viewmodel"
-            type="com.boostcamp.travery.useraction.detail.UserActionDetailViewModel" />
+            type="com.boostcamp.travery.useraction.detail.UserActionDetailViewModel"/>
     </data>
 
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -15,8 +15,8 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <include layout="@layout/toolbar"
-            android:id="@+id/toolBar"/>
+        <include android:id="@+id/toolBar"
+                 layout="@layout/toolbar"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -32,7 +32,7 @@
                 app:layout_constraintBottom_toBottomOf="@+id/tv_user_action_detail_title"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/tv_user_action_detail_title"
-                app:tint="@color/colorAccent" />
+                app:tint="@color/colorAccent"/>
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_user_action_detail_title"
@@ -45,15 +45,17 @@
                 app:layout_constraintStart_toEndOf="@+id/iv_loc"
                 app:layout_constraintTop_toTopOf="parent"
                 app:tint="@color/colorAccent"
-                tools:text="강남역에서의 점심" />
+                tools:text="강남역에서의 점심"/>
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_user_action_detail_location"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
                 android:text="@string/string_temp_useraction_detail_location"
+                android:textSize="@dimen/tv_address_size"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_user_action_detail_title" />
+                app:layout_constraintTop_toBottomOf="@id/tv_user_action_detail_title"/>
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_user_action_detail_date"
@@ -62,7 +64,7 @@
                 android:date="@{viewmodel.userAction.date}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_user_action_detail_location"
-                tools:text="2019.02.04 AM 02:39" />
+                tools:text="2019.02.04 AM 02:39"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_image_list"
@@ -70,7 +72,7 @@
                 android:layout_height="300dp"
                 android:layout_marginTop="5dp"
                 app:imageAdapter="@{viewmodel}"
-                app:layout_constraintTop_toBottomOf="@id/tv_user_action_detail_date" />
+                app:layout_constraintTop_toBottomOf="@id/tv_user_action_detail_date"/>
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_content"
@@ -82,7 +84,7 @@
                 android:textSize="17sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/rv_image_list"
-                tools:text="텍스트뷰 입니다. 입니다. 입니다." />
+                tools:text="텍스트뷰 입니다. 입니다. 입니다."/>
 
             <com.google.android.material.chip.ChipGroup
                 android:layout_width="match_parent"
@@ -94,7 +96,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_content" />
+                app:layout_constraintTop_toBottomOf="@id/tv_content"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.appcompat.widget.LinearLayoutCompat>
 </layout>
