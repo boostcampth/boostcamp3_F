@@ -4,11 +4,10 @@ import android.app.Application
 import android.content.res.Resources
 import android.util.Log
 import androidx.databinding.ObservableArrayList
+import com.boostcamp.travery.Injection
 import com.boostcamp.travery.MyApplication
 import com.boostcamp.travery.R
 import com.boostcamp.travery.base.BaseViewModel
-import com.boostcamp.travery.data.CourseRepository
-import com.boostcamp.travery.data.local.db.AppDatabase
 import com.boostcamp.travery.data.model.Course
 import com.boostcamp.travery.eventbus.EventBus
 import com.boostcamp.travery.main.adapter.viewholder.GroupItem
@@ -20,11 +19,7 @@ import io.reactivex.schedulers.Schedulers
 class MainViewModel(application: Application) : BaseViewModel(application) {
     val data = ObservableArrayList<Any>()
 
-    private val mainRepository = CourseRepository.getInstance(
-            AppDatabase.getInstance(application).daoCourse(),
-            AppDatabase.getInstance(application).daoUserAction(),
-            application.filesDir
-    )
+    private val mainRepository = Injection.provideCourseRepository(application)
 
     init {
         loadCourseList()

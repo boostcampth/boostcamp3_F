@@ -3,9 +3,8 @@ package com.boostcamp.travery.useraction.save
 import android.app.Application
 import androidx.databinding.ObservableArrayList
 import androidx.lifecycle.MutableLiveData
+import com.boostcamp.travery.Injection
 import com.boostcamp.travery.base.BaseViewModel
-import com.boostcamp.travery.data.CourseRepository
-import com.boostcamp.travery.data.local.db.AppDatabase
 import com.boostcamp.travery.data.model.UserAction
 import com.boostcamp.travery.utils.NewFileUtils
 import io.reactivex.schedulers.Schedulers
@@ -18,11 +17,7 @@ class UserActionSaveViewModel(application: Application) : BaseViewModel(applicat
 
     private val dirPath = application.filesDir
 
-    private val userActionRepository = CourseRepository.getInstance(
-            AppDatabase.getInstance(application).daoCourse(),
-            AppDatabase.getInstance(application).daoUserAction(),
-            application.filesDir
-    )
+    private val userActionRepository = Injection.provideCourseRepository(application)
 
     private var title = ""
         get() = if (field.isEmpty()) "empty" else field

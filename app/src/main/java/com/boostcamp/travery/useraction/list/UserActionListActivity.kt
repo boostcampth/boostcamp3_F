@@ -7,7 +7,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.boostcamp.travery.R
 import com.boostcamp.travery.base.BaseActivity
-import com.boostcamp.travery.data.model.UserAction
 import com.boostcamp.travery.databinding.ActivityUserActionListBinding
 import com.boostcamp.travery.useraction.list.cluster.ClusterItemUserAction
 import com.boostcamp.travery.useraction.list.cluster.ClusterRenderer

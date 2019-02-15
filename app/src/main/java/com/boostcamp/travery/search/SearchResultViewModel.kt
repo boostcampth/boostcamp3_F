@@ -2,9 +2,8 @@ package com.boostcamp.travery.search
 
 import android.app.Application
 import androidx.databinding.ObservableArrayList
+import com.boostcamp.travery.Injection
 import com.boostcamp.travery.base.BaseViewModel
-import com.boostcamp.travery.data.CourseRepository
-import com.boostcamp.travery.data.local.db.AppDatabase
 import com.boostcamp.travery.data.model.UserAction
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -14,11 +13,7 @@ class SearchResultViewModel(application: Application) : BaseViewModel(applicatio
 
     private var view: View? = null
 
-    private val tempRepository = CourseRepository.getInstance(
-            AppDatabase.getInstance(application).daoCourse(),
-            AppDatabase.getInstance(application).daoUserAction(),
-            application.filesDir
-    )
+    private val tempRepository = Injection.provideCourseRepository(application)
 
     init {
         loadSearchResult()

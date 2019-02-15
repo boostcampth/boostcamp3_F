@@ -1,6 +1,5 @@
 package com.boostcamp.travery.data
 
-import android.system.Os.remove
 import com.boostcamp.travery.data.local.db.dao.CourseDao
 import com.boostcamp.travery.data.local.db.dao.UserActionDao
 import com.boostcamp.travery.data.local.source.CourseLocalDataSource

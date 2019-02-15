@@ -20,7 +20,6 @@ import com.boostcamp.travery.coursedetail.CourseDetailActivity
 import com.boostcamp.travery.data.model.Course
 import com.boostcamp.travery.databinding.ActivityMainBinding
 import com.boostcamp.travery.mapservice.TrackingActivity
-import com.boostcamp.travery.search.SearchResultActivity
 import com.boostcamp.travery.useraction.list.UserActionFeedActivity
 import com.boostcamp.travery.useraction.list.UserActionListActivity
 import com.boostcamp.travery.useraction.save.UserActionSaveActivity
