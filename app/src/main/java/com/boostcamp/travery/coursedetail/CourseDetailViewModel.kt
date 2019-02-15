@@ -5,9 +5,8 @@ import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableInt
 import androidx.lifecycle.MutableLiveData
+import com.boostcamp.travery.Injection
 import com.boostcamp.travery.base.BaseViewModel
-import com.boostcamp.travery.data.CourseRepository
-import com.boostcamp.travery.data.local.db.AppDatabase
 import com.boostcamp.travery.data.model.Course
 import com.boostcamp.travery.data.model.TimeCode
 import com.boostcamp.travery.data.model.UserAction
@@ -18,12 +17,8 @@ import io.reactivex.schedulers.Schedulers
 
 class CourseDetailViewModel(application: Application) : BaseViewModel(application) {
     private lateinit var course: Course
-    private val courseDetailRepository =
-            CourseRepository.getInstance(
-                    AppDatabase.getInstance(application).daoCourse(),
-                    AppDatabase.getInstance(application).daoUserAction(),
-                    application.filesDir
-            )
+    private val courseDetailRepository = Injection.provideCourseRepository(application)
+
     private val timeCodeList = ArrayList<TimeCode>() //활동 추가를 위한 경로 좌표리스트
     private val userActionList = ObservableArrayList<UserAction>()
     val curUseraction = MutableLiveData<UserAction>()

@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.res.Resources
 import android.util.Log
 import androidx.databinding.ObservableArrayList
+import com.boostcamp.travery.Injection
 import com.boostcamp.travery.MyApplication
 import com.boostcamp.travery.R
 import com.boostcamp.travery.base.BaseViewModel
@@ -18,39 +19,41 @@ import io.reactivex.schedulers.Schedulers
 class MainViewModel(application: Application) : BaseViewModel(application) {
     val data = ObservableArrayList<Any>()
 
+    private val mainRepository = Injection.provideCourseRepository(application)
+
     init {
         loadCourseList()
-        EventBus.getEvents().ofType(CourseSaveEvent::class.java).subscribe {
+        addDisposable(EventBus.getEvents().ofType(CourseSaveEvent::class.java).subscribe {
             addCourseItem(it.course)
-        }.also { addDisposable(it) }
+        })
     }
 
-    private var contract: Contract? = null
+    private var view: View? = null
 
-    interface Contract {
+    interface View {
         fun onItemClick(item: Any)
     }
 
-    fun setViewModelContract(contract: Contract) {
-        this.contract = contract
+    fun setView(view: View) {
+        this.view = view
     }
 
     private fun loadCourseList() {
-        repository.getAllCourse()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .map {
-                    createGroup(it.filter { item ->
-                        item.endTime != 0L
-                    })
-                }.subscribe(
-                        {
-                            data.addAll(it)
-                        },
-                        {
-                            Log.e("TAG", "List load error", it)
-                        }
-                ).also { addDisposable(it) }
+        mainRepository.getAllCourse()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+            .map {
+                createGroup(it.filter { item ->
+                    item.endTime != 0L
+                })
+            }.subscribe(
+                {
+                    data.addAll(it)
+                },
+                {
+                    Log.e("TAG", "List load error", it)
+                }
+            ).also { addDisposable(it) }
     }
 
     // 그룹 타이틀 삽입
@@ -63,12 +66,16 @@ class MainViewModel(application: Application) : BaseViewModel(application) {
 
             if (partition != DateUtils.getTermDay(toMillis = curTime)) {
                 val termDay = DateUtils.getTermDay(toMillis = curTime)
-                result.add(GroupItem(curTime,
-                    when(termDay) {
-                        0 -> getResources().getString(R.string.string_group_title_today)
-                        1 -> getResources().getString(R.string.string_group_title_yesterday)
-                        else -> DateUtils.parseDateAsString(curTime)
-                    }))
+                result.add(
+                    GroupItem(
+                        curTime,
+                        when (termDay) {
+                            0 -> getResources().getString(R.string.string_group_title_today)
+                            1 -> getResources().getString(R.string.string_group_title_yesterday)
+                            else -> DateUtils.parseDateAsString(curTime)
+                        }
+                    )
+                )
             }
             partition = DateUtils.getTermDay(toMillis = curTime)
             result.add(course)
@@ -96,6 +103,6 @@ class MainViewModel(application: Application) : BaseViewModel(application) {
     }
 
     fun onItemClick(item: Any) {
-        contract?.onItemClick(item)
+        view?.onItemClick(item)
     }
 }

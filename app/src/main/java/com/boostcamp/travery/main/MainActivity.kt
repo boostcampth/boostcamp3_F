@@ -20,7 +20,6 @@ import com.boostcamp.travery.coursedetail.CourseDetailActivity
 import com.boostcamp.travery.data.model.Course
 import com.boostcamp.travery.databinding.ActivityMainBinding
 import com.boostcamp.travery.mapservice.TrackingActivity
-import com.boostcamp.travery.search.SearchResultActivity
 import com.boostcamp.travery.useraction.list.UserActionFeedActivity
 import com.boostcamp.travery.useraction.list.UserActionListActivity
 import com.boostcamp.travery.useraction.save.UserActionSaveActivity
@@ -30,7 +29,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 
 class MainActivity : BaseActivity<ActivityMainBinding>(), NavigationView.OnNavigationItemSelectedListener,
-    MainViewModel.Contract {
+    MainViewModel.View {
     companion object {
         private const val GPS_ENABLE_REQUEST_CODE = 2001
     }
@@ -43,7 +42,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), NavigationView.OnNavig
         setContentView(viewDataBinding.root)
 
         viewDataBinding.viewmodel = ViewModelProviders.of(this).get(MainViewModel::class.java).apply {
-            setViewModelContract(this@MainActivity)
+            setView(this@MainActivity)
         }
 
         setSupportActionBar(toolBar as Toolbar)

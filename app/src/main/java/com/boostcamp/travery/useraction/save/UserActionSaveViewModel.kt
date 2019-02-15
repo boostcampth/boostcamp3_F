@@ -3,13 +3,12 @@ package com.boostcamp.travery.useraction.save
 import android.app.Application
 import androidx.databinding.ObservableArrayList
 import androidx.lifecycle.MutableLiveData
+import com.boostcamp.travery.Injection
 import com.boostcamp.travery.base.BaseViewModel
 import com.boostcamp.travery.data.model.UserAction
+import com.boostcamp.travery.utils.NewFileUtils
 import io.reactivex.schedulers.Schedulers
 import java.io.File
-import java.io.FileInputStream
-import java.io.FileOutputStream
-import java.nio.channels.FileChannel
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -17,6 +16,8 @@ class UserActionSaveViewModel(application: Application) : BaseViewModel(applicat
     val imageList = ObservableArrayList<UserActionImage>()
 
     private val dirPath = application.filesDir
+
+    private val userActionRepository = Injection.provideCourseRepository(application)
 
     private var title = ""
         get() = if (field.isEmpty()) "empty" else field
@@ -26,14 +27,14 @@ class UserActionSaveViewModel(application: Application) : BaseViewModel(applicat
     val hashTag = MutableLiveData<String>()
     private val hashTagList = ArrayList<String>()
 
-    private var contract: UserActionSaveViewModel.Contract? = null
+    private var view: UserActionSaveViewModel.View? = null
 
-    interface Contract {
+    interface View {
         fun saveSelectedImage()
     }
 
-    fun setContract(contract: Contract) {
-        this.contract = contract
+    fun setView(view: View) {
+        this.view = view
     }
 
     fun saveUserAction(latitude: Double, longitude: Double, courseCode: Long) {
@@ -45,7 +46,7 @@ class UserActionSaveViewModel(application: Application) : BaseViewModel(applicat
             if (acc.isEmpty()) item.absolutePath else "$acc,${item.absolutePath}"
         }
 
-        addDisposable(repository.saveUserAction(
+        addDisposable(userActionRepository.saveUserAction(
                 UserAction(title,
                         content,
                         Date(System.currentTimeMillis()),
@@ -61,7 +62,7 @@ class UserActionSaveViewModel(application: Application) : BaseViewModel(applicat
     }
 
     fun onAddItemClick() {
-        contract?.saveSelectedImage()
+        view?.saveSelectedImage()
     }
 
     fun onTitleChange(title: CharSequence) {
@@ -97,22 +98,6 @@ class UserActionSaveViewModel(application: Application) : BaseViewModel(applicat
         }
     }
 
-    private fun copyFile(sourceFile: File, destFile: File) {
-        if (!sourceFile.exists()) {
-            return
-        }
-
-        // 양쪽 채널을 열어서 파일 복제
-        val source: FileChannel? = FileInputStream(sourceFile).channel
-        val destination: FileChannel? = FileOutputStream(destFile).channel
-
-        source?.apply {
-            destination?.transferFrom(this, 0, this.size())
-        }?.close()
-
-        destination?.run { close() }
-    }
-
     private fun createFileList(): List<File> {
 
         // 폴더가 존재하지않을 경우 생성
@@ -132,10 +117,7 @@ class UserActionSaveViewModel(application: Application) : BaseViewModel(applicat
         // 파일 복사
         fileList.forEachIndexed { i, file ->
             try {
-                if (!file.exists()) {
-                    file.createNewFile()
-                    copyFile(File(imageList[i].filePath), file)
-                }
+                NewFileUtils.copyFile(File(imageList[i].filePath), file)
             } catch (e: Exception) {
                 e.printStackTrace()
             }

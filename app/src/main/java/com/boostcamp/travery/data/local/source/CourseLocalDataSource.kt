@@ -1,13 +1,11 @@
 package com.boostcamp.travery.data.local.source
 
 import com.boostcamp.travery.data.CourseDataSource
-import com.boostcamp.travery.data.UserActionDataSource
 import com.boostcamp.travery.data.local.db.dao.CourseDao
 import com.boostcamp.travery.data.local.db.dao.UserActionDao
 import com.boostcamp.travery.data.model.Course
 import com.boostcamp.travery.data.model.TimeCode
 import com.boostcamp.travery.data.model.UserAction
-import com.boostcamp.travery.utils.FileUtils
 import com.boostcamp.travery.utils.NewFileUtils
 import io.reactivex.Flowable
 import io.reactivex.Observable

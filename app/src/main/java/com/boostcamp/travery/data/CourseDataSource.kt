@@ -5,9 +5,7 @@ import com.boostcamp.travery.data.model.TimeCode
 import com.boostcamp.travery.data.model.UserAction
 import io.reactivex.Flowable
 import io.reactivex.Observable
-import org.intellij.lang.annotations.Flow
 import org.json.JSONObject
-import java.io.File
 
 interface CourseDataSource {
 
