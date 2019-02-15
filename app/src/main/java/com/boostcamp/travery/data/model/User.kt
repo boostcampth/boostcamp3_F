@@ -1,7 +1,7 @@
 package com.boostcamp.travery.data.model
 
-class User {
-    private var uid: Int = 0
-    private var nickname: String? = null
-    private var image: String? = null
-}
+data class User (
+    var id: String,
+    var nickname: String="",
+    var image: String?=null
+)
