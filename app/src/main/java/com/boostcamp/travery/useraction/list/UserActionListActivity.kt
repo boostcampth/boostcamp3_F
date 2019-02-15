@@ -23,7 +23,6 @@ import kotlinx.android.synthetic.main.activity_user_action_list.*
 
 class UserActionListActivity : BaseActivity<ActivityUserActionListBinding>(),
         OnMapReadyCallback,
-        UserActionListViewModel.Contract,
         ClusterManager.OnClusterClickListener<ClusterItemUserAction>,
         ClusterManager.OnClusterInfoWindowClickListener<ClusterItemUserAction>,
         ClusterManager.OnClusterItemClickListener<ClusterItemUserAction>,
@@ -45,9 +44,8 @@ class UserActionListActivity : BaseActivity<ActivityUserActionListBinding>(),
 
         viewModel = ViewModelProviders.of(this).get(UserActionListViewModel::class.java)
 
-        viewModel?.setContract(this)
-
         observeCurrentLocation()
+        observeDataList()
 
         // 현재 위치 표시 및 카메라 이동
         btn_myLocation.setOnClickListener {
@@ -69,6 +67,30 @@ class UserActionListActivity : BaseActivity<ActivityUserActionListBinding>(),
                                 .flat(true)
                                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.map_position_no_heading))
                 )
+            }
+        })
+    }
+
+    // 활동 목록 로드 후 클러스터링
+    private fun observeDataList() {
+        viewModel?.getUserActionList()?.observe(this, Observer { list ->
+            if (list.isNotEmpty()) {
+                list.forEach {
+                    clusterManager?.addItem(
+                            ClusterItemUserAction(
+                                    it.title,
+                                    it.mainImage,
+                                    LatLng(it.latitude, it.longitude)
+                            )
+                    )
+                }
+
+                // 초기 화면 위치. 현재 위치를 읽어왔다면 현재위치, 그렇지 않은 경우 첫번째 활동 위치 기준
+                moveCamera(curLocation ?: LatLng(list[0].latitude, list[0].longitude))
+
+                clusterManager?.cluster()
+            } else {
+                curLocation?.let { moveCamera(it) }
             }
         })
     }
@@ -101,27 +123,6 @@ class UserActionListActivity : BaseActivity<ActivityUserActionListBinding>(),
     override fun onMapReady(map: GoogleMap) {
         this.googleMap = map
         settingClustering()
-    }
-
-    override fun onUserActionLoading(list: List<UserAction>) {
-        if (list.isNotEmpty()) {
-            list.forEach {
-                clusterManager?.addItem(
-                        ClusterItemUserAction(
-                                it.title,
-                                it.mainImage,
-                                LatLng(it.latitude, it.longitude)
-                        )
-                )
-            }
-
-            // 초기 화면 위치. 현재 위치를 읽어왔다면 현재위치, 그렇지 않은 경우 첫번째 활동 위치 기준
-            moveCamera(curLocation ?: LatLng(list[0].latitude, list[0].longitude))
-
-            clusterManager?.cluster()
-        } else {
-            curLocation?.let { moveCamera(it) }
-        }
     }
 
     // 아이템 클릭 시 줌 인

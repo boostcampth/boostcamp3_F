@@ -19,6 +19,8 @@ class UserActionFeedActivity : BaseActivity<ActivityUserActionFeedBinding>() {
         setSupportActionBar(toolBar as Toolbar)
         supportActionBar?.title = ""
 
+        // 다른 뷰모델을 재사용하시면 됩니다!
+        // 바인딩어댑터 확인 필요
         viewDataBinding.viewmodel = ViewModelProviders.of(this).get(UserActionListViewModel::class.java)
     }
 }

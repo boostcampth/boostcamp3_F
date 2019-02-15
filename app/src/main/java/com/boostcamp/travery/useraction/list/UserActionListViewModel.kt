@@ -18,26 +18,18 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
 class UserActionListViewModel(application: Application) : BaseViewModel(application) {
-    private var contract: Contract? = null
     private val curLocation = MutableLiveData<Location>()
+    fun getCurLocation() = curLocation
 
-    val userActionList = ObservableArrayList<UserAction>()
+    val mUserActionList = ObservableArrayList<UserAction>()
+    private val userActionList = MutableLiveData<List<UserAction>>()
+    fun getUserActionList() = userActionList
 
     private val userActionRepository =
             UserActionRepository.getInstance(AppDatabase.getInstance(application).daoUserAction())
 
-    fun getCurLocation() = curLocation
-
     init {
         loadUserActions()
-    }
-
-    interface Contract {
-        fun onUserActionLoading(list: List<UserAction>)
-    }
-
-    fun setContract(contract: Contract) {
-        this.contract = contract
     }
 
     private fun loadUserActions() {
@@ -46,10 +38,10 @@ class UserActionListViewModel(application: Application) : BaseViewModel(applicat
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe {
-                            contract?.onUserActionLoading(it)
+                            userActionList.value = it
 
-                            userActionList.clear()
-                            userActionList.addAll(it)
+                            mUserActionList.clear()
+                            mUserActionList.addAll(it)
                         })
     }
 

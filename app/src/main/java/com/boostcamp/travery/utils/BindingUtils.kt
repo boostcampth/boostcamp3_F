@@ -279,7 +279,7 @@ object BindingUtils {
     @JvmStatic
     @BindingAdapter("listAdapter")
     fun setAdapter(recyclerView: RecyclerView, viewModel: UserActionListViewModel) {
-        val adapter = UserActionListAdapter(viewModel.userActionList)
+        val adapter = UserActionListAdapter(viewModel.mUserActionList)
 
         recyclerView.apply {
             layoutManager = LinearLayoutManager(recyclerView.context)
