@@ -50,8 +50,12 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
             })
 
             // 주소 세팅 및 observe
-            setAddress(intent.getDoubleExtra(Constants.EXTRA_LATITUDE, 0.0),
-                    intent.getDoubleExtra(Constants.EXTRA_LONGITUDE, 0.0))
+            // 전달 된 위치가 없을 경우(트래킹중이 아닐 경우 현재위치 로딩안되므로)
+            val defaultLocation = this.getLastKnownLocation()
+            setAddress(intent.getDoubleExtra(Constants.EXTRA_LATITUDE, defaultLocation?.latitude
+                    ?: 0.0),
+                    intent.getDoubleExtra(Constants.EXTRA_LONGITUDE, defaultLocation?.longitude
+                            ?: 0.0))
                     .observe(this@UserActionSaveActivity, Observer {
                         tv_location_cur.text = it
                     })
