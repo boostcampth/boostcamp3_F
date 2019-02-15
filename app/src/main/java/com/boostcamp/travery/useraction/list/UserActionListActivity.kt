@@ -43,7 +43,7 @@ class UserActionListActivity : BaseActivity<ActivityUserActionListBinding>(),
         (map as SupportMapFragment).getMapAsync(this)
 
         viewModel = ViewModelProviders.of(this).get(UserActionListViewModel::class.java)
-
+        
         observeCurrentLocation()
         observeDataList()
 

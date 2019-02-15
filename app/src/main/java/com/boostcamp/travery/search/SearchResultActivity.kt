@@ -10,7 +10,7 @@ import com.boostcamp.travery.data.model.UserAction
 import com.boostcamp.travery.databinding.ActivitySearchResultBinding
 import com.boostcamp.travery.useraction.detail.UserActionDetailActivity
 
-class SearchResultActivity : BaseActivity<ActivitySearchResultBinding>(), SearchResultViewModel.Contract {
+class SearchResultActivity : BaseActivity<ActivitySearchResultBinding>(), SearchResultViewModel.View {
 
     override val layoutResourceId: Int
         get() = R.layout.activity_search_result
@@ -20,7 +20,7 @@ class SearchResultActivity : BaseActivity<ActivitySearchResultBinding>(), Search
         setContentView(viewDataBinding.root)
 
         viewDataBinding.viewmodel = ViewModelProviders.of(this).get(SearchResultViewModel::class.java).apply {
-            setContract(this@SearchResultActivity)
+            setView(this@SearchResultActivity)
         }
     }
 

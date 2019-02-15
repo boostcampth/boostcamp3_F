@@ -4,12 +4,12 @@ import android.app.Application
 import androidx.databinding.ObservableArrayList
 import androidx.lifecycle.MutableLiveData
 import com.boostcamp.travery.base.BaseViewModel
+import com.boostcamp.travery.data.CourseRepository
+import com.boostcamp.travery.data.local.db.AppDatabase
 import com.boostcamp.travery.data.model.UserAction
+import com.boostcamp.travery.utils.NewFileUtils
 import io.reactivex.schedulers.Schedulers
 import java.io.File
-import java.io.FileInputStream
-import java.io.FileOutputStream
-import java.nio.channels.FileChannel
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -17,6 +17,12 @@ class UserActionSaveViewModel(application: Application) : BaseViewModel(applicat
     val imageList = ObservableArrayList<UserActionImage>()
 
     private val dirPath = application.filesDir
+
+    private val userActionRepository = CourseRepository.getInstance(
+            AppDatabase.getInstance(application).daoCourse(),
+            AppDatabase.getInstance(application).daoUserAction(),
+            application.filesDir
+    )
 
     private var title = ""
         get() = if (field.isEmpty()) "empty" else field
@@ -26,14 +32,14 @@ class UserActionSaveViewModel(application: Application) : BaseViewModel(applicat
     val hashTag = MutableLiveData<String>()
     private val hashTagList = ArrayList<String>()
 
-    private var contract: UserActionSaveViewModel.Contract? = null
+    private var view: UserActionSaveViewModel.View? = null
 
-    interface Contract {
+    interface View {
         fun saveSelectedImage()
     }
 
-    fun setContract(contract: Contract) {
-        this.contract = contract
+    fun setView(view: View) {
+        this.view = view
     }
 
     fun saveUserAction(latitude: Double, longitude: Double, courseCode: Long) {
@@ -45,7 +51,7 @@ class UserActionSaveViewModel(application: Application) : BaseViewModel(applicat
             if (acc.isEmpty()) item.absolutePath else "$acc,${item.absolutePath}"
         }
 
-        addDisposable(repository.saveUserAction(
+        addDisposable(userActionRepository.saveUserAction(
                 UserAction(title,
                         content,
                         Date(System.currentTimeMillis()),
@@ -61,7 +67,7 @@ class UserActionSaveViewModel(application: Application) : BaseViewModel(applicat
     }
 
     fun onAddItemClick() {
-        contract?.saveSelectedImage()
+        view?.saveSelectedImage()
     }
 
     fun onTitleChange(title: CharSequence) {

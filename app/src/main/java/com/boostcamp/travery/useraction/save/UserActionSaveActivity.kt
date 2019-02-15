@@ -24,7 +24,7 @@ import kotlinx.android.synthetic.main.activity_save_user_action.*
 import java.io.File
 
 
-class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), UserActionSaveViewModel.Contract {
+class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), UserActionSaveViewModel.View {
     lateinit var viewModel: UserActionSaveViewModel
     private val compositeDisposable = CompositeDisposable()
 
@@ -37,27 +37,19 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
         super.onCreate(savedInstanceState)
         setContentView(viewDataBinding.root)
         setSupportActionBar(toolbar as Toolbar)
-        title = ""
-
-        viewModel = ViewModelProviders.of(this).get(UserActionSaveViewModel::class.java)
-        viewDataBinding.viewmodel = viewModel
+        supportActionBar?.title = ""
 
         requestPermission()
 
-        viewModel.setContract(this)
+        viewModel = ViewModelProviders.of(this).get(UserActionSaveViewModel::class.java)
+        viewModel.setView(this)
+        viewDataBinding.viewmodel = viewModel
 
         // 해시태그: MutableLiveData<String> 변화가 감지되면, Chip 생성 후 그룹에 추가
         viewModel.hashTag.observe(this, Observer {
             createChip(it)
             et_hashtag.setText("")
         })
-
-        filePath = Environment.getExternalStorageDirectory().absolutePath + File.separator + getString(R.string.app_name)
-        File(filePath).run {
-            if (!exists()) {
-                mkdirs()
-            }
-        }
     }
 
     private fun createChip(hashTag: String) {

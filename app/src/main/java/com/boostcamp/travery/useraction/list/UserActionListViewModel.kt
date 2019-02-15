@@ -11,6 +11,7 @@ import androidx.databinding.ObservableArrayList
 import androidx.lifecycle.MutableLiveData
 import com.boostcamp.travery.MyApplication
 import com.boostcamp.travery.base.BaseViewModel
+import com.boostcamp.travery.data.CourseRepository
 import com.boostcamp.travery.data.local.db.AppDatabase
 import com.boostcamp.travery.data.model.UserAction
 import com.boostcamp.travery.data.repository.UserActionRepository
@@ -25,8 +26,11 @@ class UserActionListViewModel(application: Application) : BaseViewModel(applicat
     private val userActionList = MutableLiveData<List<UserAction>>()
     fun getUserActionList() = userActionList
 
-    private val userActionRepository =
-            UserActionRepository.getInstance(AppDatabase.getInstance(application).daoUserAction())
+    private val userActionRepository = CourseRepository.getInstance(
+            AppDatabase.getInstance(application).daoCourse(),
+            AppDatabase.getInstance(application).daoUserAction(),
+            application.filesDir
+    )
 
     init {
         loadUserActions()
