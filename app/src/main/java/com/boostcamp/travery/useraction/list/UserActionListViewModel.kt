@@ -14,7 +14,6 @@ import com.boostcamp.travery.base.BaseViewModel
 import com.boostcamp.travery.data.CourseRepository
 import com.boostcamp.travery.data.local.db.AppDatabase
 import com.boostcamp.travery.data.model.UserAction
-import com.boostcamp.travery.data.repository.UserActionRepository
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
