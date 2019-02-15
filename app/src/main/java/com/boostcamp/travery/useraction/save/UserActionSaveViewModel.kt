@@ -103,22 +103,6 @@ class UserActionSaveViewModel(application: Application) : BaseViewModel(applicat
         }
     }
 
-    private fun copyFile(sourceFile: File, destFile: File) {
-        if (!sourceFile.exists()) {
-            return
-        }
-
-        // 양쪽 채널을 열어서 파일 복제
-        val source: FileChannel? = FileInputStream(sourceFile).channel
-        val destination: FileChannel? = FileOutputStream(destFile).channel
-
-        source?.apply {
-            destination?.transferFrom(this, 0, this.size())
-        }?.close()
-
-        destination?.run { close() }
-    }
-
     private fun createFileList(): List<File> {
 
         // 폴더가 존재하지않을 경우 생성
@@ -138,10 +122,7 @@ class UserActionSaveViewModel(application: Application) : BaseViewModel(applicat
         // 파일 복사
         fileList.forEachIndexed { i, file ->
             try {
-                if (!file.exists()) {
-                    file.createNewFile()
-                    copyFile(File(imageList[i].filePath), file)
-                }
+                NewFileUtils.copyFile(File(imageList[i].filePath), file)
             } catch (e: Exception) {
                 e.printStackTrace()
             }

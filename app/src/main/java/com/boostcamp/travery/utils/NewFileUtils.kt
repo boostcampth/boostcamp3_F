@@ -5,6 +5,9 @@ import com.boostcamp.travery.data.model.TimeCode
 import com.google.android.gms.maps.model.LatLng
 import org.json.JSONObject
 import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
+import java.nio.channels.FileChannel
 
 object NewFileUtils {
     fun saveJsonFile(directory: File, fileName: String, jsonObj: JSONObject) {
@@ -40,5 +43,26 @@ object NewFileUtils {
                 fileList[i].delete()
             }
         }
+    }
+
+    // 파일 복사
+    fun copyFile(sourceFile: File, destFile: File) {
+        if (!sourceFile.exists()) {
+            return
+        }
+
+        if (!destFile.exists()) {
+            destFile.createNewFile()
+        }
+
+        // 양쪽 채널을 열어서 파일 복제
+        val source: FileChannel? = FileInputStream(sourceFile).channel
+        val destination: FileChannel? = FileOutputStream(destFile).channel
+
+        source?.apply {
+            destination?.transferFrom(this, 0, this.size())
+        }?.close()
+
+        destination?.run { close() }
     }
 }
