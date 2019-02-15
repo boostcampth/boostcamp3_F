@@ -1,6 +1,7 @@
 package com.boostcamp.travery.mapservice
 
 import android.app.Application
+import android.view.View
 import android.widget.BaseAdapter
 import androidx.databinding.ObservableBoolean
 import com.boostcamp.travery.base.BaseViewModel
@@ -13,9 +14,11 @@ import com.boostcamp.travery.data.model.TimeCode
 import com.boostcamp.travery.data.repository.MapTrackingRepository
 import com.boostcamp.travery.data.repository.ServiceStartEvent
 import com.boostcamp.travery.eventbus.EventBus
+import com.boostcamp.travery.utils.DateUtils
 import com.google.android.gms.maps.model.LatLng
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import java.util.*
 
 
 class TrackingViewModel(application: Application) : BaseViewModel(application) {
@@ -26,6 +29,7 @@ class TrackingViewModel(application: Application) : BaseViewModel(application) {
             AppDatabase.getInstance(application).daoUserAction(),
             application.filesDir
     )
+    private var distanceTxt = "0m"
 
     var secondString = ObservableField<String>("")
     val isService = ObservableBoolean(false)
@@ -33,6 +37,7 @@ class TrackingViewModel(application: Application) : BaseViewModel(application) {
     var suggestCountString = ObservableField<String>("0")
     val totalDistance by lazy { mapTrackingRepository.getTotalDistance() }
     val startTime by lazy { mapTrackingRepository.getStartTime() }
+    private val startTimeTxt by lazy { DateUtils.parseDateAsString(Date(startTime)) }
     val userActionLocateList by lazy { mapTrackingRepository.getUserActionLocateList() }
     private var suggestAdapter: BaseAdapter? = null
 
@@ -62,6 +67,13 @@ class TrackingViewModel(application: Application) : BaseViewModel(application) {
                             secondString.set(setIntToTime(it))
                         }
         )
+
+        //거리 observe
+        /*addDisposable(
+                mapTrackingRepository.getDistance().subscribe {
+
+                }
+        )*/
 
         addDisposable(
                 EventBus.getEvents().ofType(ServiceStartEvent::class.java).subscribe {
@@ -113,5 +125,22 @@ class TrackingViewModel(application: Application) : BaseViewModel(application) {
     fun getSuggestAdapter(): BaseAdapter {
         suggestAdapter = SuggestListAdapter(mapTrackingRepository.getSuggestList())
         return suggestAdapter!!
+    }
+
+    fun onClickInfo(view: View) {
+    }
+
+    private fun makeInfoTxt(second: Int): String {
+        val hours = second / 3600
+        val minutes = (second % 3600) / 60
+        val seconds = second % 60
+        var timeTxt = ""
+        if (hours != 0)
+            timeTxt += "${hours}시간 "
+        if (minutes != 0)
+            timeTxt += "${minutes}분 "
+        timeTxt += "${seconds}초"
+
+        return "기록 시작 : $startTimeTxt\n경과 시간 : $timeTxt\n기록 거리 :  $distanceTxt"
     }
 }

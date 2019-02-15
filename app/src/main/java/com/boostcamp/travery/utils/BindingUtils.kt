@@ -1,6 +1,7 @@
 package com.boostcamp.travery.utils
 
 import android.animation.ObjectAnimator
+import android.graphics.drawable.AnimationDrawable
 import android.graphics.drawable.Drawable
 import android.view.View
 import android.widget.ImageView
@@ -131,8 +132,8 @@ object BindingUtils {
     }
 
     @JvmStatic
-    @BindingAdapter("bind:visibility")
-    fun setVisibility(view: View, value: Boolean) {
+    @BindingAdapter("bind:fadeVisibility")
+    fun setFadeVisibility(view: View, value: Boolean) {
         if (value) {
             view.visibility = View.VISIBLE
             ObjectAnimator.ofFloat(view, "alpha", 0f, 1f).apply {
@@ -140,6 +141,28 @@ object BindingUtils {
                 start()
             }
         } else {
+            view.visibility = View.GONE
+        }
+    }
+
+    @JvmStatic
+    @BindingAdapter("bind:visibility")
+    fun setVisibility(view: View, value: Boolean) {
+        if (value) {
+            view.visibility = View.VISIBLE
+        } else {
+            view.visibility = View.GONE
+        }
+    }
+
+    @JvmStatic
+    @BindingAdapter("bind:animatedVisibility")
+    fun setAnimateVisibility(view: View, value: Boolean) {
+        if (value) {
+            view.visibility = View.VISIBLE
+            (view.background as AnimationDrawable).start()
+        } else {
+            (view.background as AnimationDrawable).stop()
             view.visibility = View.GONE
         }
     }
@@ -254,6 +277,7 @@ object BindingUtils {
                 if (isAnimated) {
                     view.animate().translationY(-view.height.toFloat()).alpha(0.0f).withLayer()
                 } else {
+                    view.visibility = View.VISIBLE
                     view.animate().translationY(0.0f).alpha(1.0f).withLayer()
                 }
             }

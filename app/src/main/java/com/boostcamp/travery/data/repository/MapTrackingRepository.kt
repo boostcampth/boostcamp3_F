@@ -16,6 +16,7 @@ class MapTrackingRepository {
     private var suggestListSize = 0
 
     private val second: PublishSubject<Int> = PublishSubject.create()
+    private val distance: PublishSubject<Long> = PublishSubject.create()
 
     private val userActionLocateList = ArrayList<LatLng>()
 
@@ -35,6 +36,11 @@ class MapTrackingRepository {
 
     fun addTotalDistance(distance: Float) {
         totalDistance += distance.toLong()
+        this.distance.onNext(totalDistance)
+    }
+
+    fun getDistance(): Observable<Long> {
+        return distance
     }
 
     fun getTotalDistance(): Long {
@@ -44,6 +50,7 @@ class MapTrackingRepository {
     fun addTimeCode(timeCode: TimeCode) {
         if (startTime != 0L)
             timeCodeList.add(timeCode)
+
         this.timeCode.onNext(timeCode)
     }
 
