@@ -1,8 +1,8 @@
 package com.boostcamp.travery.data
 
+import com.boostcamp.travery.data.local.CourseLocalDataSource
 import com.boostcamp.travery.data.local.db.dao.CourseDao
 import com.boostcamp.travery.data.local.db.dao.UserActionDao
-import com.boostcamp.travery.data.local.source.CourseLocalDataSource
 import com.boostcamp.travery.data.model.Course
 import com.boostcamp.travery.data.model.CourseInfo
 import com.boostcamp.travery.data.model.TimeCode
@@ -24,89 +24,92 @@ class CourseRepository private constructor(private val courseDataSource: CourseD
 
         @JvmStatic
         fun getInstance(courseDao: CourseDao, userActionDao: UserActionDao, file: File) = INSTANCE
-            ?: synchronized(this) {
-                INSTANCE
-                    ?: CourseRepository(CourseLocalDataSource.getInstance(courseDao, userActionDao, file)).also {
-                        INSTANCE = it
-                    }
-            }
+                ?: synchronized(this) {
+                    INSTANCE
+                            ?: CourseRepository(CourseLocalDataSource.getInstance(courseDao, userActionDao, file)).also {
+                                INSTANCE = it
+                            }
+                }
     }
 
 
     override fun saveCourse(course: Course): Observable<Boolean> {
         return courseDataSource.saveCourse(course)
-            .doOnComplete {
-                mCachedCourse[course.startTime] = CourseInfo(course, null, null)
-            }
+                .doOnComplete {
+                    mCachedCourse[course.startTime] = CourseInfo(course, null, null)
+                }
     }
 
     override fun saveUserAction(userAction: UserAction): Observable<Boolean> {
         return courseDataSource.saveUserAction(userAction)
-            .doOnComplete {
-                if (userAction.courseCode != null) {
-                    //코스가 있는 활동 정보이라면 코스의 userActionList에 넣는다.
-                    if (mCachedCourse[userAction.courseCode ?: 0]?.userActionList == null) {
-                        mCachedCourse[userAction.courseCode ?: 0]?.userActionList = ArrayList()
+                .doOnComplete {
+                    if (userAction.courseCode != null) {
+                        //코스가 있는 활동 정보이라면 코스의 userActionList에 넣는다.
+                        if (mCachedCourse[userAction.courseCode ?: 0]?.userActionList == null) {
+                            mCachedCourse[userAction.courseCode ?: 0]?.userActionList = ArrayList()
+                        }
+                        mCachedCourse[userAction.courseCode ?: 0]?.userActionList?.add(userAction)
                     }
-                    mCachedCourse[userAction.courseCode ?: 0]?.userActionList?.add(userAction)
                 }
-            }
     }
 
     override fun deleteCourse(course: Course): Observable<Boolean> {
         return courseDataSource.deleteCourse(course)
-            .doOnComplete {
-                mCachedCourse.remove(course.startTime)
-                deleteCourseFile(course.startTime.toString())
-            }
+                .doOnComplete {
+                    mCachedCourse.remove(course.startTime)
+                    deleteCourseFile(course.startTime.toString())
+                }
     }
 
     override fun deleteCourseList(courseList: List<Course>): Observable<Boolean> {
         return courseDataSource.deleteCourseList(courseList)
-            .doOnComplete {
-                for (course in courseList) {
-                    mCachedCourse.remove(course.startTime)
-                    deleteCourseFile(course.startTime.toString())
+                .doOnComplete {
+                    for (course in courseList) {
+                        mCachedCourse.remove(course.startTime)
+                        deleteCourseFile(course.startTime.toString())
+                    }
                 }
-            }
     }
 
     override fun deleteUserAction(userAction: UserAction): Observable<Boolean> {
         return courseDataSource.deleteUserAction(userAction)
-            .doOnComplete {
-                if (userAction.courseCode != null) {
-                    mCachedCourse[userAction.courseCode ?: 0]?.userActionList?.remove(userAction)
+                .doOnComplete {
+                    if (userAction.courseCode != null) {
+                        mCachedCourse[userAction.courseCode
+                                ?: 0]?.userActionList?.remove(userAction)
+                    }
                 }
-            }
     }
 
     override fun deleteUserActionList(userActionList: List<UserAction>): Observable<Boolean> {
         return courseDataSource.deleteUserActionList(userActionList)
-            .doOnComplete {
-                for (userAction in userActionList) {
-                    if (userAction.courseCode != null) {
-                        mCachedCourse[userAction.courseCode ?: 0]?.userActionList?.remove(userAction)
+                .doOnComplete {
+                    for (userAction in userActionList) {
+                        if (userAction.courseCode != null) {
+                            mCachedCourse[userAction.courseCode
+                                    ?: 0]?.userActionList?.remove(userAction)
+                        }
                     }
                 }
-            }
     }
 
     override fun updateCourse(course: Course): Observable<Boolean> {
         return courseDataSource.updateCourse(course)
-            .doOnComplete {
-                mCachedCourse[course.startTime]?.course = course
-            }
+                .doOnComplete {
+                    mCachedCourse[course.startTime]?.course = course
+                }
     }
 
     override fun updateUserAction(userAction: UserAction): Observable<Boolean> {
         return courseDataSource.updateUserAction(userAction)
-            .doOnComplete {
-                //경로위에 있는 활동일 때
-                if (userAction.courseCode != null) {
-                    mCachedCourse[userAction.courseCode ?: 0]?.userActionList?.remove(userAction)
-                    mCachedCourse[userAction.courseCode ?: 0]?.userActionList?.add(userAction)
+                .doOnComplete {
+                    //경로위에 있는 활동일 때
+                    if (userAction.courseCode != null) {
+                        mCachedCourse[userAction.courseCode
+                                ?: 0]?.userActionList?.remove(userAction)
+                        mCachedCourse[userAction.courseCode ?: 0]?.userActionList?.add(userAction)
+                    }
                 }
-            }
     }
 
     override fun getAllCourse(): Flowable<List<Course>> {
@@ -142,11 +145,11 @@ class CourseRepository private constructor(private val courseDataSource: CourseD
             Flowable.fromArray(mCachedCourse[course.startTime]?.userActionList)
         } else {
             courseDataSource.getUserActionForCourse(course).doOnNext {
-                if (mCachedCourse[course.startTime]==null){
-                    mCachedCourse[course.startTime]= CourseInfo()
+                if (mCachedCourse[course.startTime] == null) {
+                    mCachedCourse[course.startTime] = CourseInfo()
                 }
-                mCachedCourse[course.startTime]?.course=course
-                mCachedCourse[course.startTime]?.userActionList= ArrayList(it)
+                mCachedCourse[course.startTime]?.course = course
+                mCachedCourse[course.startTime]?.userActionList = ArrayList(it)
             }
         }
     }
@@ -160,10 +163,10 @@ class CourseRepository private constructor(private val courseDataSource: CourseD
             Flowable.fromArray(mCachedCourse[fileName.toLong()]?.timeCodeList)
         } else {
             courseDataSource.loadCoordinateListFromJsonFile(fileName).doOnNext {
-                if(mCachedCourse[fileName.toLong()]==null){
-                    mCachedCourse[fileName.toLong()]=CourseInfo()
+                if (mCachedCourse[fileName.toLong()] == null) {
+                    mCachedCourse[fileName.toLong()] = CourseInfo()
                 }
-                mCachedCourse[fileName.toLong()]?.timeCodeList=ArrayList(it)
+                mCachedCourse[fileName.toLong()]?.timeCodeList = ArrayList(it)
             }
         }
     }
