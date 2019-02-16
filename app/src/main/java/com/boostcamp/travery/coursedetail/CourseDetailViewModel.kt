@@ -11,15 +11,20 @@ import com.boostcamp.travery.data.model.Course
 import com.boostcamp.travery.data.model.TimeCode
 import com.boostcamp.travery.data.model.UserAction
 import com.google.android.gms.maps.model.LatLng
+import com.warkiz.widget.OnSeekChangeListener
 import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import com.warkiz.widget.IndicatorSeekBar
+import com.warkiz.widget.SeekParams
+
 
 class CourseDetailViewModel(application: Application) : BaseViewModel(application) {
     private lateinit var course: Course
     private val courseDetailRepository = Injection.provideCourseRepository(application)
-
     private val timeCodeList = ArrayList<TimeCode>() //활동 추가를 위한 경로 좌표리스트
+    val timeCodeListSize = ObservableInt(0)
+
     private val userActionList = ObservableArrayList<UserAction>()
     val curUseraction = MutableLiveData<UserAction>()
     val userActionListAdapter = UserActionListAdapter(userActionList)
@@ -27,6 +32,18 @@ class CourseDetailViewModel(application: Application) : BaseViewModel(applicatio
     val markerList = MutableLiveData<List<UserAction>>() //지
     val isAnimated = ObservableBoolean()
     val scrollTo = ObservableInt()
+
+    val seekTimeCode = MutableLiveData<TimeCode>()
+    val seekListener: OnSeekChangeListener = object : OnSeekChangeListener {
+        override fun onSeeking(seekParams: SeekParams) {
+            seekTimeCode.value = timeCodeList[seekParams.progress]
+        }
+
+        override fun onStartTrackingTouch(seekBar: IndicatorSeekBar) {}
+
+        override fun onStopTrackingTouch(seekBar: IndicatorSeekBar) {}
+    }
+
     private var eventListener: ViewModelEventListener? = null
 
     interface ViewModelEventListener {
@@ -40,6 +57,7 @@ class CourseDetailViewModel(application: Application) : BaseViewModel(applicatio
         addDisposable(courseDetailRepository.loadCoordinateListFromJsonFile(course.startTime.toString())
                 .flatMap { timeList ->
                     timeCodeList.addAll(timeList)
+                    timeCodeListSize.set(timeList.size - 1)
                     Flowable.fromIterable(timeList)
                 }
                 .map { it -> it.coordinate }
@@ -61,13 +79,13 @@ class CourseDetailViewModel(application: Application) : BaseViewModel(applicatio
     private fun loadUserActionList() {
         val start = UserAction(
                 "산뜻한 출발",
-                latitude = latLngList.value?.let { it[0].latitude}?:.0,
-                longitude = latLngList.value?.let { it[0].longitude}?:.0
+                latitude = latLngList.value?.let { it[0].latitude } ?: .0,
+                longitude = latLngList.value?.let { it[0].longitude } ?: .0
         )
         val end = UserAction(
                 "도오착",
-                latitude = latLngList.value?.let { it[it.size-1].latitude}?:.0,
-                longitude = latLngList.value?.let { it[it.size-1].longitude}?:.0
+                latitude = latLngList.value?.let { it[it.size - 1].latitude } ?: .0,
+                longitude = latLngList.value?.let { it[it.size - 1].longitude } ?: .0
         )
 
         addDisposable(

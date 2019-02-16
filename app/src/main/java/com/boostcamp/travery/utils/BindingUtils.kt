@@ -32,6 +32,8 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
+import com.warkiz.widget.IndicatorSeekBar
+import com.warkiz.widget.OnSeekChangeListener
 import java.util.*
 
 
@@ -314,5 +316,11 @@ object BindingUtils {
             layoutManager = LinearLayoutManager(recyclerView.context)
             this.adapter = adapter
         }
+    }
+
+    @JvmStatic
+    @BindingAdapter("onSeekChanged")
+    fun onSeekChangedListener(view: IndicatorSeekBar, listener: OnSeekChangeListener) {
+        view.onSeekChangeListener = listener
     }
 }
