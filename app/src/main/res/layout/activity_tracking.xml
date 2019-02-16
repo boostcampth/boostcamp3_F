@@ -135,7 +135,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/fab_margin"
             android:onClick="startService"
-            android:src="@drawable/ic_directions_run_black_24dp"
+            android:src="@drawable/walk1"
             app:backgroundTint="@color/colorAccentLight"
             app:fabCustomSize="90dp"
             app:fadeVisibility="@{!viewmodel.isService}"
