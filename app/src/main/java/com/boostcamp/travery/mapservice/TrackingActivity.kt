@@ -233,14 +233,9 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
             val mb = service as MapTrackingService.LocalBinder
             mapService = mb.service // 서비스가 제공하는 메소드 호출하여
 
-            mapService.getLastLocation()?.let {
-                val myLocation = LatLng(it.latitude, it.longitude)
-                myLocationMarker.position = myLocation
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 15f))
-            }
-
             //서비스가 돌고 있을 때
             if (viewModel.getIsServiceState()) {
+                myLocationMarker.position = viewModel.getTimeCodeList().last().coordinate
                 Completable.fromAction {
                     viewModel.getTimeCodeList().forEach {
                         polylineOptions.add(it.coordinate)
@@ -253,6 +248,7 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
                     polyline = mMap.addPolyline(polylineOptions)
                 }.subscribe().dispose()
             }
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocationMarker.position, 15f))
         }
 
         override fun onServiceDisconnected(name: ComponentName) {

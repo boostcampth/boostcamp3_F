@@ -96,7 +96,7 @@ class MapTrackingService : Service() {
                             if (isRunning) lostLocationCnt++
                         } else {//1.5초에서 2.5초에 한번 씩 데이터가 들어옴
                             //200번 쌓이면 5분
-                            if (lostLocationCnt > 1 && canSuggest) {
+                            if (lostLocationCnt > 200 && canSuggest) {
                                 mapTrackingRepository.addSuggest(Suggestion(
                                         LatLng(
                                                 standardLocation.latitude,
@@ -144,13 +144,13 @@ class MapTrackingService : Service() {
         }
     }
 
-
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
 
         startForeground(1, notification.build())
 
         isRunning = true
-
+        mapTrackingRepository.setStartTime(System.currentTimeMillis())
+        mapTrackingRepository.setSecond(second)
         secondTimer.schedule(SecondTimer(), 1000, 1000)
 
         getLastKnownLocation()?.let {
@@ -159,7 +159,7 @@ class MapTrackingService : Service() {
             mapTrackingRepository.addTimeCode(TimeCode(LatLng(it.latitude, it.longitude), it.time))
         }
 
-        mapTrackingRepository.setStartTime(System.currentTimeMillis())
+
 
         return Service.START_NOT_STICKY
     }
@@ -193,15 +193,18 @@ class MapTrackingService : Service() {
         }
     }
 
-    fun getLastLocation(): Location? {
-        return getLastKnownLocation()
-    }
-
     fun setCanSuggestFalse() {
         canSuggest = false
     }
 
     override fun onBind(intent: Intent): IBinder? {
+        Log.d("mapService", "OnBind")
+        getLastKnownLocation()?.let {
+            exLocation = it
+            standardLocation = it
+            mapTrackingRepository.addTimeCode(TimeCode(LatLng(it.latitude, it.longitude), it.time))
+        }
+
         return mBinder
     }
 }

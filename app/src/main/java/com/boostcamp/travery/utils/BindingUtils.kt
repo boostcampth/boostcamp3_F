@@ -1,6 +1,7 @@
 package com.boostcamp.travery.utils
 
 import android.animation.ObjectAnimator
+import android.graphics.drawable.AnimationDrawable
 import android.graphics.drawable.Drawable
 import android.view.View
 import android.widget.ImageView
@@ -131,8 +132,8 @@ object BindingUtils {
     }
 
     @JvmStatic
-    @BindingAdapter("bind:visibility")
-    fun setVisibility(view: View, value: Boolean) {
+    @BindingAdapter("bind:fadeVisibility")
+    fun setFadeVisibility(view: View, value: Boolean) {
         if (value) {
             view.visibility = View.VISIBLE
             ObjectAnimator.ofFloat(view, "alpha", 0f, 1f).apply {
@@ -142,6 +143,34 @@ object BindingUtils {
         } else {
             view.visibility = View.GONE
         }
+    }
+
+    @JvmStatic
+    @BindingAdapter("bind:visibility")
+    fun setVisibility(view: View, value: Boolean) {
+        if (value) {
+            view.visibility = View.VISIBLE
+        } else {
+            view.visibility = View.GONE
+        }
+    }
+
+    @JvmStatic
+    @BindingAdapter("bind:animatedVisibility")
+    fun setAnimateVisibility(view: View, value: Boolean) {
+        if (value) {
+            (view.background as AnimationDrawable).start()
+        } else {
+            (view.background as AnimationDrawable).stop()
+        }
+    }
+
+    @JvmStatic
+    @BindingAdapter("bind:talk")
+    fun setRandomText(view: View, value: Boolean) {
+        val array = view.resources.getStringArray(R.array.talk_array)
+        val randomStr = array[Random().nextInt(array.size)]
+        (view as TextView).text = randomStr
     }
 
     @JvmStatic
