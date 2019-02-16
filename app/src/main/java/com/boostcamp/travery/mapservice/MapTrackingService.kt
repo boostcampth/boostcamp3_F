@@ -96,7 +96,7 @@ class MapTrackingService : Service() {
                             if (isRunning) lostLocationCnt++
                         } else {//1.5초에서 2.5초에 한번 씩 데이터가 들어옴
                             //200번 쌓이면 5분
-                            if (lostLocationCnt > 1 && canSuggest) {
+                            if (lostLocationCnt > 200 && canSuggest) {
                                 mapTrackingRepository.addSuggest(Suggestion(
                                         LatLng(
                                                 standardLocation.latitude,

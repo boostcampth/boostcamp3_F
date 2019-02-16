@@ -32,23 +32,61 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:src="@drawable/history_info_cell"
-            android:visibility="invisible"
-            app:direction='@{"up"}'
-            app:isAnimated="@{!viewmodel.isService}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="50dp"
+            android:textColor="@color/ef_white"
+            android:textSize="14sp"
+            app:talk="@{true}"
+            app:visibility="@{!viewmodel.isService}"
+            app:layout_constraintBottom_toBottomOf="@id/info_bar"
+            app:layout_constraintEnd_toEndOf="@id/info_bar"
+            app:layout_constraintStart_toStartOf="@id/info_bar"
+            app:layout_constraintTop_toTopOf="@id/info_bar"/>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/img_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ride_lap"
+            android:scaleX="0.6"
+            android:scaleY="0.6"
+            app:fadeVisibility="@{viewmodel.isService}"
+            app:layout_constraintBottom_toBottomOf="@id/info_bar"
+            app:layout_constraintEnd_toStartOf="@id/tv_text"
+            app:layout_constraintTop_toTopOf="@id/info_bar"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="50dp"
+            android:text="@{viewmodel.secondString}"
+            android:textColor="@color/ef_white"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:fadeVisibility="@{viewmodel.isService}"
+            app:layout_constraintBottom_toBottomOf="@id/info_bar"
+            app:layout_constraintEnd_toEndOf="@id/info_bar"
+            app:layout_constraintStart_toStartOf="@id/info_bar"
+            app:layout_constraintTop_toTopOf="@id/info_bar"/>
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/btn_suggest"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_margin="10dp"
             android:onClick="openSuggestDialog"
-            android:src="@drawable/ic_add_alert_black_24dp"
+            android:src="@drawable/ic_notifications_none_black_24dp"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/normal_red"
+            app:layout_constraintTop_toTopOf="@id/info_bar"
+            app:layout_constraintBottom_toBottomOf="@id/info_bar"
+            app:layout_constraintHorizontal_bias="0.95"
             app:visibility='@{!viewmodel.suggestCountString.equals("0")}'/>
 
 
@@ -56,9 +94,11 @@
             android:id="@+id/tv_seggest_num"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/textview_with_red_circle"
             android:text="@{viewmodel.suggestCountString}"
-            android:textColor="@color/normal_red"
-            android:textSize="16sp"
+            android:gravity="center"
+            android:textColor="@color/ef_white"
+            android:textSize="12sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="@+id/btn_suggest"
             app:layout_constraintTop_toTopOf="@+id/btn_suggest"
@@ -148,32 +188,6 @@
             app:layout_constraintStart_toStartOf="@id/info_bar"
             app:layout_constraintTop_toTopOf="@id/info_bar"/>
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/img_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ride_lap"
-            android:scaleX="0.6"
-            android:scaleY="0.6"
-            app:fadeVisibility="@{viewmodel.isService}"
-            app:layout_constraintBottom_toBottomOf="@id/info_bar"
-            app:layout_constraintEnd_toStartOf="@id/tv_text"
-            app:layout_constraintTop_toTopOf="@id/info_bar"/>
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tv_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="50dp"
-            android:text="@{viewmodel.secondString}"
-            android:textColor="@color/ef_white"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            app:fadeVisibility="@{viewmodel.isService}"
-            app:layout_constraintBottom_toBottomOf="@id/info_bar"
-            app:layout_constraintEnd_toEndOf="@id/info_bar"
-            app:layout_constraintStart_toStartOf="@id/info_bar"
-            app:layout_constraintTop_toTopOf="@id/info_bar"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_acc"

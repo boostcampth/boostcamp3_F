@@ -54,6 +54,13 @@
         <item>직접 입력</item>
     </string-array>
 
+    <string-array name="talk_array">
+        <item>오늘의 기록을 남겨볼까요?</item>
+        <item>고고씽~!</item>
+        <item>즐거운 하루 보내고 계신가요?</item>
+        <item>오늘은 무엇을 해볼까요?</item>
+    </string-array>
+
     <string name="string_place_holder_date">%s ~ %s</string>
 
     <string name="progress_bar_message">잠시만 기다려주세요</string>

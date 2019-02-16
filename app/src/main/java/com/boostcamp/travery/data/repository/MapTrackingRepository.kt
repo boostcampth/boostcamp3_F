@@ -35,8 +35,9 @@ class MapTrackingRepository {
     }
 
     fun addTotalDistance(distance: Float) {
-        totalDistance += distance.toLong()
-        this.distance.onNext(totalDistance)
+        if (startTime != 0L)
+            totalDistance += distance.toLong()
+        //this.distance.onNext(totalDistance)
     }
 
     fun getDistance(): Observable<Long> {

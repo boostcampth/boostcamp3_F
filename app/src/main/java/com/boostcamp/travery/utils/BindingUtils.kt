@@ -159,12 +159,18 @@ object BindingUtils {
     @BindingAdapter("bind:animatedVisibility")
     fun setAnimateVisibility(view: View, value: Boolean) {
         if (value) {
-            view.visibility = View.VISIBLE
             (view.background as AnimationDrawable).start()
         } else {
             (view.background as AnimationDrawable).stop()
-            view.visibility = View.GONE
         }
+    }
+
+    @JvmStatic
+    @BindingAdapter("bind:talk")
+    fun setRandomText(view: View, value: Boolean) {
+        val array = view.resources.getStringArray(R.array.talk_array)
+        val randomStr = array[Random().nextInt(array.size)]
+        (view as TextView).text = randomStr
     }
 
     @JvmStatic
@@ -277,7 +283,6 @@ object BindingUtils {
                 if (isAnimated) {
                     view.animate().translationY(-view.height.toFloat()).alpha(0.0f).withLayer()
                 } else {
-                    view.visibility = View.VISIBLE
                     view.animate().translationY(0.0f).alpha(1.0f).withLayer()
                 }
             }
