@@ -31,7 +31,7 @@
                     android:maxLength="30"
                     android:maxLines="1"
                     android:padding="10dp"
-                    android:textSize="18sp" />
+                    android:textSize="@dimen/font_title" />
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:layout_width="wrap_content"

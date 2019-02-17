@@ -12,6 +12,7 @@ import com.boostcamp.travery.Constants.EXTRA_USER_ACTION
 import com.boostcamp.travery.R
 import com.boostcamp.travery.base.BaseActivity
 import com.boostcamp.travery.data.model.UserAction
+import com.boostcamp.travery.databinding.ActivityCourseDetailBinding
 import com.boostcamp.travery.useraction.detail.UserActionDetailActivity
 import com.boostcamp.travery.utils.CustomMarker
 import com.boostcamp.travery.utils.DateUtils

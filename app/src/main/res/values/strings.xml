@@ -86,4 +86,5 @@
     <string name="string_tv_share">공유하기</string>
     <string name="string_activity_save_useraction_toolbar">활동 추가</string>
     <string name="string_activity_save_course_toolbar">코스 저장</string>
+    <string name="string_tracking_initial_distance">0m</string>
 </resources>

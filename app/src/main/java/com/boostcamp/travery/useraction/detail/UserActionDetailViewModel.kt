@@ -5,7 +5,7 @@ import androidx.databinding.ObservableArrayList
 import com.boostcamp.travery.base.BaseViewModel
 import com.boostcamp.travery.data.model.UserAction
 import org.json.JSONArray
-import java.util.regex.Pattern
+
 
 class UserActionDetailViewModel(application: Application) : BaseViewModel(application) {
     var userAction: UserAction? = null
@@ -15,8 +15,8 @@ class UserActionDetailViewModel(application: Application) : BaseViewModel(applic
     fun init(userAction: UserAction) {
         this.userAction = userAction
 
-        val jsonList=JSONArray(userAction.subImage)
-        for(i in 0..jsonList.length()){
+        val jsonList = JSONArray(userAction.subImage)
+        for (i in 0..jsonList.length()) {
             imageList.add(jsonList[i].toString())
         }
         hashTagList.addAll(parseHashTag(userAction.hashTag))
@@ -27,11 +27,7 @@ class UserActionDetailViewModel(application: Application) : BaseViewModel(applic
     }
 
     private fun parseHashTag(list: String): List<String> {
-        val result = ArrayList<String>()
-        list.split(" ").forEach {
-            if (Pattern.matches("^#[0-9a-zA-Z가-힣]*$", it)) result.add(it)
-        }
-        return result
+        return list.split(" ")
     }
 
     fun onItemClick(item: Any) {

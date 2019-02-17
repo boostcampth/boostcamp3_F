@@ -15,7 +15,6 @@
             android:id="@+id/toolbar"
             layout="@layout/toolbar"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 
@@ -63,7 +62,7 @@
             android:layout_marginBottom="15dp"
             android:text="@{viewModel.totalDistance}"
             android:textColor="@color/ef_black_alpha_aa"
-            android:textSize="14sp"
+            android:textSize="@dimen/font_small"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/detail_seekbar"
             app:layout_constraintEnd_toEndOf="@id/detail_seekbar"/>
@@ -73,9 +72,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="15dp"
-            android:text="0m"
+            android:text="@string/string_tracking_initial_distance"
             android:textColor="@color/ef_black_alpha_aa"
-            android:textSize="14sp"
+            android:textSize="@dimen/font_small"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/detail_seekbar"
             app:layout_constraintStart_toStartOf="@id/detail_seekbar"/>
