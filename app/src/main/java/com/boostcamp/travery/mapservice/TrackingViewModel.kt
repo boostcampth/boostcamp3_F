@@ -68,6 +68,20 @@ class TrackingViewModel(application: Application) : BaseViewModel(application) {
                         }
         )
 
+        /*addDisposable(
+            Observable.interval(1, TimeUnit.SECONDS)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    val rightNow = Date()
+                    nowTime.set(
+                        DateUtils.parseDateAsString(
+                            rightNow,
+                            "yyyy년 MM월 dd일\n  a h시 mm분 ss초\n   오늘의 기록을 시작해보세요."
+                        )
+                    )
+                }
+        )*/
         //거리 observe
         /*addDisposable(
                 mapTrackingRepository.getDistance().subscribe {

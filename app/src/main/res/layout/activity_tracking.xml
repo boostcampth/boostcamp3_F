@@ -105,29 +105,18 @@
             app:visibility='@{!viewmodel.suggestCountString.equals("0")}'/>
 
         <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideLine_bottom"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.85"
+            android:id="@+id/guideLine_top"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.45"/>
 
-        <View
-            android:layout_alignParentBottom="true"
-            android:background="@drawable/shadow_reverse"
-            android:layout_width="match_parent"
-            android:layout_height="4dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/guideLine_bottom"/>
-        <View
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:background="@color/ef_white"
-            android:paddingTop="@dimen/fab_margin"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="@id/guideLine_bottom"/>
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideLine_bottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_begin="622dp"/>
 
         <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/btn_myLocation"
@@ -158,32 +147,38 @@
             android:id="@+id/btn_play"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/fab_margin"
             android:onClick="startService"
             android:src="@drawable/walk1"
+            android:text="dsdsd"
             app:backgroundTint="@color/colorAccentLight"
             app:fabCustomSize="90dp"
             app:fadeVisibility="@{!viewmodel.isService}"
-            app:layout_constraintTop_toTopOf="@+id/guideLine_bottom"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:maxImageSize="60dp"
             app:tint="@color/ef_white"/>
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
+        <com.google.android.material.chip.Chip
             android:id="@+id/btn_save_action"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:elevation="5dp"
             android:onClick="saveUserAction"
-            android:src="@drawable/ic_add_white_24dp"
-            app:backgroundTint="@color/colorAccentLight"
-            app:fabSize="normal"
+            android:text="@string/string_write_useraction"
+            android:textColor="@color/colorAccent"
+            app:chipBackgroundColor="@color/ef_white"
+            app:chipIcon="@drawable/write"
+            app:chipIconSize="12dp"
+            app:chipStartPadding="10dp"
             app:fadeVisibility="@{viewmodel.isService}"
-            app:layout_constraintBottom_toBottomOf="@id/btn_run"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.95"
             app:layout_constraintStart_toStartOf="parent"
-            app:tint="@color/ef_white"/>
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.95"/>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/btn_stop"
