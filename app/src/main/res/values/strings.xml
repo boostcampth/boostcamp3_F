@@ -35,8 +35,8 @@
     <string name="service_title">Travery Service</string>
     <string name="service_message">활동을 기록하고 있습니다.</string>
 
-    <string name="string_et_course_add_hint">제목을 입력하세요(20자 이내)</string>
-    <string name="string_et_course_add_content_hint">현재 코스를 한줄로 표현해주세요</string>
+    <string name="string_et_course_add_hint">제목</string>
+    <string name="string_et_course_add_content_hint">현재 코스를 한줄로 표현한다면?</string>
     <string name="string_et_course_add_theme">테마를 입력하세요</string>
     <string name="string_tv_course_add">테마</string>
     <string name="string_tv_date">날짜</string>
@@ -83,4 +83,7 @@
     <string name="string_folder_title">Folder</string>
 
     <string name="base_image_url">http://35.229.76.14/uploads/</string>
+    <string name="string_tv_share">공유하기</string>
+    <string name="string_activity_save_useraction_toolbar">활동 추가</string>
+    <string name="string_activity_save_course_toolbar">코스 저장</string>
 </resources>

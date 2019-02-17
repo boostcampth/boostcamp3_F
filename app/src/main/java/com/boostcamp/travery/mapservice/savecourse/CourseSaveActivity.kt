@@ -20,9 +20,14 @@ class CourseSaveActivity : BaseActivity<ActivityCourseSaveBinding>() {
         super.onCreate(savedInstanceState)
 
         setContentView(viewDataBinding.root)
-
         setSupportActionBar(toolbar as Toolbar)
-        title = ""
+
+        supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+            setDisplayShowHomeEnabled(true)
+            title = resources.getString(R.string.string_activity_save_course_toolbar)
+        }
+
         viewDataBinding.savevm = ViewModelProviders.of(this).get(CourseSaveViewModel::class.java)
 
         initView()

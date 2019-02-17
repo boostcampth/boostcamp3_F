@@ -72,4 +72,9 @@ abstract class BaseActivity<T : ViewDataBinding> : AppCompatActivity() {
             progressDialog?.dismiss()
         }
     }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return super.onSupportNavigateUp()
+    }
 }

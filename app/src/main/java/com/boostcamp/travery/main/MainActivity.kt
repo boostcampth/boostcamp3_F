@@ -46,7 +46,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), NavigationView.OnNavig
         }
 
         setSupportActionBar(toolBar as Toolbar)
-        supportActionBar?.title = ""
 
         initFab()
         initFabAnimation()

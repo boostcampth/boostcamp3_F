@@ -35,7 +35,12 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
         super.onCreate(savedInstanceState)
         setContentView(viewDataBinding.root)
         setSupportActionBar(toolbar as Toolbar)
-        supportActionBar?.title = ""
+
+        supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+            setDisplayShowHomeEnabled(true)
+            title = resources.getString(R.string.string_activity_save_useraction_toolbar)
+        }
 
         requestPermission()
 

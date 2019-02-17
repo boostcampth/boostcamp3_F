@@ -21,8 +21,11 @@ class UserActionDetailActivity : BaseActivity<ActivityUserActionDetailBinding>()
         super.onCreate(savedInstanceState)
         setContentView(viewDataBinding.root)
 
-        setSupportActionBar(toolBar as Toolbar)
-        supportActionBar?.title = ""
+        setSupportActionBar(toolbar as Toolbar)
+        supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+            setDisplayShowHomeEnabled(true)
+        }
 
         viewModel = ViewModelProviders.of(this).get(UserActionDetailViewModel::class.java)
         viewDataBinding.viewmodel = viewModel

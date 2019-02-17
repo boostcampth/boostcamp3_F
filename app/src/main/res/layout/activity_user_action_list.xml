@@ -38,7 +38,7 @@
                     android:layout_height="30dp"
                     android:layout_marginEnd="5dp"
                     android:layout_weight="1"
-                    android:src="@drawable/ic_search_black_24dp" />
+                    android:src="@drawable/ic_search_white_24dp" />
             </androidx.appcompat.widget.LinearLayoutCompat>
 
         </com.google.android.material.card.MaterialCardView>

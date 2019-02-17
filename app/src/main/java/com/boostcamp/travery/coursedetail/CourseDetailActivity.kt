@@ -2,8 +2,8 @@ package com.boostcamp.travery.coursedetail
 
 
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
+import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -12,7 +12,6 @@ import com.boostcamp.travery.Constants.EXTRA_USER_ACTION
 import com.boostcamp.travery.R
 import com.boostcamp.travery.base.BaseActivity
 import com.boostcamp.travery.data.model.UserAction
-import com.boostcamp.travery.databinding.ActivityCourseDetailBinding
 import com.boostcamp.travery.useraction.detail.UserActionDetailActivity
 import com.boostcamp.travery.utils.CustomMarker
 import com.boostcamp.travery.utils.DateUtils
@@ -23,7 +22,6 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import kotlinx.android.synthetic.main.activity_course_detail.*
-import kotlinx.android.synthetic.main.item_seekbar_content.*
 import kotlinx.android.synthetic.main.item_seekbar_content.view.*
 
 
@@ -49,6 +47,13 @@ class CourseDetailActivity : BaseActivity<ActivityCourseDetailBinding>(), OnMapR
         super.onCreate(savedInstanceState)
 
         setContentView(viewDataBinding.root)
+
+        setSupportActionBar(toolbar as Toolbar)
+        supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+            setDisplayShowHomeEnabled(true)
+        }
+
         val mapFragment = fragment_map as SupportMapFragment
         mapFragment.getMapAsync(this)
         setupBindings(savedInstanceState)
