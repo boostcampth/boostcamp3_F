@@ -34,6 +34,12 @@ class NewsFeedActivity : BaseActivity<ActivityNewsfeedBinding>() {
         })
 
         initView()
+
+    }
+
+    private fun initView() {
+        rv_newsfeed_list.layoutManager = LinearLayoutManager(this)
+        rv_newsfeed_list.adapter = NewsFeedListAdapter(viewModel.getFeedList())
         rv_newsfeed_list.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
@@ -43,11 +49,6 @@ class NewsFeedActivity : BaseActivity<ActivityNewsfeedBinding>() {
                 }
             }
         })
-    }
-
-    private fun initView() {
-        rv_newsfeed_list.layoutManager = LinearLayoutManager(this)
-        rv_newsfeed_list.adapter = NewsFeedListAdapter(viewModel.getFeedList())
     }
 
 }
