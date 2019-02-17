@@ -7,18 +7,23 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.boostcamp.travery.Injection
 import com.boostcamp.travery.base.BaseViewModel
+import com.boostcamp.travery.data.NewsFeedRepository
 import com.boostcamp.travery.data.model.UserAction
+import com.boostcamp.travery.utils.ImageUtils
 import com.boostcamp.travery.utils.NewFileUtils
 import io.reactivex.schedulers.Schedulers
+import org.json.JSONArray
 import java.io.File
 import java.util.*
 import kotlin.collections.ArrayList
 
 class UserActionSaveViewModel(application: Application) : BaseViewModel(application) {
-    private val userActionRepository = Injection.provideCourseRepository(application)
-    private val dirPath = application.filesDir
-
     val imageList = ObservableArrayList<UserActionImage>()
+
+
+    private val userActionRepository = Injection.provideCourseRepository(application)
+    private val newsFeedRepository = NewsFeedRepository.getInstance()
+
     private val geoCoder = Geocoder(application)
     private var address = MutableLiveData<String>()
 
@@ -53,29 +58,39 @@ class UserActionSaveViewModel(application: Application) : BaseViewModel(applicat
     }
 
     fun saveUserAction(latitude: Double, longitude: Double, courseCode: Long) {
-
-        // 이미지리스트 개수 만큼 내부 저장소에 복사할 File 객체 리스트 생성
-        val fileList = createFileList()
-
-        // 사진 경로 리스트 복사
-        // 구분자 : ,
-        val result = fileList.subList(1, fileList.size).fold("") { acc, item ->
-            if (acc.isEmpty()) item.absolutePath else "$acc,${item.absolutePath}"
+        val fileList = ArrayList<File>()
+        for (image in imageList) {
+            if (!image.filePath.isNullOrEmpty()) {
+                fileList.add(ImageUtils.createImage(getApplication(), image.filePath))
+            }
         }
 
-        addDisposable(userActionRepository.saveUserAction(
-                UserAction(title,
-                        content,
-                        Date(System.currentTimeMillis()),
-                        listToString(hashTagList, ' '),
-                        fileList[0].absolutePath,
-                        result,
-                        latitude, longitude,
-                        when (courseCode) {
-                            0L -> null
-                            else -> courseCode
-                        }, address.value ?: "")
-        ).subscribeOn(Schedulers.io()).subscribe())
+        val result = JSONArray()
+        for (file in fileList) {
+            result.put(file.path)
+        }
+
+        val userAction = UserAction(
+                title,
+                content,
+                Date(System.currentTimeMillis()),
+                listToString(hashTagList, ' '),
+                if (result.length() > 0) result.getString(0) else "",
+                result.toString(),
+                latitude, longitude,
+                when (courseCode) {
+                    0L -> null
+                    else -> courseCode
+                }
+        )
+        addDisposable(
+                userActionRepository.saveUserAction(userAction).subscribeOn(Schedulers.io()).subscribe()
+        )
+
+        //TODO 서버로 전송하는 부분 주석처리 해놈 설정시에만 보낼수 있도록 추후 변경
+//        addDisposable(newsFeedRepository.uploadFeed(userAction, "temp").subscribe({
+//            Log.e("TEST", it.message)
+//        }, { Log.e("TEST", it.message) }))
     }
 
     fun onAddItemClick() {
@@ -115,29 +130,5 @@ class UserActionSaveViewModel(application: Application) : BaseViewModel(applicat
         }
     }
 
-    private fun createFileList(): List<File> {
 
-        // 폴더가 존재하지않을 경우 생성
-        if (!dirPath.exists()) {
-            dirPath.mkdirs()
-        }
-
-        val fileList = imageList.subList(0, imageList.size - 1).map {
-            val name = it.filePath.split("/").let { list ->
-                list[list.size - 1]
-            }
-            File(dirPath, name)
-        }
-
-        // 파일 복사
-        fileList.forEachIndexed { i, file ->
-            try {
-                NewFileUtils.copyFile(File(imageList[i].filePath), file)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
-
-        return fileList
-    }
 }

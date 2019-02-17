@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.databinding.ObservableArrayList
 import com.boostcamp.travery.base.BaseViewModel
 import com.boostcamp.travery.data.model.UserAction
+import org.json.JSONArray
 import java.util.regex.Pattern
 
 class UserActionDetailViewModel(application: Application) : BaseViewModel(application) {
@@ -14,8 +15,10 @@ class UserActionDetailViewModel(application: Application) : BaseViewModel(applic
     fun init(userAction: UserAction) {
         this.userAction = userAction
 
-        imageList.add(userAction.mainImage)
-        imageList.addAll(parseImageList(userAction.subImage))
+        val jsonList=JSONArray(userAction.subImage)
+        for(i in 0..jsonList.length()){
+            imageList.add(jsonList[i].toString())
+        }
         hashTagList.addAll(parseHashTag(userAction.hashTag))
     }
 

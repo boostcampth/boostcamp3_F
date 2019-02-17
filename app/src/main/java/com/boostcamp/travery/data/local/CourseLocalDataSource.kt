@@ -1,4 +1,4 @@
-package com.boostcamp.travery.data.local.source
+package com.boostcamp.travery.data.local
 
 import com.boostcamp.travery.data.CourseDataSource
 import com.boostcamp.travery.data.local.db.dao.CourseDao
@@ -25,7 +25,12 @@ class CourseLocalDataSource private constructor(
         @JvmStatic
         fun getInstance(courseDao: CourseDao, userActionDao: UserActionDao, file: File) =
             INSTANCE ?: synchronized(this) {
-                INSTANCE ?: CourseLocalDataSource(courseDao, userActionDao, file).also { INSTANCE = it }
+                INSTANCE
+                    ?: CourseLocalDataSource(
+                        courseDao,
+                        userActionDao,
+                        file
+                    ).also { INSTANCE = it }
             }
     }
 
