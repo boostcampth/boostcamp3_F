@@ -35,7 +35,7 @@
     <string name="service_title">Travery Service</string>
     <string name="service_message">활동을 기록하고 있습니다.</string>
 
-    <string name="string_et_course_add_hint">제목</string>
+    <string name="string_et_course_add_hint">제목(최대 20자)</string>
     <string name="string_et_course_add_content_hint">현재 코스를 한줄로 표현한다면?</string>
     <string name="string_et_course_add_theme">테마를 입력하세요</string>
     <string name="string_tv_course_add">테마</string>
@@ -43,7 +43,7 @@
     <string name="string_save_menu">저장</string>
     <string name="string_input_theme">직접 입력</string>
 
-    <string name="string_et_content_hint">내용을 입력하세요\n\n\n</string>
+    <string name="string_et_content_hint">내용을 입력하세요\n\n\n\n\n\n</string>
     <string name="string_tv_useraction_hashtag">해시태그</string>
     <string name="string_tv_location">위치</string>
     <string name="string_tv_image">사진</string>
