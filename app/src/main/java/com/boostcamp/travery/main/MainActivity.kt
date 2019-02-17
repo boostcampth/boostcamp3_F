@@ -20,7 +20,7 @@ import com.boostcamp.travery.coursedetail.CourseDetailActivity
 import com.boostcamp.travery.data.model.Course
 import com.boostcamp.travery.databinding.ActivityMainBinding
 import com.boostcamp.travery.mapservice.TrackingActivity
-import com.boostcamp.travery.useraction.list.UserActionFeedActivity
+import com.boostcamp.travery.feed.NewsFeedActivity
 import com.boostcamp.travery.useraction.list.UserActionListActivity
 import com.boostcamp.travery.useraction.save.UserActionSaveActivity
 import com.google.android.material.navigation.NavigationView
@@ -134,7 +134,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), NavigationView.OnNavig
             }
             R.id.nav_gallery -> {
 //                startActivity(Intent(this, SearchResultActivity::class.java))
-                startActivity(Intent(this, UserActionFeedActivity::class.java))
+                startActivity(Intent(this, NewsFeedActivity::class.java))
             }
             R.id.nav_slideshow -> {
                 startActivity(Intent(this, UserActionSaveActivity::class.java))

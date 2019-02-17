@@ -57,8 +57,7 @@ class ApiService {
         /**
          * 게시판 목록을 불러오는 메소드
          */
-        @FormUrlEncoded
-        @POST("boardList.php")
+        @GET("boardList.php")
         fun getBoardList(@Query("start") start: Int): Single<Response<List<NewsFeed>>>
     }
 }

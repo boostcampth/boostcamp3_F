@@ -9,6 +9,7 @@ import io.reactivex.schedulers.Schedulers
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
 import java.util.*
@@ -50,12 +51,16 @@ class NewsFeedRemoteDataSource : NewsFeedDataSource {
         // 사진 여러개로 확장을 위하여 List로 선언
         val parts = ArrayList<MultipartBody.Part>()
 
-        if (!userAction.mainImage.isEmpty()) {
-            //추후 여러 장 이미지 일경우 List에 넣는 작업.
-            val file = File(userAction.mainImage)
+//        if (!userAction.subImage.isEmpty()) {
+        val jsonArray = JSONArray(userAction.subImage)
+        //추후 여러 장 이미지 일경우 List에 넣는 작업.
+        for (i in 0 until jsonArray.length()) {
+            val file = File(jsonArray[i] as String)
             val requestFile = RequestBody.create(MediaType.parse("image/*"), file)
             parts.add(MultipartBody.Part.createFormData("file[]", file.name, requestFile))
         }
+
+//        }
 
         return ApiService.getInstance()
                 .api

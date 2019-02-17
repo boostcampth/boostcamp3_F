@@ -109,4 +109,6 @@ dependencies {
 
     //Splash
     implementation 'com.github.ViksaaSkool:AwesomeSplash:v1.0.0'
+
+    implementation 'com.romandanylyk:pageindicatorview:1.0.3'
 }

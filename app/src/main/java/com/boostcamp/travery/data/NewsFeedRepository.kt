@@ -28,7 +28,13 @@ class NewsFeedRepository private constructor(private val newsFeedDataSource: New
 
 
     override fun getFeedList(start: Int): Single<List<NewsFeed>> {
-        return if (mCachedFeed.size - start > FEED_LOAD_COUNT) {
+
+        //FEED_LOAD_COUNT 갯수보다 캐시된 데이터가 적을 경우( 피드가 적어서)
+        if (mCachedFeed.size < FEED_LOAD_COUNT) {
+            mCachedFeed.clear()
+        }
+
+        return if (mCachedFeed.size - start >= FEED_LOAD_COUNT) {
             Single.just(mCachedFeed.subList(start, start + FEED_LOAD_COUNT).toList())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -42,5 +48,10 @@ class NewsFeedRepository private constructor(private val newsFeedDataSource: New
 
     override fun uploadFeed(userAction: UserAction, userId: String): Single<MyResponse> {
         return newsFeedDataSource.uploadFeed(userAction, userId).observeOn(AndroidSchedulers.mainThread())
+    }
+
+    fun reloadList(): Single<List<NewsFeed>> {
+        mCachedFeed.clear()
+        return getFeedList(0)
     }
 }

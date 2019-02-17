@@ -1,26 +1,29 @@
 package com.boostcamp.travery.utils
 
 import android.animation.ObjectAnimator
+import android.annotation.SuppressLint
 import android.graphics.drawable.AnimationDrawable
 import android.graphics.drawable.Drawable
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager.widget.ViewPager
 import com.boostcamp.travery.GlideApp
 import com.boostcamp.travery.R
+import com.boostcamp.travery.coursedetail.UserActionListAdapter
+import com.boostcamp.travery.feed.ViewPagerAdapter
 import com.boostcamp.travery.main.MainViewModel
 import com.boostcamp.travery.main.adapter.CourseListAdapter
 import com.boostcamp.travery.search.SearchResultViewModel
 import com.boostcamp.travery.search.UserActionSearchAdapter
 import com.boostcamp.travery.useraction.detail.UserActionDetailViewModel
 import com.boostcamp.travery.useraction.detail.UserActionImageAdapter
-import com.boostcamp.travery.useraction.list.UserActionListAdapter
-import com.boostcamp.travery.useraction.list.UserActionListViewModel
 import com.boostcamp.travery.useraction.save.UserActionImageListAdapter
 import com.boostcamp.travery.useraction.save.UserActionSaveViewModel
 import com.bumptech.glide.load.DataSource
@@ -32,10 +35,14 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
+import org.json.JSONArray
+import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 object BindingUtils {
+
     @JvmStatic
     @BindingAdapter("android:mapImage")
     fun setMapImage(imageView: ImageView, path: String) {
@@ -58,29 +65,42 @@ object BindingUtils {
     @BindingAdapter("image")
     fun setImage(imageView: ImageView, path: String?) {
         GlideApp.with(imageView.context)
-                .load(path)
-                .listener(object : RequestListener<Drawable> {
-                    override fun onLoadFailed(
-                            e: GlideException?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            isFirstResource: Boolean
-                    ): Boolean {
-                        imageView.visibility = View.GONE
-                        return false
-                    }
+            .load(path)
+            .listener(object : RequestListener<Drawable> {
+                override fun onLoadFailed(
+                    e: GlideException?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    imageView.visibility = View.GONE
+                    return false
+                }
 
-                    override fun onResourceReady(
-                            resource: Drawable?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            dataSource: DataSource?,
-                            isFirstResource: Boolean
-                    ): Boolean {
-                        return false
-                    }
-                })
-                .into(imageView)
+                override fun onResourceReady(
+                    resource: Drawable?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    dataSource: DataSource?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    return false
+                }
+            })
+            .into(imageView)
+    }
+
+    /**
+     * 둥근 이미지형태로 로드.
+     */
+    @JvmStatic
+    @BindingAdapter("circleImage")
+    fun setCircleImage(imageView: ImageView, path: String) {
+        GlideApp.with(imageView.context)
+            .load(path)
+            .circleCrop()
+            .error(R.mipmap.ic_launcher)
+            .into(imageView)
     }
 
     /**
@@ -90,10 +110,10 @@ object BindingUtils {
     @BindingAdapter("roundedImage")
     fun setRoundedImage(imageView: ImageView, path: String?) {
         GlideApp.with(imageView.context)
-                .load(path)
-                .transform(MultiTransformation(CenterCrop(), RoundedCorners(10)))
-                .error(R.drawable.empty_image)
-                .into(imageView)
+            .load(path)
+            .transform(MultiTransformation(CenterCrop(), RoundedCorners(10)))
+            .error(R.drawable.empty_image)
+            .into(imageView)
     }
 
     @JvmStatic
@@ -106,11 +126,11 @@ object BindingUtils {
     @BindingAdapter("bind:startTime", "bind:endTime")
     fun setTime(textView: TextView, startTime: Long, endTime: Long) {
         textView.text = String.format(
-                textView.context.resources.getString(
-                        R.string.string_place_holder_date,
-                        DateUtils.parseDateAsString(startTime, "yyyy.MM.dd - HH:mm"),
-                        DateUtils.parseDateAsString(endTime, "HH:mm")
-                )
+            textView.context.resources.getString(
+                R.string.string_place_holder_date,
+                DateUtils.parseDateAsString(startTime, "yyyy.MM.dd - HH:mm"),
+                DateUtils.parseDateAsString(endTime, "HH:mm")
+            )
         )
     }
 
@@ -120,13 +140,16 @@ object BindingUtils {
         recyclerView.layoutManager = LinearLayoutManager(recyclerView.context)
         recyclerView.adapter = adapter
         val dividerItemDecoration =
-                DividerItemDecoration(recyclerView.context, LinearLayoutManager(recyclerView.context).orientation)
+            DividerItemDecoration(recyclerView.context, LinearLayoutManager(recyclerView.context).orientation)
         recyclerView.addItemDecoration(dividerItemDecoration)
     }
 
     @JvmStatic
     @BindingAdapter("setAdapter")
-    fun bindMultiSnapRecyclerViewAdapter(recyclerView: com.takusemba.multisnaprecyclerview.MultiSnapRecyclerView, adapter: RecyclerView.Adapter<*>) {
+    fun bindMultiSnapRecyclerViewAdapter(
+        recyclerView: com.takusemba.multisnaprecyclerview.MultiSnapRecyclerView,
+        adapter: RecyclerView.Adapter<*>
+    ) {
         recyclerView.layoutManager = LinearLayoutManager(recyclerView.context, LinearLayoutManager.HORIZONTAL, false)
         recyclerView.adapter = adapter
     }
@@ -305,14 +328,53 @@ object BindingUtils {
 
     }
 
-    @JvmStatic
-    @BindingAdapter("listAdapter")
-    fun setAdapter(recyclerView: RecyclerView, viewModel: UserActionListViewModel) {
-        val adapter = UserActionListAdapter(viewModel.mUserActionList)
+    /**
+     * FeedViewPager에 adapter 세팅
+     */
 
-        recyclerView.apply {
-            layoutManager = LinearLayoutManager(recyclerView.context)
-            this.adapter = adapter
+    @JvmStatic
+    @BindingAdapter("setViewPagerAdapter")
+    fun setViewPagerAdapter(viewpager: ViewPager, jsonString: String) {
+        if (jsonString.isEmpty()) {
+            viewpager.visibility = View.GONE
+            //계속되는 viewPager adapter 생성을 막기 위한 조건
+            if (viewpager.adapter == null) {
+            } else {
+                (viewpager.adapter as ViewPagerAdapter).clear()
+            }
+        } else {
+            viewpager.visibility = View.VISIBLE
+            val jsonArray = JSONArray(jsonString)
+            val imageList = ArrayList<String>()
+            for (i in 0 until jsonArray.length()) {
+                imageList.add(jsonArray[i] as String)
+            }
+            if (viewpager.adapter == null) {
+                viewpager.adapter = ViewPagerAdapter(imageList)
+            } else {
+                (viewpager.adapter as ViewPagerAdapter).itemChange(imageList)
+            }
         }
+
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    @JvmStatic
+    @BindingAdapter("feedDate")
+    fun setDateCompareToNowDate(textView: AppCompatTextView, stringDate: String) {
+        val writeDate = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(stringDate)
+        val min = (Date().time - writeDate.time) / 60000
+        var stringTime = ""
+        when {
+            min == 0L -> stringTime = "방금"
+            min < 60 -> stringTime = min.toString() + "분 전"
+            min < 1440 -> {
+                val hour = min / 60
+                stringTime = hour.toString() + "시간 전"
+            }
+            min < 525600 -> stringTime = SimpleDateFormat("MM월 dd일 HH:mm").format(writeDate)
+            else -> SimpleDateFormat("yyyy년 MM월 dd일 HH:mm").format(writeDate)
+        }
+        textView.text = stringTime
     }
 }

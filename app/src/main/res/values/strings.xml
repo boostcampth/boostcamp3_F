@@ -79,4 +79,6 @@
     <string name="string_temp_useraction_detail_location">서울시 강남구 역삼동 1234</string>
 
     <string name="string_folder_title">Folder</string>
+
+    <string name="base_image_url">http://35.229.76.14/uploads/</string>
 </resources>
