@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:state_pressed="false">
+            <!-- background (위로) -->
+                <shape
+                    android:shape="rectangle">
+                    <corners android:radius="45dp" />
+                    <solid android:color="@color/colorAccentLight" />
+                </shape>
+    </item>
+    <item
+        android:state_pressed="true">
+        <layer-list>
+            <!-- background (위로) -->
+            <item>
+                <shape>
+                    <corners android:radius="45dp" />
+                    <solid android:color="@color/colorAccent" />
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+</selector>

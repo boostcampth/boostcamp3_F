@@ -3,6 +3,7 @@ package com.boostcamp.travery.coursedetail
 import android.app.Application
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableBoolean
+import androidx.databinding.ObservableField
 import androidx.databinding.ObservableInt
 import androidx.lifecycle.MutableLiveData
 import com.boostcamp.travery.Injection
@@ -17,6 +18,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import com.warkiz.widget.IndicatorSeekBar
 import com.warkiz.widget.SeekParams
+import io.reactivex.Observable
+import kotlin.math.round
 
 
 class CourseDetailViewModel(application: Application) : BaseViewModel(application) {
@@ -32,6 +35,7 @@ class CourseDetailViewModel(application: Application) : BaseViewModel(applicatio
     val markerList = MutableLiveData<List<UserAction>>() //지
     val isAnimated = ObservableBoolean()
     val scrollTo = ObservableInt()
+    val totalDistance = ObservableField<String>()
 
     val seekTimeCode = MutableLiveData<TimeCode>()
     val seekListener: OnSeekChangeListener = object : OnSeekChangeListener {
@@ -52,6 +56,11 @@ class CourseDetailViewModel(application: Application) : BaseViewModel(applicatio
 
     fun init(course: Course) {
         this.course = course
+
+        totalDistance.set(when (course.distance >= 1000) {
+            true -> "${String.format("%.2f", course.distance / 1000.0)}km"
+            false -> "${course.distance}m"
+        })
         val tempList = ArrayList<LatLng>()
         //저장소로부터 TimeCode리스트를 받아 ViewModel의 TimeCode리스트와 LatLng리스트로 저장
         addDisposable(courseDetailRepository.loadCoordinateListFromJsonFile(course.startTime.toString())
