@@ -110,5 +110,9 @@ dependencies {
     //Splash
     implementation 'com.github.ViksaaSkool:AwesomeSplash:v1.0.0'
 
+    //seekBar
+    implementation 'com.github.warkiz.widget:indicatorseekbar:2.1.2'
+
     implementation 'com.romandanylyk:pageindicatorview:1.0.3'
+
 }

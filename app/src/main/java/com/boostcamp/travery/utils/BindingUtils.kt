@@ -33,6 +33,8 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
+import com.warkiz.widget.IndicatorSeekBar
+import com.warkiz.widget.OnSeekChangeListener
 import org.json.JSONArray
 import java.util.*
 import kotlin.collections.ArrayList
@@ -373,5 +375,11 @@ object BindingUtils {
             else -> stringTime = DateUtils.parseDateAsString(writeDate, "yyyy년 MM월 dd일 HH:mm")
         }
         textView.text = stringTime
+    }
+
+    @JvmStatic
+    @BindingAdapter("onSeekChanged")
+    fun onSeekChangedListener(view: IndicatorSeekBar, listener: OnSeekChangeListener) {
+        view.onSeekChangeListener = listener
     }
 }

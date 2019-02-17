@@ -2,7 +2,9 @@ package com.boostcamp.travery.coursedetail
 
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.boostcamp.travery.Constants
@@ -13,6 +15,7 @@ import com.boostcamp.travery.data.model.UserAction
 import com.boostcamp.travery.databinding.ActivityCourseDetailBinding
 import com.boostcamp.travery.useraction.detail.UserActionDetailActivity
 import com.boostcamp.travery.utils.CustomMarker
+import com.boostcamp.travery.utils.DateUtils
 import com.boostcamp.travery.utils.toPx
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -20,10 +23,22 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import kotlinx.android.synthetic.main.activity_course_detail.*
+import kotlinx.android.synthetic.main.item_seekbar_content.*
+import kotlinx.android.synthetic.main.item_seekbar_content.view.*
 
 
 class CourseDetailActivity : BaseActivity<ActivityCourseDetailBinding>(), OnMapReadyCallback {
     override val layoutResourceId: Int = R.layout.activity_course_detail
+    private val seekerMarker by lazy {
+        val myLocation = LatLng(37.56, 126.97)
+        map.addMarker(
+                MarkerOptions()
+                        .position(myLocation)
+                        .flat(true)
+                        .anchor(0.5f, 0.5f)
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.map_position_no_heading))
+        )
+    }
     private val viewModel by lazy {
         ViewModelProviders.of(this).get(CourseDetailViewModel::class.java)
     }
@@ -79,7 +94,12 @@ class CourseDetailActivity : BaseActivity<ActivityCourseDetailBinding>(), OnMapR
 
         viewModel.latLngList.observe(this, Observer {
             // 경로의 폴리라인과 시작점 끝점 마크를 맵위에 표시.
-            map.addPolyline(PolylineOptions().addAll(it))
+            map.addPolyline(PolylineOptions().color(ContextCompat.getColor(this, R.color.colorAccent))
+                    .geodesic(true)
+                    .width(10f).addAll(it))
+
+            //seekbar max 설정
+            detail_seekbar.max = viewModel.timeCodeListSize.get().toFloat()
 
             //지도가 완전히 뜨고나서 카메라가 지정한 위치로 이동하기 위해 post를 사용.
             fragment_map.view?.post {
@@ -90,6 +110,12 @@ class CourseDetailActivity : BaseActivity<ActivityCourseDetailBinding>(), OnMapR
                 )
             }
 
+        })
+
+        viewModel.seekTimeCode.observe(this, Observer {
+            seekerMarker.position = it.coordinate
+            map.moveCamera(CameraUpdateFactory.newLatLng(it.coordinate))
+            detail_seekbar.indicator.topContentView.tv_time?.text = DateUtils.parseDateAsString(it.timeStamp, "a h시 mm분 ss초")
         })
 
         viewModel.markerList.observe(this, Observer { actionList ->

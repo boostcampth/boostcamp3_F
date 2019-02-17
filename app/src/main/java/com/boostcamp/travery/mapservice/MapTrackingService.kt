@@ -153,13 +153,10 @@ class MapTrackingService : Service() {
         mapTrackingRepository.setSecond(second)
         secondTimer.schedule(SecondTimer(), 1000, 1000)
 
-        getLastKnownLocation()?.let {
-            exLocation = it
-            standardLocation = it
+        exLocation?.let{
             mapTrackingRepository.addTimeCode(TimeCode(LatLng(it.latitude, it.longitude), it.time))
+            standardLocation = it
         }
-
-
 
         return Service.START_NOT_STICKY
     }
