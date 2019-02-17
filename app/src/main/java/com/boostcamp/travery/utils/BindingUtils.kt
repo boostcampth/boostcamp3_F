@@ -1,7 +1,6 @@
 package com.boostcamp.travery.utils
 
 import android.animation.ObjectAnimator
-import android.annotation.SuppressLint
 import android.graphics.drawable.AnimationDrawable
 import android.graphics.drawable.Drawable
 import android.view.View
@@ -35,7 +34,6 @@ import com.bumptech.glide.request.target.Target
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import org.json.JSONArray
-import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -64,29 +62,29 @@ object BindingUtils {
     @BindingAdapter("image")
     fun setImage(imageView: ImageView, path: String?) {
         GlideApp.with(imageView.context)
-            .load(path)
-            .listener(object : RequestListener<Drawable> {
-                override fun onLoadFailed(
-                    e: GlideException?,
-                    model: Any?,
-                    target: Target<Drawable>?,
-                    isFirstResource: Boolean
-                ): Boolean {
-                    imageView.visibility = View.GONE
-                    return false
-                }
+                .load(path)
+                .listener(object : RequestListener<Drawable> {
+                    override fun onLoadFailed(
+                            e: GlideException?,
+                            model: Any?,
+                            target: Target<Drawable>?,
+                            isFirstResource: Boolean
+                    ): Boolean {
+                        imageView.visibility = View.GONE
+                        return false
+                    }
 
-                override fun onResourceReady(
-                    resource: Drawable?,
-                    model: Any?,
-                    target: Target<Drawable>?,
-                    dataSource: DataSource?,
-                    isFirstResource: Boolean
-                ): Boolean {
-                    return false
-                }
-            })
-            .into(imageView)
+                    override fun onResourceReady(
+                            resource: Drawable?,
+                            model: Any?,
+                            target: Target<Drawable>?,
+                            dataSource: DataSource?,
+                            isFirstResource: Boolean
+                    ): Boolean {
+                        return false
+                    }
+                })
+                .into(imageView)
     }
 
     /**
@@ -96,10 +94,10 @@ object BindingUtils {
     @BindingAdapter("circleImage")
     fun setCircleImage(imageView: ImageView, path: String) {
         GlideApp.with(imageView.context)
-            .load(path)
-            .circleCrop()
-            .error(R.mipmap.ic_launcher)
-            .into(imageView)
+                .load(path)
+                .circleCrop()
+                .error(R.mipmap.ic_launcher)
+                .into(imageView)
     }
 
     /**
@@ -109,10 +107,10 @@ object BindingUtils {
     @BindingAdapter("roundedImage")
     fun setRoundedImage(imageView: ImageView, path: String?) {
         GlideApp.with(imageView.context)
-            .load(path)
-            .transform(MultiTransformation(CenterCrop(), RoundedCorners(10)))
-            .error(R.drawable.empty_image)
-            .into(imageView)
+                .load(path)
+                .transform(MultiTransformation(CenterCrop(), RoundedCorners(10)))
+                .error(R.drawable.empty_image)
+                .into(imageView)
     }
 
     @JvmStatic
@@ -125,11 +123,11 @@ object BindingUtils {
     @BindingAdapter("bind:startTime", "bind:endTime")
     fun setTime(textView: TextView, startTime: Long, endTime: Long) {
         textView.text = String.format(
-            textView.context.resources.getString(
-                R.string.string_place_holder_date,
-                DateUtils.parseDateAsString(startTime, "yyyy.MM.dd - HH:mm"),
-                DateUtils.parseDateAsString(endTime, "HH:mm")
-            )
+                textView.context.resources.getString(
+                        R.string.string_place_holder_date,
+                        DateUtils.parseDateAsString(startTime, "yyyy.MM.dd - HH:mm"),
+                        DateUtils.parseDateAsString(endTime, "HH:mm")
+                )
         )
     }
 
@@ -139,15 +137,15 @@ object BindingUtils {
         recyclerView.layoutManager = LinearLayoutManager(recyclerView.context)
         recyclerView.adapter = adapter
         val dividerItemDecoration =
-            DividerItemDecoration(recyclerView.context, LinearLayoutManager(recyclerView.context).orientation)
+                DividerItemDecoration(recyclerView.context, LinearLayoutManager(recyclerView.context).orientation)
         recyclerView.addItemDecoration(dividerItemDecoration)
     }
 
     @JvmStatic
     @BindingAdapter("setAdapter")
     fun bindMultiSnapRecyclerViewAdapter(
-        recyclerView: com.takusemba.multisnaprecyclerview.MultiSnapRecyclerView,
-        adapter: RecyclerView.Adapter<*>
+            recyclerView: com.takusemba.multisnaprecyclerview.MultiSnapRecyclerView,
+            adapter: RecyclerView.Adapter<*>
     ) {
         recyclerView.layoutManager = LinearLayoutManager(recyclerView.context, LinearLayoutManager.HORIZONTAL, false)
         recyclerView.adapter = adapter
@@ -357,11 +355,11 @@ object BindingUtils {
 
     }
 
-    @SuppressLint("SimpleDateFormat")
     @JvmStatic
     @BindingAdapter("feedDate")
     fun setDateCompareToNowDate(textView: AppCompatTextView, stringDate: String) {
-        val writeDate = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(stringDate)
+
+        val writeDate = DateUtils.parseStringToDate(stringDate, "yyyy-MM-dd HH:mm:ss")
         val min = (Date().time - writeDate.time) / 60000
         var stringTime = ""
         when {
@@ -371,8 +369,8 @@ object BindingUtils {
                 val hour = min / 60
                 stringTime = hour.toString() + "시간 전"
             }
-            min < 525600 -> stringTime = SimpleDateFormat("MM월 dd일 HH:mm").format(writeDate)
-            else -> SimpleDateFormat("yyyy년 MM월 dd일 HH:mm").format(writeDate)
+            min < 525600 -> stringTime = DateUtils.parseDateAsString(writeDate, "MM월 dd일 HH:mm")
+            else -> stringTime = DateUtils.parseDateAsString(writeDate, "yyyy년 MM월 dd일 HH:mm")
         }
         textView.text = stringTime
     }
