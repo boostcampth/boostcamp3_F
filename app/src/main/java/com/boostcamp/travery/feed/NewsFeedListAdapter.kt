@@ -37,10 +37,7 @@ class NewsFeedListAdapter(newsFeedList: ObservableList<NewsFeed>) :
                     binding.vpActionImage.visibility = View.GONE
 
                     //계속되는 viewPager adapter 생성을 막기 위한 조건
-                    if (binding.vpActionImage.adapter == null) {
-                    } else {
-                        (binding.vpActionImage.adapter as ViewPagerAdapter).clear()
-                    }
+                    (binding.vpActionImage.adapter as? ViewPagerAdapter)?.clear()
                 } else {
                     binding.vpActionImage.visibility = View.VISIBLE
                     val jsonArray = JSONArray(item.image)
