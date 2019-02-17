@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.boostcamp.travery.GlideApp
 import com.boostcamp.travery.R
-import com.boostcamp.travery.coursedetail.UserActionListAdapter
 import com.boostcamp.travery.feed.ViewPagerAdapter
 import com.boostcamp.travery.main.MainViewModel
 import com.boostcamp.travery.main.adapter.CourseListAdapter
