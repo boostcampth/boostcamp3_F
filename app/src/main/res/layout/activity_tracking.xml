@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
-        <import type="android.view.View" />
+        <import type="android.view.View"/>
 
         <variable
             name="viewmodel"
-            type="com.boostcamp.travery.mapservice.TrackingViewModel" />
+            type="com.boostcamp.travery.mapservice.TrackingViewModel"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -24,7 +24,7 @@
             android:layout_height="match_parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:context=".MapsActivity" />
+            tools:context=".MapsActivity"/>
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/info_bar"
@@ -34,7 +34,7 @@
             android:src="@drawable/history_info_cell"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="wrap_content"
@@ -47,7 +47,7 @@
             app:layout_constraintStart_toStartOf="@id/info_bar"
             app:layout_constraintTop_toTopOf="@id/info_bar"
             app:talk="@{true}"
-            app:visibility="@{!viewmodel.isService}" />
+            app:visibility="@{!viewmodel.isService}"/>
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/img_time"
@@ -59,7 +59,7 @@
             app:fadeVisibility="@{viewmodel.isService}"
             app:layout_constraintBottom_toBottomOf="@id/info_bar"
             app:layout_constraintEnd_toStartOf="@id/tv_text"
-            app:layout_constraintTop_toTopOf="@id/info_bar" />
+            app:layout_constraintTop_toTopOf="@id/info_bar"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_text"
@@ -74,7 +74,7 @@
             app:layout_constraintBottom_toBottomOf="@id/info_bar"
             app:layout_constraintEnd_toEndOf="@id/info_bar"
             app:layout_constraintStart_toStartOf="@id/info_bar"
-            app:layout_constraintTop_toTopOf="@id/info_bar" />
+            app:layout_constraintTop_toTopOf="@id/info_bar"/>
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/btn_suggest"
@@ -87,7 +87,7 @@
             app:layout_constraintHorizontal_bias="0.95"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/info_bar"
-            app:visibility='@{!viewmodel.suggestCountString.equals("0")}' />
+            app:visibility='@{!viewmodel.suggestCountString.equals("0")}'/>
 
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -102,21 +102,15 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="@+id/btn_suggest"
             app:layout_constraintTop_toTopOf="@+id/btn_suggest"
-            app:visibility='@{!viewmodel.suggestCountString.equals("0")}' />
+            app:visibility='@{!viewmodel.suggestCountString.equals("0")}'/>
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideLine_top"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.45" />
+            app:layout_constraintGuide_percent="0.45"/>
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideLine_bottom"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_begin="622dp" />
 
         <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/btn_myLocation"
@@ -129,7 +123,7 @@
             app:layout_constraintHorizontal_bias="0.95"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.8" />
+            app:layout_constraintVertical_bias="0.8"/>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/btn_run"
@@ -141,7 +135,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:maxImageSize="60dp" />
+            app:maxImageSize="60dp"/>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/btn_play"
@@ -158,7 +152,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:maxImageSize="60dp"
             app:tint="@color/ef_white"
-            tools:text="dsdsd" />
+            tools:text="dsdsd"/>
 
         <com.google.android.material.chip.Chip
             android:id="@+id/btn_save_action"
@@ -182,7 +176,7 @@
             app:layout_constraintHorizontal_bias="0.95"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.95" />
+            app:layout_constraintVertical_bias="0.95"/>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/btn_stop"
@@ -199,7 +193,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:maxImageSize="60dp"
-            app:tint="@color/ef_white" />
+            app:tint="@color/ef_white"/>
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/walk_anim"
@@ -210,7 +204,7 @@
             app:animatedVisibility="@{viewmodel.isService}"
             app:layout_constraintBottom_toBottomOf="@id/info_bar"
             app:layout_constraintStart_toStartOf="@id/info_bar"
-            app:layout_constraintTop_toTopOf="@id/info_bar" />
+            app:layout_constraintTop_toTopOf="@id/info_bar"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_acc"
@@ -219,7 +213,7 @@
             android:textSize="@dimen/font_large"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"/>
 
         <include
             android:id="@+id/footer"
@@ -231,7 +225,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.6" />
+            app:layout_constraintVertical_bias="0.6"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

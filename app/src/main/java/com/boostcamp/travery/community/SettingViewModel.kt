@@ -7,6 +7,7 @@ import android.content.Context.MODE_PRIVATE
 import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
 import com.boostcamp.travery.Constants
+import com.boostcamp.travery.R
 
 
 class SettingViewModel(application: Application) : BaseViewModel(application) {
@@ -24,12 +25,12 @@ class SettingViewModel(application: Application) : BaseViewModel(application) {
     }
 
     fun logout() {
-        if (loginBtnString.get() == "로그인") {
+        if (loginBtnString.get() == getApplication<Application>().getString(R.string.string_setting_login)) {
             openLogin.value = true
         } else {
             removePreferences()
-            userName.set("로그인을 해주세요.")
-            loginBtnString.set("로그인")
+            userName.set(getApplication<Application>().getString(R.string.string_setting_request_login))
+            loginBtnString.set(getApplication<Application>().getString(R.string.string_setting_login))
         }
     }
 
@@ -40,11 +41,11 @@ class SettingViewModel(application: Application) : BaseViewModel(application) {
     // 값 불러오기
     fun getPreferences() {
         val pref = getApplication<Application>().getSharedPreferences(Constants.PREF_NAME_LOGIN, MODE_PRIVATE)
-        userName.set(pref.getString(Constants.PREF_USER_NAME, "로그인을 해주세요."))
-        if (userName.get() == "로그인을 해주세요.") {
-            loginBtnString.set("로그인")
+        userName.set(pref.getString(Constants.PREF_USER_NAME, getApplication<Application>().getString(R.string.string_setting_request_login)))
+        if (userName.get() == getApplication<Application>().getString(R.string.string_setting_request_login)) {
+            loginBtnString.set(getApplication<Application>().getString(R.string.string_setting_login))
         } else {
-            loginBtnString.set("로그아웃")
+            loginBtnString.set(getApplication<Application>().getString(R.string.string_setting_logout))
         }
         autoUploadState.set(pref.getBoolean(Constants.PREF_AUTO_UPLOAD, false))
     }

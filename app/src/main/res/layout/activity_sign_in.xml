@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="viewModel"
+            type="com.boostcamp.travery.community.SignInViewModel"/>
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/setting_backgroundDark_alpha30">
+
+        <include
+            android:id="@+id/toolBar_sign"
+            layout="@layout/toolbar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/img_user"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:background="@drawable/btn_circle"
+            android:src="@drawable/ic_add_a_photo_black_24dp"
+            app:layout_constraintBottom_toTopOf="@id/et_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolBar_sign"/>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideLine_top"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.5"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/setting_backgroundDark_alpha60"
+            app:layout_constraintBottom_toTopOf="@+id/et_title"/>
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/et_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/setting_content"
+            android:drawableStart="@drawable/more_main_account"
+            android:focusable="true"
+            android:hint="@string/string_et_course_add_hint"
+            android:inputType="text"
+            android:maxLength="20"
+            android:onTextChanged="@{(text, start, before, count) -> viewModel.onTextChange(text)}"
+            android:padding="15dp"
+            android:singleLine="true"
+            android:textSize="@dimen/font_title"
+            app:layout_constraintBottom_toTopOf="@+id/btn_signIn"
+        />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_signIn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:focusable="true"
+            android:hint="@string/string_et_course_add_hint"
+            android:inputType="text"
+            android:maxLength="20"
+            android:onClick="@{(view) -> viewModel.onClick()}"
+            android:padding="15dp"
+            android:singleLine="true"
+            android:text="@string/string_setting_sign"
+            android:textColor="@color/ef_white"
+            android:textSize="@dimen/font_title"
+            app:layout_constraintBottom_toBottomOf="parent"
+        />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -22,6 +22,7 @@
     <color name="colorBackground">#F6F6F6</color>
 
     <color name="setting_background">#F6F6F6</color>
+    <color name="setting_backgroundDark_alpha30">#4DC3C3C3</color>
     <color name="setting_backgroundDark_alpha60">#99C3C3C3</color>
     <color name="head_backgroundDark">#72F1F1F1</color>
 </resources>

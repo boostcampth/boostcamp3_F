@@ -51,7 +51,10 @@
     <string name="string_tv_image">사진</string>
 
     <string name="string_setting_user">계정</string>
+    <string name="string_setting_login">로그인</string>
     <string name="string_setting_logout">로그아웃</string>
+    <string name="string_setting_sign">가입하기</string>
+    <string name="string_setting_request_login">로그인을 해주세요.</string>
     <string name="string_setting_auto_upload">활동 자동 공유</string>
     <string name="string_setting_version">버전</string>
     <string name="string_setting_about">앱에 관하여</string>
@@ -92,6 +95,8 @@
 
     <string name="base_image_url">http://35.229.76.14/uploads/</string>
     <string name="string_tv_share">공유하기</string>
+    <string name="string_activity_sign_toolbar">가입</string>
+    <string name="string_activity_setting_toolbar">설정</string>
     <string name="string_activity_save_useraction_toolbar">활동 추가</string>
     <string name="string_activity_save_course_toolbar">코스 저장</string>
     <string name="string_tracking_initial_distance">0m</string>
