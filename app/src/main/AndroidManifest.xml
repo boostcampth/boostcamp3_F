@@ -21,18 +21,20 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
-
+        <activity android:name=".community.SignInActivity"
+                  android:windowSoftInputMode="adjustResize"/>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key"/>
+
         <activity android:name=".community.SettingActivity"/>
         <activity android:name=".community.LoginActivity"/>
-        <activity android:name=".useraction.list.UserActionListActivity" />
-        <activity android:name=".useraction.detail.UserActionDetailActivity" />
+        <activity android:name=".useraction.list.UserActionListActivity"/>
+        <activity android:name=".useraction.detail.UserActionDetailActivity"/>
         <activity
             android:name=".useraction.save.UserActionSaveActivity"
-            android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".mapservice.savecourse.CourseSaveActivity" />
+            android:windowSoftInputMode="adjustResize"/>
+        <activity android:name=".mapservice.savecourse.CourseSaveActivity"/>
         <activity
             android:name=".mapservice.TrackingActivity"
             android:launchMode="singleTask"
@@ -53,7 +55,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".mapservice.MapTrackingService" />
+        <service android:name=".mapservice.MapTrackingService"/>
     </application>
 
 </manifest>

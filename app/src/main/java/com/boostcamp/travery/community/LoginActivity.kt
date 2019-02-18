@@ -44,8 +44,10 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>() {
             offProgress()
             when (it) {
                 "success" -> {
-                    setResult(Activity.RESULT_OK, Intent())
-                    finish()
+                    //TODO 서버 처리 과정
+                    //setResult(Activity.RESULT_OK, Intent())
+                    //finish()
+                    startActivityForResult(Intent(this, SignInActivity::class.java), Constants.SIGN_IN_SERVER)
                 }
                 else -> it.toast(this)
             }
@@ -54,6 +56,10 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>() {
         sign_in_button.setOnClickListener {
             val signInIntent = mGoogleSignInClient.signInIntent
             startActivityForResult(signInIntent, Constants.SIGN_IN_GOOGLE)
+        }
+
+        btn_close.setOnClickListener {
+            finish()
         }
     }
 
