@@ -19,9 +19,12 @@ import com.boostcamp.travery.R
 import com.boostcamp.travery.base.BaseActivity
 import com.boostcamp.travery.data.model.Course
 import com.boostcamp.travery.data.model.Suggestion
+import com.boostcamp.travery.data.model.UserAction
 import com.boostcamp.travery.databinding.ActivityTrackingBinding
 import com.boostcamp.travery.mapservice.savecourse.CourseSaveActivity
+import com.boostcamp.travery.useraction.detail.UserActionDetailActivity
 import com.boostcamp.travery.useraction.save.UserActionSaveActivity
+import com.boostcamp.travery.utils.CustomMarker
 import com.boostcamp.travery.utils.toast
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -33,7 +36,7 @@ import io.reactivex.Completable
 import kotlinx.android.synthetic.main.activity_tracking.*
 import kotlinx.android.synthetic.main.item_dialog_footer.*
 
-class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCallback {
+class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     override val layoutResourceId: Int
         get() = R.layout.activity_tracking
 
@@ -44,6 +47,7 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
     private var polyline: Polyline? = null
     private var polylineOptions: PolylineOptions = PolylineOptions()
     private var isBound = false
+    private var tagNum = 0
 
     private val viewModel by lazy {
         ViewModelProviders.of(this).get(TrackingViewModel::class.java)
@@ -60,6 +64,7 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
+        mMap.setOnMarkerClickListener(this)
 
         polylineOptions.color(Color.BLUE)
                 .geodesic(true)
@@ -82,6 +87,18 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
     override fun onDestroy() {
         doUnbindService()
         super.onDestroy()
+    }
+
+    override fun onMarkerClick(marker: Marker): Boolean {
+        when (marker.tag) {
+            null -> return false
+            else -> {
+                startActivity(Intent(this, UserActionDetailActivity::class.java).apply {
+                    putExtra(Constants.EXTRA_USER_ACTION, viewModel.getUserAction(marker.tag.toString().toInt()))
+                })
+            }
+        }
+        return true
     }
 
     fun startService(v: View) {
@@ -149,16 +166,8 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
     fun saveUserAction(v: View) {
         mapService.setCanSuggestFalse()
         startActivityForResult(Intent(this, UserActionSaveActivity::class.java).apply {
-            when (viewModel.getIsServiceState()) {
-                true -> {
-                    putExtra(Constants.EXTRA_LATITUDE, myLocationMarker.position.latitude)
-                    putExtra(Constants.EXTRA_LONGITUDE, myLocationMarker.position.longitude)
-                }
-                false -> {
-                    putExtra(Constants.EXTRA_LATITUDE, mMap.cameraPosition.target.latitude)
-                    putExtra(Constants.EXTRA_LONGITUDE, mMap.cameraPosition.target.longitude)
-                }
-            }
+            putExtra(Constants.EXTRA_LATITUDE, myLocationMarker.position.latitude)
+            putExtra(Constants.EXTRA_LONGITUDE, myLocationMarker.position.longitude)
             putExtra(Constants.EXTRA_COURSE_CODE, viewModel.startTime)
         }, Constants.REQUEST_CODE_USERACTION)
 
@@ -240,9 +249,13 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
                     viewModel.getTimeCodeList().forEach {
                         polylineOptions.add(it.coordinate)
                     }
-                    viewModel.userActionLocateList.forEach {
-                        mMap.addMarker(MarkerOptions().position(it)
-                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_pin)))
+                    viewModel.userActionList.forEach {
+                        mMap.addMarker(MarkerOptions().position(
+                                LatLng(it.latitude, it.longitude))
+                                .icon(BitmapDescriptorFactory.fromBitmap(CustomMarker.create(this@TrackingActivity, it.mainImage))))
+                                .tag = tagNum
+
+                        tagNum++
                     }
                 }.doOnComplete {
                     polyline = mMap.addPolyline(polylineOptions)
@@ -285,15 +298,15 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
             when (requestCode) {
                 Constants.REQUEST_CODE_USERACTION -> data?.let {
                     if (viewModel.getIsServiceState()) {
+                        val userAction: UserAction = it.getParcelableExtra(Constants.EXTRA_USER_ACTION)
                         mMap.addMarker(MarkerOptions().position(
-                                LatLng(it.getDoubleExtra(Constants.EXTRA_LATITUDE, 0.0),
-                                        it.getDoubleExtra(Constants.EXTRA_LONGITUDE, 0.0)))
-                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_pin)))
+                                LatLng(userAction.latitude, userAction.longitude))
+                                .icon(BitmapDescriptorFactory.fromBitmap(CustomMarker.create(this@TrackingActivity, userAction.mainImage))))
+                                .tag = tagNum
 
-                        viewModel.addUserActionLocate(LatLng(
-                                it.getDoubleExtra(Constants.EXTRA_LATITUDE, 0.0),
-                                it.getDoubleExtra(Constants.EXTRA_LONGITUDE, 0.0)
-                        ))
+                        tagNum++
+
+                        viewModel.addUserAction(userAction)
                     }
                 }
             }

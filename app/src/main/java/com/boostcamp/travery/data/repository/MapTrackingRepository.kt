@@ -2,8 +2,8 @@ package com.boostcamp.travery.data.repository
 
 import com.boostcamp.travery.data.model.Suggestion
 import com.boostcamp.travery.data.model.TimeCode
+import com.boostcamp.travery.data.model.UserAction
 import com.boostcamp.travery.eventbus.EventBus
-import com.google.android.gms.maps.model.LatLng
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 
@@ -18,7 +18,7 @@ class MapTrackingRepository {
     private val second: PublishSubject<Int> = PublishSubject.create()
     private val distance: PublishSubject<Long> = PublishSubject.create()
 
-    private val userActionLocateList = ArrayList<LatLng>()
+    private val userActionList = ArrayList<UserAction>()
 
     private var startTime = 0L
     private var totalDistance = 0L
@@ -108,7 +108,7 @@ class MapTrackingRepository {
     fun clearData() {
         timeCodeList.clear()
         suggestList.clear()
-        userActionLocateList.clear()
+        userActionList.clear()
 
         startTime = 0L
         totalDistance = 0L
@@ -117,12 +117,16 @@ class MapTrackingRepository {
         EventBus.sendEvent(ServiceStartEvent(startTime))
     }
 
-    fun addUserActionLocate(locate: LatLng) {
-        userActionLocateList.add(locate)
+    fun addUserAction(userAction: UserAction) {
+        userActionList.add(userAction)
     }
 
-    fun getUserActionLocateList(): ArrayList<LatLng> {
-        return userActionLocateList
+    fun getUserAction(position: Int): UserAction {
+        return userActionList[position]
+    }
+
+    fun getUserActionList(): ArrayList<UserAction> {
+        return userActionList
     }
 }
 
