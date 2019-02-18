@@ -364,15 +364,15 @@ object BindingUtils {
         val writeDate = DateUtils.parseStringToDate(stringDate, "yyyy-MM-dd HH:mm:ss")
         val min = (Date().time - writeDate.time) / 60000
         var stringTime = ""
-        when {
-            min == 0L -> stringTime = "방금"
-            min < 60 -> stringTime = min.toString() + "분 전"
+        stringTime = when {
+            min == 0L -> "방금"
+            min < 60 -> min.toString() + "분 전"
             min < 1440 -> {
                 val hour = min / 60
-                stringTime = hour.toString() + "시간 전"
+                hour.toString() + "시간 전"
             }
-            min < 525600 -> stringTime = DateUtils.parseDateAsString(writeDate, "MM월 dd일 HH:mm")
-            else -> stringTime = DateUtils.parseDateAsString(writeDate, "yyyy년 MM월 dd일 HH:mm")
+            min < 525600 -> DateUtils.parseDateAsString(writeDate, "MM월 dd일 HH:mm")
+            else -> DateUtils.parseDateAsString(writeDate, "yyyy년 MM월 dd일 HH:mm")
         }
         textView.text = stringTime
     }

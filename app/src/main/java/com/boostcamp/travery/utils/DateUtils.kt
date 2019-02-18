@@ -37,4 +37,15 @@ object DateUtils {
 
         return Math.abs(toDays - fromDays)
     }
+
+    fun getTotalTime(time: Long = System.currentTimeMillis()):String{
+        val min=time/60000
+        val stringTime=when{
+            min<0L-> parseDateAsString(time,"ss초")
+            min<60-> parseDateAsString(time,"mm분 ss초")
+            min<1440-> parseDateAsString(time,"HH시간 mm분 ss초")
+            else-> parseDateAsString(time,"dd일 HH시간 mm분 ss초")
+        }
+        return stringTime
+    }
 }

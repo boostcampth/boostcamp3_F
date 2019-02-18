@@ -23,20 +23,20 @@
             android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/detail_seekbar"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@+id/toolbar"
             tools:context=".MapsActivity"/>
 
         <com.warkiz.widget.IndicatorSeekBar
             android:id="@+id/detail_seekbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="60dp"
-            android:layout_marginEnd="60dp"
-            android:paddingTop="20dp"
-            android:paddingBottom="20dp"
+
+           android:padding="20dp"
+            android:background="@android:color/white"
+
+
             app:isb_indicator_color="@color/ef_black_alpha_50"
             app:isb_indicator_top_content_layout="@layout/item_seekbar_content"
             app:isb_max="0"
@@ -81,14 +81,13 @@
 
         <com.takusemba.multisnaprecyclerview.MultiSnapRecyclerView
             android:id="@+id/rv_useraction_list"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:clipToPadding="false"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
             android:orientation="horizontal"
-            android:paddingStart="20dp"
-            android:paddingEnd="20dp"
-            app:direction='@{"down"}'
-            app:isAnimated="@{viewModel.isAnimated}"
+            android:background="@android:color/white"
+            android:clipToPadding="false"
+
+
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
