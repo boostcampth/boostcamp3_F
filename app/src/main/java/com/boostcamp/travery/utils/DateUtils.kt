@@ -6,13 +6,6 @@ import java.util.*
 object DateUtils {
     private const val DATE_PATTERN = "yyyy.MM.dd"
 
-    fun getDate(date: Long = System.currentTimeMillis()): List<Int> {
-        val dateFormat = SimpleDateFormat(DATE_PATTERN, Locale.getDefault())
-        return dateFormat.format(Date(date)).toString().split(".").map {
-            it.toInt()
-        }
-    }
-
     fun parseDateAsString(date: Long = System.currentTimeMillis(), pattern: String = DATE_PATTERN): String {
         return SimpleDateFormat(pattern, Locale.getDefault()).format(Date(date)).toString()
     }
@@ -36,5 +29,16 @@ object DateUtils {
         }
 
         return Math.abs(toDays - fromDays)
+    }
+
+    fun getTotalTime(time: Long = System.currentTimeMillis()): String {
+        val min = time / 60000
+        val stringTime = when {
+            min < 0L -> parseDateAsString(time, "ss초")
+            min < 60 -> parseDateAsString(time, "mm분 ss초")
+            min < 1440 -> parseDateAsString(time, "HH시간 mm분 ss초")
+            else -> parseDateAsString(time, "dd일 HH시간 mm분 ss초")
+        }
+        return stringTime
     }
 }

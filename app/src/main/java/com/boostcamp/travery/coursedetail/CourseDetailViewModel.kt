@@ -1,8 +1,8 @@
 package com.boostcamp.travery.coursedetail
 
 import android.app.Application
+import android.location.Geocoder
 import androidx.databinding.ObservableArrayList
-import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
 import androidx.databinding.ObservableInt
 import androidx.lifecycle.MutableLiveData
@@ -11,13 +11,15 @@ import com.boostcamp.travery.base.BaseViewModel
 import com.boostcamp.travery.data.model.Course
 import com.boostcamp.travery.data.model.TimeCode
 import com.boostcamp.travery.data.model.UserAction
+import com.boostcamp.travery.utils.DateUtils
 import com.google.android.gms.maps.model.LatLng
+import com.warkiz.widget.IndicatorSeekBar
 import com.warkiz.widget.OnSeekChangeListener
+import com.warkiz.widget.SeekParams
 import io.reactivex.Flowable
+import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import com.warkiz.widget.IndicatorSeekBar
-import com.warkiz.widget.SeekParams
 
 
 class CourseDetailViewModel(application: Application) : BaseViewModel(application) {
@@ -31,7 +33,6 @@ class CourseDetailViewModel(application: Application) : BaseViewModel(applicatio
     val userActionListAdapter = UserActionListAdapter(userActionList)
     val latLngList = MutableLiveData<List<LatLng>>() //저장된 코스를 맵에 보여주기 위한 좌표리스트
     val markerList = MutableLiveData<List<UserAction>>() //지
-    val isAnimated = ObservableBoolean()
     val scrollTo = ObservableInt()
     val totalDistance = ObservableField<String>()
 
@@ -55,10 +56,12 @@ class CourseDetailViewModel(application: Application) : BaseViewModel(applicatio
     fun init(course: Course) {
         this.course = course
 
-        totalDistance.set(when (course.distance >= 1000) {
-            true -> "${String.format("%.2f", course.distance / 1000.0)}km"
-            false -> "${course.distance}m"
-        })
+        totalDistance.set(
+                when (course.distance >= 1000) {
+                    true -> "${String.format("%.2f", course.distance / 1000.0)}km"
+                    false -> "${course.distance}m"
+                }
+        )
         val tempList = ArrayList<LatLng>()
         //저장소로부터 TimeCode리스트를 받아 ViewModel의 TimeCode리스트와 LatLng리스트로 저장
         addDisposable(courseDetailRepository.loadCoordinateListFromJsonFile(course.startTime.toString())
@@ -85,26 +88,44 @@ class CourseDetailViewModel(application: Application) : BaseViewModel(applicatio
     //코스에 대한 활동 리스트를 가져옴
     private fun loadUserActionList() {
         val start = UserAction(
-                "산뜻한 출발",
+                course.title,
+                course.body,
+                hashTag = course.theme,
+                mainImage = DateUtils.parseDateAsString(course.startTime, "yyyy.MM.dd HH:mm") +
+                        " ~ " + DateUtils.parseDateAsString(course.endTime, "HH:mm"),
+                subImage = "${String.format("%.2f", course.distance / 1000.0)}km",
                 latitude = latLngList.value?.let { it[0].latitude } ?: .0,
                 longitude = latLngList.value?.let { it[0].longitude } ?: .0
         )
-        val end = UserAction(
-                "도오착",
-                latitude = latLngList.value?.let { it[it.size - 1].latitude } ?: .0,
-                longitude = latLngList.value?.let { it[it.size - 1].longitude } ?: .0
-        )
+        val endLatLng = latLngList.value?.get(latLngList.value?.size?.minus(1) ?: 0)
+                ?: LatLng(0.0, 0.0)
+        addDisposable(Single.fromCallable {
+            Geocoder(getApplication()).getFromLocation(endLatLng.latitude, endLatLng.longitude, 1)[0]
+        }.map {
+            val split = it.getAddressLine(0).split(" ")
+            UserAction(
+                    "코스정보",
+                    split.subList(1, split.size).fold("") { acc, s -> "$acc $s" },
+                    mainImage = "총 걸린 시간: " + DateUtils.getTotalTime(course.endTime - course.startTime),
+                    latitude = latLngList.value?.let { latLng -> latLng[latLng.size - 1].latitude }
+                            ?: .0,
+                    longitude = latLngList.value?.let { latLng -> latLng[latLng.size - 1].longitude }
+                            ?: .0
+            )
+        }.flatMap {
+            Flowable.merge(Flowable.just(start),
+                    (courseDetailRepository.getUserActionForCourse(course).flatMap { list -> Flowable.fromIterable(list) }),
+                    Flowable.just(it)).toList()
+        }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    userActionList.addAll(it)
+                    markerList.value = it
+                }, {
 
-        addDisposable(
-                Flowable.merge(Flowable.just(start),
-                        (courseDetailRepository.getUserActionForCourse(course).flatMap { list -> Flowable.fromIterable(list) }), Flowable.just(end))
-                        .toList()
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe { it ->
-                            userActionList.addAll(it)
-                            markerList.value = it
-                        })
+                })
+        )
     }
 
 
@@ -113,14 +134,9 @@ class CourseDetailViewModel(application: Application) : BaseViewModel(applicatio
      */
     fun markerClick(position: Int) {
         scrollTo.set(position)
-        isAnimated.set(false)
         //활동 마커에 대해서만 바텀 뷰를 보여주기 위함
     }
 
-    fun mapClick() {
-        //마커 클릭 하지 않았음을 알림.
-        isAnimated.set(!isAnimated.get())
-    }
 
     fun updateCurUseraction(position: Int) {
         curUseraction.value = markerList.value?.get(position)
