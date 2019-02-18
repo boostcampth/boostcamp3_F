@@ -16,6 +16,10 @@
                 android:id="@+id/nav_slideshow"
                 android:icon="@drawable/ic_menu_manage"
                 android:title="활동 저장"/>
+        <item
+            android:id="@+id/nav_save"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="코스 저장"/>
     </group>
 
 </menu>

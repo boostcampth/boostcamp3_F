@@ -13,6 +13,7 @@ import com.boostcamp.travery.data.local.db.AppDatabase
 import com.boostcamp.travery.data.model.Course
 import com.boostcamp.travery.data.model.TimeCode
 import com.boostcamp.travery.eventbus.EventBus
+import com.boostcamp.travery.utils.DateUtils
 import com.boostcamp.travery.utils.FileUtils
 import com.google.android.gms.maps.model.LatLng
 import io.reactivex.Completable
@@ -33,7 +34,11 @@ class CourseSaveViewModel(application: Application) : BaseViewModel(application)
         get() = if (field.isEmpty()) "활동" else field
 
     val theme = ObservableField<String>("")
-    lateinit var staticMapURL: String
+    private lateinit var staticMapURL: String
+    val url = ObservableField<String>()
+    val distance = ObservableField<String>()
+
+    val today = DateUtils.parseDateAsString(System.currentTimeMillis(), "yyyy.MM.dd EEE요일")
 
     private val courseRepository = CourseRepository.getInstance(
             AppDatabase.getInstance(application).daoCourse(),
@@ -41,36 +46,46 @@ class CourseSaveViewModel(application: Application) : BaseViewModel(application)
             application.filesDir
     )
 
-    private fun makeCoordinateJson(timeCodeList: ArrayList<TimeCode>): JSONObject {
+    fun generateStaticMap(bundle: Bundle?) {
+        val timeCodeList = bundle?.getParcelableArrayList(Constants.EXTRA_COURSE_LOCATION_LIST) ?: listOf<TimeCode>()
 
+        val marker = if (timeCodeList.size >= 2) {
+            "&markers=color:red%7C${timeCodeList[0].coordinate.latitude},${timeCodeList[0].coordinate.longitude}" +
+                    "&markers=color:blue%7C${timeCodeList.last().coordinate.latitude},${timeCodeList.last().coordinate.longitude}"
+        } else ""
+
+        val urlPath =
+                StringBuilder("https://maps.googleapis.com/maps/api/staticmap?size=200x200$marker&scale=2&path=weight:5%7Ccolor:0x02d864ff")
+
+        for (timeCode in timeCodeList) {
+            urlPath.append("|${timeCode.coordinate.latitude},${timeCode.coordinate.longitude}")
+        }
+
+        urlPath.append("&key=${getApplication<Application>().getString(R.string.google_maps_key)}")
+
+        staticMapURL = urlPath.toString()
+        url.set(staticMapURL)
+
+        val dist = bundle?.let { it.getParcelable<Course>(Constants.EXTRA_COURSE)?.distance.toString() } ?: "0"
+        distance.set("총 거리 : ${dist}m")
+    }
+
+    private fun makeCoordinateJson(timeCodeList: ArrayList<TimeCode>): JSONObject {
         val coordinates = JSONObject()
         val coordinateItem = JSONArray()
         val colms = JSONObject()
 
-        var marker = ""
-        if (timeCodeList.size >= 2) {
-            marker = "&markers=color:red%7C${timeCodeList[0].coordinate.latitude},${timeCodeList[0].coordinate.longitude}" +
-                    "&markers=color:blue%7C${timeCodeList.last().coordinate.latitude},${timeCodeList.last().coordinate.longitude}"
-        }
-
-        val urlPath =
-                StringBuilder("https://maps.googleapis.com/maps/api/staticmap?size=200x200$marker&scale=2&path=weight:5%7Ccolor:0x02d864ff")
         for (timecode in timeCodeList) {
             val coordinate = JSONObject()
             coordinate.put("lat", timecode.coordinate.latitude)
             coordinate.put("lng", timecode.coordinate.longitude)
             coordinate.put("time", timecode.timeStamp)
             coordinateItem.put(coordinate)
-
-            urlPath.append("|${timecode.coordinate.latitude},${timecode.coordinate.longitude}")
         }
-        urlPath.append("&key=${getApplication<Application>().getString(R.string.google_maps_key)}")
 
         colms.put("name", timeCodeList[0].timeStamp)
         coordinates.put("colms", colms)
         coordinates.put("coordinate", coordinateItem)
-
-        staticMapURL = urlPath.toString()
 
         return coordinates
     }

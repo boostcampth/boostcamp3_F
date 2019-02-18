@@ -199,7 +199,7 @@ object BindingUtils {
     @BindingAdapter("imageAdapter")
     fun setAdapter(recyclerView: RecyclerView, viewModel: UserActionSaveViewModel) {
         val adapter = UserActionImageListAdapter(viewModel.imageList).apply {
-            onAddItemClickListener = viewModel::onAddItemClick
+            onRemoveItemClickListener = viewModel::onRemoveItemClick
         }
         recyclerView.apply {
             layoutManager = LinearLayoutManager(recyclerView.context, LinearLayoutManager.HORIZONTAL, false)

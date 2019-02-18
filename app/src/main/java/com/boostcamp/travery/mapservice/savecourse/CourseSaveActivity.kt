@@ -9,7 +9,6 @@ import androidx.lifecycle.ViewModelProviders
 import com.boostcamp.travery.R
 import com.boostcamp.travery.base.BaseActivity
 import com.boostcamp.travery.databinding.ActivityCourseSaveBinding
-import com.boostcamp.travery.utils.DateUtils
 import kotlinx.android.synthetic.main.activity_course_save.*
 
 class CourseSaveActivity : BaseActivity<ActivityCourseSaveBinding>() {
@@ -29,13 +28,12 @@ class CourseSaveActivity : BaseActivity<ActivityCourseSaveBinding>() {
         }
 
         viewDataBinding.savevm = ViewModelProviders.of(this).get(CourseSaveViewModel::class.java)
+        viewDataBinding.savevm?.generateStaticMap(intent.extras)
 
         initView()
     }
 
     private fun initView() {
-        tv_date_cur.text = DateUtils.parseDateAsString()
-
         ArrayAdapter.createFromResource(
                 this,
                 R.array.theme_array,
