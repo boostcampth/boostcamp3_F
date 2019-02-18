@@ -1,4 +1,4 @@
-package com.boostcamp.travery.main
+package com.boostcamp.travery.course.list
 
 import android.app.Application
 import android.content.res.Resources
@@ -8,15 +8,15 @@ import com.boostcamp.travery.Injection
 import com.boostcamp.travery.MyApplication
 import com.boostcamp.travery.R
 import com.boostcamp.travery.base.BaseViewModel
+import com.boostcamp.travery.course.list.adapter.viewholder.GroupItem
 import com.boostcamp.travery.data.model.Course
 import com.boostcamp.travery.eventbus.EventBus
-import com.boostcamp.travery.main.adapter.viewholder.GroupItem
 import com.boostcamp.travery.mapservice.savecourse.CourseSaveEvent
 import com.boostcamp.travery.utils.DateUtils
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
-class MainViewModel(application: Application) : BaseViewModel(application) {
+class CourseListViewModel(application: Application) : BaseViewModel(application) {
     val data = ObservableArrayList<Any>()
 
     private val mainRepository = Injection.provideCourseRepository(application)

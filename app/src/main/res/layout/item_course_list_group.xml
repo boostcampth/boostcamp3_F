@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+        xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
         <variable
             name="item"
-            type="com.boostcamp.travery.main.adapter.viewholder.GroupItem" />
+            type="com.boostcamp.travery.course.list.adapter.viewholder.GroupItem"/>
     </data>
 
     <LinearLayout
@@ -17,19 +17,12 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
             android:text="@{item.title}"
             android:textSize="18sp"
             android:textStyle="bold"
-            tools:text="오늘" />
-
-        <!--<View-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="2dp"-->
-        <!--android:layout_marginStart="5dp"-->
-        <!--android:layout_marginEnd="5dp"-->
-        <!--android:background="@android:color/darker_gray" />-->
+            tools:text="오늘"/>
 
     </LinearLayout>
 </layout>
