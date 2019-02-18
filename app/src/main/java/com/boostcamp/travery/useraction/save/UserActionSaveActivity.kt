@@ -3,17 +3,15 @@ package com.boostcamp.travery.useraction.save
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.appcompat.widget.Toolbar
-import androidx.core.content.ContextCompat
-import androidx.core.content.res.ColorStateListInflaterCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.boostcamp.travery.Constants
@@ -23,7 +21,6 @@ import com.boostcamp.travery.databinding.ActivitySaveUserActionBinding
 import com.boostcamp.travery.utils.toast
 import com.esafirm.imagepicker.features.ImagePicker
 import com.google.android.material.chip.Chip
-import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_save_user_action.*
 
 class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), UserActionSaveViewModel.View {
@@ -31,7 +28,6 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
         get() = R.layout.activity_save_user_action
 
     private lateinit var viewModel: UserActionSaveViewModel
-    private val compositeDisposable = CompositeDisposable()
 
     private var hashTagSwitch = false
 
@@ -85,10 +81,11 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
         }
 
         btn_image_add.setOnClickListener {
-            btn_image_add.isSelected = true
             ImagePicker.create(this)
                     .folderMode(true)
+                    .imageDirectory(resources.getString(R.string.app_name))
                     .toolbarFolderTitle(getString(R.string.string_folder_title))
+                    .theme(R.style.ImagePickerTheme)
                     .start()
         }
 
@@ -176,6 +173,7 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (ImagePicker.shouldHandle(requestCode, resultCode, data)) {
+            btn_image_add.isSelected = true
             ImagePicker.getImages(data).forEach {
                 rv_save_useraction_image_list.apply {
                     visibility = View.VISIBLE
@@ -188,8 +186,15 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
         super.onActivityResult(requestCode, resultCode, data)
     }
 
-    override fun onDestroy() {
-        compositeDisposable.clear()
-        super.onDestroy()
+    override fun onBackPressed() {
+        AlertDialog.Builder(this).apply {
+            setMessage(resources.getString(R.string.dialog_message))
+            setPositiveButton(resources.getString(R.string.dialog_positive)) { _, _ ->
+                super.onBackPressed()
+            }
+            setNegativeButton(resources.getString(R.string.dialog_negative)) { dialog, _ ->
+                dialog.cancel()
+            }
+        }.create().show()
     }
 }

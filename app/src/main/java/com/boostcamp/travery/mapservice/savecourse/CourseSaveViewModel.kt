@@ -47,7 +47,8 @@ class CourseSaveViewModel(application: Application) : BaseViewModel(application)
     )
 
     fun generateStaticMap(bundle: Bundle?) {
-        val timeCodeList = bundle?.getParcelableArrayList(Constants.EXTRA_COURSE_LOCATION_LIST) ?: listOf<TimeCode>()
+        val timeCodeList = bundle?.getParcelableArrayList(Constants.EXTRA_COURSE_LOCATION_LIST)
+                ?: listOf<TimeCode>()
 
         val marker = if (timeCodeList.size >= 2) {
             "&markers=color:red%7C${timeCodeList[0].coordinate.latitude},${timeCodeList[0].coordinate.longitude}" +
@@ -66,8 +67,13 @@ class CourseSaveViewModel(application: Application) : BaseViewModel(application)
         staticMapURL = urlPath.toString()
         url.set(staticMapURL)
 
-        val dist = bundle?.let { (it.getParcelable<Course>(Constants.EXTRA_COURSE)?.distance)?.div(1000.0).toString() } ?: "0"
-        distance.set("총 거리 : ${dist}km")
+        val tDistance = bundle?.let { (it.getParcelable<Course>(Constants.EXTRA_COURSE)?.distance) }
+                ?: 0
+        if (tDistance < 1000) {
+            distance.set("총 거리 : ${tDistance}m")
+        } else {
+            distance.set("총 거리 : ${tDistance / 1000.0}km")
+        }
     }
 
     private fun makeCoordinateJson(timeCodeList: ArrayList<TimeCode>): JSONObject {

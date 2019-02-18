@@ -87,4 +87,8 @@
     <string name="string_activity_save_useraction_toolbar">활동 추가</string>
     <string name="string_activity_save_course_toolbar">코스 저장</string>
     <string name="string_tracking_initial_distance">0m</string>
+
+    <string name="dialog_message">기록을 종료하시겠습니까?</string>
+    <string name="dialog_positive">예</string>
+    <string name="dialog_negative">아니오</string>
 </resources>

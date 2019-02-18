@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ArrayAdapter
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.ViewModelProviders
 import com.boostcamp.travery.R
@@ -58,4 +59,17 @@ class CourseSaveActivity : BaseActivity<ActivityCourseSaveBinding>() {
 
         else -> super.onOptionsItemSelected(item)
     }
+
+    override fun onBackPressed() {
+        AlertDialog.Builder(this).apply {
+            setMessage(resources.getString(R.string.dialog_message))
+            setPositiveButton(resources.getString(R.string.dialog_positive)) { _, _ ->
+                super.onBackPressed()
+            }
+            setNegativeButton(resources.getString(R.string.dialog_negative)) { dialog, _ ->
+                dialog.cancel()
+            }
+        }.create().show()
+    }
+
 }

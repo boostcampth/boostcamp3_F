@@ -79,9 +79,8 @@
 
                         <androidx.appcompat.widget.AppCompatEditText
                             android:id="@+id/et_selected_theme"
-                            android:layout_width="0dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
                             android:background="@null"
                             android:hint="@string/string_et_course_add_theme"
                             android:maxLength="15"
