@@ -1,6 +1,5 @@
 package com.boostcamp.travery.coursedetail
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.ObservableList
@@ -10,7 +9,6 @@ import com.boostcamp.travery.base.ObservableRecyclerViewAdapter
 import com.boostcamp.travery.data.model.UserAction
 import com.boostcamp.travery.databinding.ItemUseractionDetailBinding
 import com.boostcamp.travery.databinding.ItemUseractionEndpointBinding
-import com.boostcamp.travery.utils.toImage
 
 class UserActionListAdapter(userActionList: ObservableList<UserAction>) :
         ObservableRecyclerViewAdapter<UserAction, RecyclerView.ViewHolder>(userActionList) {
@@ -28,7 +26,6 @@ class UserActionListAdapter(userActionList: ObservableList<UserAction>) :
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        Log.e("TopListAdapter", "" + position)
         if (holder is ActivityEmptyViewHolder) {
             //아이템이 0번째라면 시작 이미지
             if (position == 0) {
@@ -40,12 +37,7 @@ class UserActionListAdapter(userActionList: ObservableList<UserAction>) :
             holder.binding.executePendingBindings()
         } else if (holder is ActivityViewHolder) {
             holder.binding.root.setOnClickListener { onItemClickListener?.invoke(getItem(position)) }
-            val tens = position % 100 / 10
-            val units = position % 10
-            holder.binding.ivTens.setImageResource(tens.toImage())
-            holder.binding.ivUnits.setImageResource(units.toImage())
             holder.binding.item = getItem(position)
-            Log.e("USER", getItem(position).toString())
             holder.binding.executePendingBindings()
         }
     }

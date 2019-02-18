@@ -1,95 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
-
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_gravity="center_vertical">
     <data>
         <variable
             name="item"
             type="com.boostcamp.travery.data.model.UserAction"/>
     </data>
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/ll_useraction_info"
-        style="@style/Widget.MaterialComponents.CardView"
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="120dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:background="@drawable/bg_theme_white"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:padding="10dp">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
+        <ImageView
+            android:id="@+id/iv_useraction_mainimg"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginStart="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:roundedImage="@{item.mainImage}"/>
+        <TextView
+            android:id="@+id/tv_useraction_title"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:padding="10dp">
-
-            <ImageView
-                android:id="@+id/iv_tens"
-                android:layout_width="30dp"
-                android:layout_height="40dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@color/bckg"/>
-
-            <ImageView
-                android:id="@+id/iv_units"
-                android:layout_width="30dp"
-                android:layout_height="40dp"
-                app:layout_constraintStart_toEndOf="@+id/iv_tens"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@color/bckg"/>
-
-            <ImageView
-                android:id="@+id/iv_useraction_mainimg"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:roundedImage="@{item.mainImage}"/>
-
-            <TextView
-                android:id="@+id/tv_useraction_title"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
-                android:ellipsize="end"
-                android:singleLine="true"
-                android:text="@{item.title}"
-                android:textColor="@android:color/black"
-                android:textSize="@dimen/font_course_user_action_title"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@+id/iv_units"
-                app:layout_constraintEnd_toStartOf="@+id/iv_useraction_mainimg"
-                app:layout_constraintStart_toEndOf="@+id/iv_units"
-                app:layout_constraintTop_toTopOf="@+id/iv_units"/>
-            <TextView
-                android:id="@+id/tv_useraction_body"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:layout_marginEnd="8dp"
-                android:ellipsize="end"
-                android:maxLines="2"
-                android:text="@{item.body}"
-                app:layout_constraintEnd_toStartOf="@+id/iv_useraction_mainimg"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/iv_units"/>
-            <TextView
-                android:id="@+id/tv_useraction_hashtag"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:layout_marginEnd="8dp"
-                android:text="@{item.hashTag}"
-                app:layout_constraintEnd_toStartOf="@+id/iv_useraction_mainimg"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_useraction_body"/>
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </com.google.android.material.card.MaterialCardView>
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="@{item.title}"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/iv_useraction_mainimg"
+            app:layout_constraintTop_toTopOf="@+id/iv_useraction_mainimg"/>
+        <TextView
+            android:id="@+id/tv_useraction_body"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="8dp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:text="@{item.body}"
+            android:textColor="#6F6F6F"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/iv_useraction_mainimg"
+            app:layout_constraintTop_toBottomOf="@id/tv_useraction_title"
+        />
+        <TextView
+            android:id="@+id/tv_useraction_hashtag"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="8dp"
+            android:text="@{item.hashTag}"
+            android:textColor="#B2B2B2"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_useraction_mainimg"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/iv_useraction_mainimg"
+            app:layout_constraintTop_toBottomOf="@+id/tv_useraction_body"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
