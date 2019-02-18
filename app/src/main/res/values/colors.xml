@@ -21,7 +21,6 @@
 
     <color name="colorBackground">#F6F6F6</color>
 
-    <!--<color name="colorPrimary">#F6F6F6</color>
-    <color name="colorPrimaryDark_alpha60">#99C3C3C3</color>
-    <color name="colorPrimaryDark">#C3C3C3</color> -->
+    <color name="setting_background">#F6F6F6</color>
+    <color name="setting_backgroundDark_alpha60">#99C3C3C3</color>
 </resources>

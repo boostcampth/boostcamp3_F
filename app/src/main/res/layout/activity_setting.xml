@@ -12,7 +12,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorPrimary"
+        android:background="@color/setting_background"
         tools:context=".community.SettingActivity">
 
         <include
@@ -52,7 +52,7 @@
             android:layout_marginEnd="20dp"
             android:text="@{viewModel.loginBtnString}"
             app:chipBackgroundColor="@color/ef_white"
-            app:chipStrokeColor="@color/colorPrimaryDark"
+            app:chipStrokeColor="@color/ef_black_alpha_aa"
             app:chipStrokeWidth="1dp"
             android:onClick="@{(view) -> viewModel.logout()}"
             app:layout_constraintBottom_toBottomOf="@id/tv_user"

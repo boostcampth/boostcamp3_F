@@ -34,7 +34,7 @@ class LoginViewModel(application: Application) : BaseViewModel(application) {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d("lologin", "signInWithCredential:success")
                     val user = mAuth.currentUser
-                    user?.let { _user-> savePreferences(_user.uid, _user.displayName?:"") }
+                    user?.let { _user -> savePreferences(_user.uid, _user.displayName ?: "") }
 
                     //TODO user.uid, user?.photoUrl
                     //updateUI(user)
@@ -52,7 +52,7 @@ class LoginViewModel(application: Application) : BaseViewModel(application) {
         }
     }
 
-    private fun savePreferences(userID : String, userName: String) {
+    private fun savePreferences(userID: String, userName: String) {
         val pref = getApplication<Application>().getSharedPreferences(Constants.PREF_NAME_LOGIN, Context.MODE_PRIVATE)
         val editor = pref.edit()
         editor.putString(Constants.PREF_USER_ID, userID)

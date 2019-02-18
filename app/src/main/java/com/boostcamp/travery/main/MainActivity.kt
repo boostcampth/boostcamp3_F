@@ -24,8 +24,8 @@ import com.boostcamp.travery.databinding.ActivityMainBinding
 import com.boostcamp.travery.mapservice.TrackingActivity
 import com.boostcamp.travery.feed.NewsFeedActivity
 import com.boostcamp.travery.mapservice.savecourse.CourseSaveActivity
+import com.boostcamp.travery.useraction.detail.UserActionDetailActivity
 import com.boostcamp.travery.useraction.list.UserActionListActivity
-import com.boostcamp.travery.useraction.save.UserActionSaveActivity
 import com.google.android.material.navigation.NavigationView
 import com.tedpark.tedpermission.rx2.TedRx2Permission
 import kotlinx.android.synthetic.main.activity_main.*
@@ -139,7 +139,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), NavigationView.OnNavig
                 startActivity(Intent(this, NewsFeedActivity::class.java))
             }
             R.id.nav_slideshow -> {
-                startActivity(Intent(this, UserActionFeedDetailActivity::class.java))
+                startActivity(Intent(this, UserActionDetailActivity::class.java))
             }
             R.id.nav_login -> {
                 startActivity(Intent(this, LoginActivity::class.java))

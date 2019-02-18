@@ -12,7 +12,7 @@
             <solid android:color="@android:color/transparent" />
             <stroke
                 android:width="1dp"
-                android:color="@color/colorPrimaryDark_alpha60" />
+                android:color="@color/setting_backgroundDark_alpha60" />
         </shape>
     </item>
 
