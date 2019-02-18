@@ -138,9 +138,6 @@ class CourseDetailViewModel(application: Application) : BaseViewModel(applicatio
         //활동 마커에 대해서만 바텀 뷰를 보여주기 위함
     }
 
-    fun mapClick() {
-        //마커 클릭 하지 않았음을 알림.
-    }
 
     fun updateCurUseraction(position: Int) {
         curUseraction.value = markerList.value?.get(position)

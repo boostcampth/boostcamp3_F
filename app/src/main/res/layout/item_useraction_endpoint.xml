@@ -2,7 +2,6 @@
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
 >
     <data>
         <variable
@@ -10,17 +9,6 @@
             type="com.boostcamp.travery.data.model.UserAction"/>
     </data>
 
-    <!--<com.google.android.material.card.MaterialCardView-->
-    <!--android:id="@+id/ll_useraction_info"-->
-    <!--style="@style/Widget.MaterialComponents.CardView"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:layout_marginStart="8dp"-->
-    <!--android:layout_marginEnd="8dp"-->
-    <!--android:layout_marginBottom="8dp"-->
-    <!--android:background="@drawable/bg_theme_white"-->
-    <!--android:orientation="vertical"-->
-    <!--&gt;-->
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -86,5 +74,4 @@
             app:layout_constraintStart_toEndOf="@id/tv_title"
             app:layout_constraintTop_toTopOf="@+id/tv_title"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
-    <!--</com.google.android.material.card.MaterialCardView>-->
 </layout>

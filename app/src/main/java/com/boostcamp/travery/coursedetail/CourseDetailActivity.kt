@@ -90,9 +90,6 @@ class CourseDetailActivity : BaseActivity<ActivityCourseDetailBinding>(), OnMapR
             marker?.tag?.let { viewModel.markerClick(it as Int) }
             false
         }
-        map.setOnMapClickListener {
-            viewModel.mapClick()
-        }
         observeViewModel()
     }
 
