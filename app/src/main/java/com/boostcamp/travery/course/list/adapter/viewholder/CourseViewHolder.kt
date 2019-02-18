@@ -1,4 +1,4 @@
-package com.boostcamp.travery.main.adapter.viewholder
+package com.boostcamp.travery.course.list.adapter.viewholder
 
 import com.boostcamp.travery.base.BaseViewHolder
 import com.boostcamp.travery.data.model.Course

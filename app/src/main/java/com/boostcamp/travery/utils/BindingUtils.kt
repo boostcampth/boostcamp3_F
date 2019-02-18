@@ -5,20 +5,18 @@ import android.graphics.drawable.AnimationDrawable
 import android.graphics.drawable.Drawable
 import android.view.View
 import android.widget.ImageView
-import android.widget.Switch
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.boostcamp.travery.GlideApp
 import com.boostcamp.travery.R
 import com.boostcamp.travery.feed.ViewPagerAdapter
-import com.boostcamp.travery.main.MainViewModel
-import com.boostcamp.travery.main.adapter.CourseListAdapter
+import com.boostcamp.travery.course.list.CourseListViewModel
+import com.boostcamp.travery.course.list.adapter.CourseListAdapter
 import com.boostcamp.travery.search.SearchResultViewModel
 import com.boostcamp.travery.search.UserActionSearchAdapter
 import com.boostcamp.travery.useraction.detail.UserActionDetailViewModel
@@ -221,7 +219,7 @@ object BindingUtils {
 
     @JvmStatic
     @BindingAdapter("listAdapter")
-    fun setAdapter(recyclerView: RecyclerView, viewModel: MainViewModel) {
+    fun setAdapter(recyclerView: RecyclerView, viewModel: CourseListViewModel) {
         val adapter = CourseListAdapter(viewModel.data).apply {
             onItemClickListener = { item: Any -> viewModel.onItemClick(item) }
         }

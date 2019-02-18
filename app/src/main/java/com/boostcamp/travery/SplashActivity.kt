@@ -1,7 +1,7 @@
 package com.boostcamp.travery
 
 import android.content.Intent
-import com.boostcamp.travery.main.MainActivity
+import com.boostcamp.travery.feed.NewsFeedActivity
 import com.daimajia.androidanimations.library.Techniques
 import com.viksaa.sssplash.lib.activity.AwesomeSplash
 import com.viksaa.sssplash.lib.model.ConfigSplash
@@ -24,7 +24,7 @@ class SplashActivity : AwesomeSplash() {
     }
 
     override fun animationsFinished() {
-        startActivity(Intent(this, MainActivity::class.java))
+        startActivity(Intent(this, NewsFeedActivity::class.java))
         finish()
     }
 }

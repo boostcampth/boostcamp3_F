@@ -36,10 +36,10 @@
         <activity
             android:name=".mapservice.TrackingActivity"
             android:launchMode="singleTask"
-            android:parentActivityName=".main.MainActivity"
+            android:parentActivityName=".course.list.CourseListActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".search.SearchResultActivity" />
-        <activity android:name=".main.MainActivity" />
+        <activity android:name=".course.list.CourseListActivity" />
         <activity android:name=".coursedetail.CourseDetailActivity" />
         <activity android:name=".feed.NewsFeedActivity" />
         <activity
