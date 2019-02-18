@@ -85,22 +85,19 @@ class NewsFeedActivity : BaseActivity<MainFeedBinding>(), NavigationView.OnNavig
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.nav_camera -> {
+            R.id.nav_recode_course->{
+                permissionCheck()
+            }
+
+            R.id.nav_useraction_map -> {
                 onProgress(resources.getString(R.string.progress_bar_message))
                 startActivity(Intent(this, UserActionListActivity::class.java))
             }
-            R.id.nav_gallery -> {
-//                startActivity(Intent(this, SearchResultActivity::class.java))
+            R.id.nav_useraction_list -> {
                 startActivity(Intent(this, CourseListActivity::class.java))
             }
-            R.id.nav_slideshow -> {
+            R.id.nav_useraction_add -> {
                 startActivity(Intent(this, UserActionDetailActivity::class.java))
-            }
-            R.id.nav_login -> {
-                startActivity(Intent(this, LoginActivity::class.java))
-            }
-            R.id.nav_save -> {
-                startActivity(Intent(this, CourseSaveActivity::class.java))
             }
 
             R.id.nav_setting -> {
@@ -126,23 +123,7 @@ class NewsFeedActivity : BaseActivity<MainFeedBinding>(), NavigationView.OnNavig
 
         //코스 기록을 위한 버튼
         fab.setOnClickListener {
-            TedRx2Permission.with(this)
-                    .setRationaleTitle(getString(R.string.permission_title))
-                    .setRationaleMessage(getString(R.string.permission_message)) // "we need permission for read contact and find your location"
-                    .setPermissions(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
-                    .request()
-                    .subscribe({ tedPermissionResult ->
-                        if (tedPermissionResult.isGranted) {
-                            if (!checkLocationServicesStatus()) {
-                                showDialogForLocationServiceSetting()
-                            } else {
-                                val intent = Intent(this@NewsFeedActivity, TrackingActivity::class.java)
-                                startActivity(intent)
-                            }
-                        } else {
-                            //"Permission Denied\n" + tedPermissionResult.deniedPermissions.toString().toast()
-                        }
-                    }, { })
+            permissionCheck()
         }
         rv_newsfeed_list.layoutManager = LinearLayoutManager(this)
         rv_newsfeed_list.adapter = NewsFeedListAdapter(viewModel.getFeedList())
@@ -196,6 +177,28 @@ class NewsFeedActivity : BaseActivity<MainFeedBinding>(), NavigationView.OnNavig
                 }
         }
     }
+
+    private fun permissionCheck(){
+        TedRx2Permission.with(this)
+            .setRationaleTitle(getString(R.string.permission_title))
+            .setRationaleMessage(getString(R.string.permission_message)) // "we need permission for read contact and find your location"
+            .setPermissions(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
+            .request()
+            .subscribe({ tedPermissionResult ->
+                if (tedPermissionResult.isGranted) {
+                    if (!checkLocationServicesStatus()) {
+                        showDialogForLocationServiceSetting()
+                    } else {
+                        val intent = Intent(this@NewsFeedActivity, TrackingActivity::class.java)
+                        startActivity(intent)
+                    }
+                } else {
+                    //"Permission Denied\n" + tedPermissionResult.deniedPermissions.toString().toast()
+                }
+            }, { })
+    }
+
+
 
     override fun onStop() {
         super.onStop()

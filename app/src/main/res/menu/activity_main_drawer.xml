@@ -3,31 +3,28 @@
       xmlns:tools="http://schemas.android.com/tools"
       tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
+    <group>
         <item
-            android:id="@+id/nav_camera"
-            android:icon="@drawable/ic_menu_manage"
+            android:id="@+id/nav_recode_course"
+            android:icon="@drawable/ic_course"
+            android:title="경로 기록"/>
+
+        <item
+            android:id="@+id/nav_useraction_map"
+            android:icon="@drawable/ic_map"
             android:title="활동 목록(지도)"/>
         <item
-            android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_manage"
+            android:id="@+id/nav_useraction_list"
+            android:icon="@drawable/ic_list"
             android:title="활동 목록(리스트)"/>
         <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="활동 저장"/>
-        <item
-            android:id="@+id/nav_login"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="로그인"/>
-        <item
-            android:id="@+id/nav_save"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="코스 저장"/>
+            android:id="@+id/nav_useraction_add"
+            android:icon="@drawable/ic_calendar"
+            android:title="개별 활동 저장"/>
 
         <item
             android:id="@+id/nav_setting"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/ic_settings_work_tool"
             android:title="설정"/>
     </group>
 
