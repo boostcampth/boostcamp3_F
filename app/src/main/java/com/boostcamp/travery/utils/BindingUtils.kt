@@ -5,6 +5,7 @@ import android.graphics.drawable.AnimationDrawable
 import android.graphics.drawable.Drawable
 import android.view.View
 import android.widget.ImageView
+import android.widget.Switch
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
@@ -117,8 +118,8 @@ object BindingUtils {
 
     @JvmStatic
     @BindingAdapter("android:date")
-    fun setDate(textView: TextView, date: Date) {
-        textView.text = DateUtils.parseDateAsString(date, "yyyy.MM.dd")
+    fun setDate(textView: TextView, date: Date?) {
+        date?.let{textView.text = DateUtils.parseDateAsString(date, "yyyy.MM.dd")}
     }
 
     @JvmStatic

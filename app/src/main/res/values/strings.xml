@@ -8,6 +8,8 @@
     <string name="all_save">저장</string>
     <string name="all_hold">보류</string>
 
+    <string name="server_client_id">S4nXU-nm85oA2iLq9Ghn7BbS</string>
+
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">테스트 메뉴입니다.</string>
@@ -17,8 +19,8 @@
     <string name="notification_channel_id">TraveryServiceChannel</string>
     <string name="notification_channel_name">Travery Service Channel</string>
 
-    <string name="permission_title">Notice</string>
-    <string name="permission_message">we need permission for find your location</string>
+    <string name="permission_title">권한 요청</string>
+    <string name="permission_message">사용자의 위치를 가져오기 위하여 권한이 필요합니다.</string>
     <string name="permission_message_select_image">카메라 또는 앨범에 접근하려면 권한이 필요합니다.</string>
     <string name="permission_denied">"권한이 없으면 제대로 동작하지 않습니다!\n"</string>
 
@@ -47,6 +49,12 @@
     <string name="string_tv_useraction_hashtag">해시태그</string>
     <string name="string_tv_location">위치</string>
     <string name="string_tv_image">사진</string>
+
+    <string name="string_setting_user">계정</string>
+    <string name="string_setting_logout">로그아웃</string>
+    <string name="string_setting_auto_upload">활동 자동 공유</string>
+    <string name="string_setting_version">버전</string>
+    <string name="string_setting_about">앱에 관하여</string>
 
     <string-array name="theme_array">
         <item>데이트코스</item>

@@ -2,6 +2,7 @@ package com.boostcamp.travery.useraction.save
 
 import android.app.Application
 import android.location.Geocoder
+
 import androidx.databinding.ObservableArrayList
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

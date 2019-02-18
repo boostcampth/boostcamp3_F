@@ -16,14 +16,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.boostcamp.travery.Constants
 import com.boostcamp.travery.R
 import com.boostcamp.travery.base.BaseActivity
+import com.boostcamp.travery.community.LoginActivity
+import com.boostcamp.travery.community.SettingActivity
 import com.boostcamp.travery.coursedetail.CourseDetailActivity
 import com.boostcamp.travery.data.model.Course
 import com.boostcamp.travery.databinding.ActivityMainBinding
 import com.boostcamp.travery.mapservice.TrackingActivity
 import com.boostcamp.travery.feed.NewsFeedActivity
 import com.boostcamp.travery.mapservice.savecourse.CourseSaveActivity
+import com.boostcamp.travery.useraction.detail.UserActionDetailActivity
 import com.boostcamp.travery.useraction.list.UserActionListActivity
-import com.boostcamp.travery.useraction.save.UserActionSaveActivity
 import com.google.android.material.navigation.NavigationView
 import com.tedpark.tedpermission.rx2.TedRx2Permission
 import kotlinx.android.synthetic.main.activity_main.*
@@ -137,10 +139,17 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), NavigationView.OnNavig
                 startActivity(Intent(this, NewsFeedActivity::class.java))
             }
             R.id.nav_slideshow -> {
-                startActivity(Intent(this, UserActionSaveActivity::class.java))
+                startActivity(Intent(this, UserActionDetailActivity::class.java))
+            }
+            R.id.nav_login -> {
+                startActivity(Intent(this, LoginActivity::class.java))
             }
             R.id.nav_save -> {
                 startActivity(Intent(this, CourseSaveActivity::class.java))
+            }
+
+            R.id.nav_setting -> {
+                startActivity(Intent(this, SettingActivity::class.java))
             }
         }
 

@@ -1,0 +1,89 @@
+{
+  "project_info": {
+    "project_number": "932842954747",
+    "firebase_url": "https://alime-156108.firebaseio.com",
+    "project_id": "alime-156108",
+    "storage_bucket": "alime-156108.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:932842954747:android:81e7c09c799df67d",
+        "android_client_info": {
+          "package_name": "com.boostcamp.travery"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "932842954747-apq8ksufsu740j1vumodpuqsli7vr46t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.boostcamp.travery",
+            "certificate_hash": "fb55b99a6ef87b51eaa534a58423cb8ad46a69ea"
+          }
+        },
+        {
+          "client_id": "932842954747-fld93ub0aj6i4hu2f0htdrm6ef1isgp5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyABEKsI1-glKYqKNeDa28_Y83Xaqu3T1CY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "932842954747-fld93ub0aj6i4hu2f0htdrm6ef1isgp5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:932842954747:android:e6bd015771836cce",
+        "android_client_info": {
+          "package_name": "comgomsang.httpsgithub.Alime"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "932842954747-fld93ub0aj6i4hu2f0htdrm6ef1isgp5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyABEKsI1-glKYqKNeDa28_Y83Xaqu3T1CY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 2,
+          "analytics_property": {
+            "tracking_id": "UA-97858164-1"
+          }
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
