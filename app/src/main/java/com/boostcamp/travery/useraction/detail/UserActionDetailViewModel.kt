@@ -16,14 +16,11 @@ class UserActionDetailViewModel(application: Application) : BaseViewModel(applic
         this.userAction = userAction
 
         val jsonList = JSONArray(userAction.subImage)
-        for (i in 0..jsonList.length()) {
+        for (i in 0 until jsonList.length()) {
             imageList.add(jsonList[i].toString())
         }
-        hashTagList.addAll(parseHashTag(userAction.hashTag))
-    }
 
-    private fun parseImageList(list: String): List<String> {
-        return list.split(",")
+        hashTagList.addAll(parseHashTag(userAction.hashTag))
     }
 
     private fun parseHashTag(list: String): List<String> {

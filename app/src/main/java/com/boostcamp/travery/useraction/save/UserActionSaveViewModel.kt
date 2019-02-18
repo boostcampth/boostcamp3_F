@@ -10,6 +10,8 @@ import com.boostcamp.travery.base.BaseViewModel
 import com.boostcamp.travery.data.NewsFeedRepository
 import com.boostcamp.travery.data.model.UserAction
 import com.boostcamp.travery.utils.ImageUtils
+import io.reactivex.Observable.just
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import org.json.JSONArray
 import java.io.File
@@ -51,17 +53,17 @@ class UserActionSaveViewModel(application: Application) : BaseViewModel(applicat
 
     fun setAddress(latitude: Double, longitude: Double) {
         // Geocode 변환
-        Thread(Runnable {
-            try {
-                val fullAddress = geoCoder.getFromLocation(latitude, longitude, 1)[0].getAddressLine(0)
-                val split = fullAddress.split(" ")
-                val shortAddress = split.subList(1, split.size).fold("") { acc, s -> "$acc $s" }
-//                "$adminArea $locality $subLocality $thoroughfare ${featureName.replace(" ", "")}"
-                address.postValue(shortAddress)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }).start()
+        addDisposable(just(
+                try {
+                    geoCoder.getFromLocation(latitude, longitude, 1)[0].getAddressLine(0)
+                } catch (e: Exception) {
+                    "오류"
+                }).map {
+            val split = it.split(" ")
+            split.subList(1, split.size).fold("") { acc, s -> "$acc $s" }
+        }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe {
+            address.setValue(it)
+        })
     }
 
     fun saveUserAction(latitude: Double, longitude: Double, courseCode: Long) {

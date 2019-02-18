@@ -66,8 +66,8 @@ class CourseSaveViewModel(application: Application) : BaseViewModel(application)
         staticMapURL = urlPath.toString()
         url.set(staticMapURL)
 
-        val dist = bundle?.let { it.getParcelable<Course>(Constants.EXTRA_COURSE)?.distance.toString() } ?: "0"
-        distance.set("총 거리 : ${dist}m")
+        val dist = bundle?.let { (it.getParcelable<Course>(Constants.EXTRA_COURSE)?.distance)?.div(1000.0).toString() } ?: "0"
+        distance.set("총 거리 : ${dist}km")
     }
 
     private fun makeCoordinateJson(timeCodeList: ArrayList<TimeCode>): JSONObject {
