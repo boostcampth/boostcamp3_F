@@ -41,16 +41,3 @@ data class UserAction(
         return super.equals(other)
     }
 }
-
-data class FireUserAction(
-    var title: String="",
-    var body: String="",
-    var date: String="",
-    var hashTag: String="",
-    var mainImage: String="",
-    var subImage: String="",
-    var latitude: Double,
-    var longitude: Double,
-    var like:Int = 0,
-    val ketId: String
-)
