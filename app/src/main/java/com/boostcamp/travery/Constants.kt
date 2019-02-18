@@ -17,4 +17,11 @@ object Constants {
     const val SIGN_IN_GOOGLE = 900
 
     const val REQUEST_CODE_USERACTION = 1004
+    const val REQUEST_CODE_LOGIN = 701
+
+    const val PREF_NAME_LOGIN = "loginPref"
+    const val PREF_USER_ID= "userID"
+    const val PREF_USER_NAME= "userName"
+    const val PREF_USER_IMAGE= "userImage"
+    const val PREF_AUTO_UPLOAD = "autoUpload"
 }

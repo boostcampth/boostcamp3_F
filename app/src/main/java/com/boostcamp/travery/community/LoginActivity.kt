@@ -1,5 +1,6 @@
 package com.boostcamp.travery.community
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -25,8 +26,8 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>() {
     override val layoutResourceId: Int
         get() = R.layout.activity_login
 
-    private lateinit var gso:GoogleSignInOptions
-    private lateinit var mGoogleSignInClient:GoogleSignInClient
+    private lateinit var gso: GoogleSignInOptions
+    private lateinit var mGoogleSignInClient: GoogleSignInClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,14 +35,18 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>() {
         setContentView(viewDataBinding.root)
 
         gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken("932842954747-fld93ub0aj6i4hu2f0htdrm6ef1isgp5.apps.googleusercontent.com")
-            .requestEmail()
-            .build()
+                .requestIdToken("932842954747-fld93ub0aj6i4hu2f0htdrm6ef1isgp5.apps.googleusercontent.com")
+                .requestEmail()
+                .build()
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
 
         viewDataBinding.viewmodel?.loginSuccessString?.observe(this, Observer {
-            when(it){
-                "success" -> finish()
+            offProgress()
+            when (it) {
+                "success" -> {
+                    setResult(Activity.RESULT_OK, Intent())
+                    finish()
+                }
                 else -> it.toast(this)
             }
         })
@@ -54,7 +59,7 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>() {
 
     override fun onStart() {
         super.onStart()
-        viewDataBinding.viewmodel?.getCurrentUser()?.let{
+        viewDataBinding.viewmodel?.getCurrentUser()?.let {
             //로그인이 되어 있을 때 view 처리
         }
     }
@@ -65,13 +70,15 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>() {
             // The Task returned from this call is always completed, no need to attach
             // a listener.
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            onProgress(resources.getString(R.string.progress_bar_message))
             try {
                 // Google Sign In was successful, authenticate with Firebase
                 val account = task.getResult(ApiException::class.java)
-                Log.d("lologin",account.toString())
+                Log.d("lologin", account.toString())
                 viewDataBinding.viewmodel?.firebaseAuthWithGoogle(account)
             } catch (e: ApiException) {
-                Log.e("lologin",e.toString())
+                Log.e("lologin", e.toString())
+                offProgress()
                 // Google Sign In failed, update UI appropriately
                 //Log.w(FragmentActivity.TAG, "Google sign in failed", e)
                 // ...

@@ -17,7 +17,7 @@ import com.boostcamp.travery.Constants
 import com.boostcamp.travery.R
 import com.boostcamp.travery.base.BaseActivity
 import com.boostcamp.travery.community.LoginActivity
-import com.boostcamp.travery.community.useraction.UserActionFeedDetailActivity
+import com.boostcamp.travery.community.SettingActivity
 import com.boostcamp.travery.coursedetail.CourseDetailActivity
 import com.boostcamp.travery.data.model.Course
 import com.boostcamp.travery.databinding.ActivityMainBinding
@@ -146,6 +146,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), NavigationView.OnNavig
             }
             R.id.nav_save -> {
                 startActivity(Intent(this, CourseSaveActivity::class.java))
+            }
+
+            R.id.nav_setting -> {
+                startActivity(Intent(this, SettingActivity::class.java))
             }
         }
 
