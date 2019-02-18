@@ -21,24 +21,26 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
-        <activity android:name=".feed.NewsFeedActivity"/>
-        <activity android:name=".useraction.list.UserActionListActivity"/>
-        <activity android:name=".useraction.detail.UserActionDetailActivity"/>
-        <activity android:name=".useraction.save.UserActionSaveActivity"/>
-        <activity android:name=".mapservice.savecourse.CourseSaveActivity"/>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
+        <activity android:name=".useraction.list.UserActionListActivity" />
+        <activity android:name=".useraction.detail.UserActionDetailActivity" />
+        <activity
+            android:name=".useraction.save.UserActionSaveActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".mapservice.savecourse.CourseSaveActivity" />
         <activity
             android:name=".mapservice.TrackingActivity"
             android:launchMode="singleTask"
             android:parentActivityName=".main.MainActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".search.SearchResultActivity"/>
-        <activity android:name=".main.MainActivity"/>
+            android:screenOrientation="portrait" />
+        <activity android:name=".search.SearchResultActivity" />
+        <activity android:name=".main.MainActivity" />
         <activity android:name=".coursedetail.CourseDetailActivity" />
+        <activity android:name=".feed.NewsFeedActivity" />
         <activity
             android:name=".SplashActivity"
             android:theme="@style/AppTheme.NoActionBar.Fullscreen">

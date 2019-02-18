@@ -10,7 +10,8 @@ import com.boostcamp.travery.base.BaseViewModel
 import com.boostcamp.travery.data.NewsFeedRepository
 import com.boostcamp.travery.data.model.UserAction
 import com.boostcamp.travery.utils.ImageUtils
-import com.boostcamp.travery.utils.NewFileUtils
+import io.reactivex.Observable.just
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import org.json.JSONArray
 import java.io.File
@@ -18,49 +19,57 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class UserActionSaveViewModel(application: Application) : BaseViewModel(application) {
-    val imageList = ObservableArrayList<UserActionImage>()
-
-
     private val userActionRepository = Injection.provideCourseRepository(application)
     private val newsFeedRepository = NewsFeedRepository.getInstance()
 
+    val imageList = ObservableArrayList<UserActionImage>()
+    private val hashTag = MutableLiveData<String>()
+    private val hashTagList = ArrayList<String>()
+
     private val geoCoder = Geocoder(application)
-    private var address = MutableLiveData<String>()
+    private val address = MutableLiveData<String>()
+
+    fun getHashTag(): LiveData<String> = hashTag
+
+    fun getHashTagCount() = hashTagList.size
+
+    fun getAddress(): LiveData<String> = address
 
     private var title = ""
         get() = if (field.isEmpty()) "empty" else field
     private var content = ""
         get() = if (field.isEmpty()) "empty" else field
 
-    val hashTag = MutableLiveData<String>()
-    private val hashTagList = ArrayList<String>()
-
     private var view: UserActionSaveViewModel.View? = null
 
     interface View {
         fun saveSelectedImage()
+        fun imageListEmpty()
     }
 
     fun setView(view: View) {
         this.view = view
     }
 
-    fun setAddress(latitude: Double, longitude: Double): LiveData<String> {
+    fun setAddress(latitude: Double, longitude: Double) {
         // Geocode 변환
-        Thread(Runnable {
-            try {
-                address.postValue(geoCoder.getFromLocation(latitude, longitude, 1)[0].getAddressLine(0))
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }).start()
-        return address
+        addDisposable(just(
+                try {
+                    geoCoder.getFromLocation(latitude, longitude, 1)[0].getAddressLine(0)
+                } catch (e: Exception) {
+                    "오류"
+                }).map {
+            val split = it.split(" ")
+            split.subList(1, split.size).fold("") { acc, s -> "$acc $s" }
+        }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe {
+            address.setValue(it)
+        })
     }
 
     fun saveUserAction(latitude: Double, longitude: Double, courseCode: Long) {
         val fileList = ArrayList<File>()
         for (image in imageList) {
-            if (!image.filePath.isNullOrEmpty()) {
+            if (!image.filePath.isEmpty()) {
                 fileList.add(ImageUtils.createImage(getApplication(), image.filePath))
             }
         }
@@ -93,8 +102,11 @@ class UserActionSaveViewModel(application: Application) : BaseViewModel(applicat
 //        }, { Log.e("TEST", it.message) }))
     }
 
-    fun onAddItemClick() {
-        view?.saveSelectedImage()
+    fun onRemoveItemClick(item: UserActionImage) {
+        imageList.remove(item)
+        if (imageList.isEmpty()) {
+            view?.imageListEmpty()
+        }
     }
 
     fun onTitleChange(title: CharSequence) {
@@ -107,7 +119,7 @@ class UserActionSaveViewModel(application: Application) : BaseViewModel(applicat
 
     fun onHashTagChange(body: CharSequence) {
         val count = body.count()
-        if (count > 0 && body[0] == '#') { // # 으로 시작할 경우 해시태그
+        if (count > 0) {
             // 마지막 문자가 ' '으로 끝날 경우, 해당 해시태그를 observe 하는 액티비티에게 변경사항 알림
             if (body[count - 1] == ' ' || body[count - 1] == '\n') {
                 hashTag.value = body.substring(0, count - 1).also {
@@ -129,6 +141,4 @@ class UserActionSaveViewModel(application: Application) : BaseViewModel(applicat
             if (acc.isEmpty()) item else "$acc$divider$item"
         }
     }
-
-
 }

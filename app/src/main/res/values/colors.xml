@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#F6F6F6</color>
-    <color name="colorPrimaryDark">#C3C3C3</color>
-    <color name="colorAccent">#0B4DBF</color>
+    <color name="colorPrimary">#296bd0</color>
+    <color name="colorPrimaryDark">#296bd0</color>
+    <color name="colorAccent">#fe304f</color>
+
+    <!--기존 색깔-->
+    <!--<color name="colorPrimary">#304ffe</color>-->
+    <!--<color name="colorPrimaryDark">#0026ca</color>-->
+    <!--<color name="colorAccent">#fe304f</color>-->
+
     <color name="colorAccentLight">#0E53C4</color>
 
     <color name="whiteBlue">#0088FF</color>
@@ -12,4 +18,6 @@
     <color name="normal_red">#FF1200</color>
     <color name="normal_black">#000000</color>
     <color name="gray_alpha50">#80000000</color>
+
+    <color name="colorBackground">#F6F6F6</color>
 </resources>

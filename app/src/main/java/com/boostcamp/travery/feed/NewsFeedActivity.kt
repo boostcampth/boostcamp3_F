@@ -1,6 +1,7 @@
 package com.boostcamp.travery.feed
 
 import android.os.Bundle
+import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,11 +17,15 @@ class NewsFeedActivity : BaseActivity<ActivityNewsfeedBinding>() {
         ViewModelProviders.of(this).get(NewsFeedViewModel::class.java)
     }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(viewDataBinding.root)
 
+        setSupportActionBar(toolBar as Toolbar)
+        supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+            setDisplayShowHomeEnabled(true)
+        }
 
         viewDataBinding.viewModel = viewModel
         viewDataBinding.setLifecycleOwner(this)

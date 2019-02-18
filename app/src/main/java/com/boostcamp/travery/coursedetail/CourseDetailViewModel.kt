@@ -18,8 +18,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import com.warkiz.widget.IndicatorSeekBar
 import com.warkiz.widget.SeekParams
-import io.reactivex.Observable
-import kotlin.math.round
 
 
 class CourseDetailViewModel(application: Application) : BaseViewModel(application) {

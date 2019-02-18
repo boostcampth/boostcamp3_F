@@ -1,134 +1,131 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:attrs="http://schemas.android.com/apk/res-auto"
->
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:attrs="http://schemas.android.com/apk/res-auto">
+
     <data>
 
         <variable
-                name="item"
-                type="com.boostcamp.travery.data.remote.model.NewsFeed"/>
+            name="item"
+            type="com.boostcamp.travery.data.remote.model.NewsFeed" />
     </data>
 
     <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-    >
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-        >
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
             <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/iv_feed_userimage"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_marginStart="@dimen/activity_content_padding"
-                    android:layout_marginTop="@dimen/activity_content_padding"
-                    app:circleImage="@{String.format(@string/base_image_url, item.user.image)}"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-            />
+                android:id="@+id/iv_feed_userimage"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="@dimen/activity_content_padding"
+                android:layout_marginTop="@dimen/activity_content_padding"
+                app:circleImage="@{String.format(@string/base_image_url, item.user.image)}"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/tv_feed_nickname"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:text="@{item.user.nickname}"
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/iv_feed_userimage"
-                    app:layout_constraintTop_toTopOf="@+id/iv_feed_userimage"/>
+                android:id="@+id/tv_feed_nickname"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:text="@{item.user.nickname}"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/font_feed_nickname"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/iv_feed_userimage"
+                app:layout_constraintTop_toTopOf="@+id/iv_feed_userimage" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/tv_feed_time"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginEnd="8dp"
-                    android:textSize="12sp"
-                    app:feedDate="@{item.date}"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/iv_feed_userimage"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_feed_nickname"/>
+                android:id="@+id/tv_feed_time"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="8dp"
+                android:textSize="@dimen/font_feed_date"
+                app:feedDate="@{item.date}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/iv_feed_userimage"
+                app:layout_constraintTop_toBottomOf="@+id/tv_feed_nickname" />
 
             <androidx.viewpager.widget.ViewPager
-                    android:id="@+id/vp_action_image"
-                    android:layout_width="0dp"
-                    android:layout_height="300dp"
-                    android:layout_marginTop="8dp"
-                    app:setViewPagerAdapter="@{item.image}"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/iv_feed_userimage"
-            />
+                android:id="@+id/vp_action_image"
+                android:layout_width="0dp"
+                android:layout_height="300dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/iv_feed_userimage"
+                app:setViewPagerAdapter="@{item.image}" />
+
             <com.rd.PageIndicatorView
-                    android:id="@+id/piv_action_image"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/vp_action_image"
-                    app:piv_count="0"
-                    app:piv_dynamicCount="true"
-                    app:piv_animationType="drop"
-                    app:piv_interactiveAnimation="true"
-                    app:piv_selectedColor="#3F51B5"
-                    app:piv_unselectedColor="#E0E0E0"
-                    app:piv_viewPager="@id/vp_action_image"
-                    attrs:piv_padding="10dp"
-                    attrs:piv_radius="5dp"/>
-
-
-            <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/tv_title"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:text="@{item.title}"
-                    android:textColor="@android:color/black"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/piv_action_image"/>
+                android:id="@+id/piv_action_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/vp_action_image"
+                app:piv_animationType="drop"
+                app:piv_count="0"
+                app:piv_dynamicCount="true"
+                app:piv_interactiveAnimation="true"
+                app:piv_selectedColor="#3F51B5"
+                app:piv_unselectedColor="#E0E0E0"
+                app:piv_viewPager="@id/vp_action_image"
+                attrs:piv_padding="10dp"
+                attrs:piv_radius="5dp" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/tv_content"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:text="@{item.body}"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_title"/>
+                android:id="@+id/tv_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:text="@{item.title}"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/font_feed_title"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/piv_action_image" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_content"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:text="@{item.body}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_title" />
+
             <com.google.android.material.chip.ChipGroup
-                    android:id="@+id/chip_group_feed"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
-                    app:chipSpacing="@dimen/chip_group_child_spacing"
-                    app:chipSpacingVertical="@dimen/chip_group_child_spacing_vertical"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_content"/>
+                android:id="@+id/chip_group_feed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                app:chipSpacing="@dimen/chip_group_child_spacing"
+                app:chipSpacingVertical="@dimen/chip_group_child_spacing_vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_content" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 

@@ -1,110 +1,132 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
-        <import type="android.view.View" />
+        <import type="android.view.View"/>
+        <import type="com.boostcamp.travery.utils.DateUtils"/>
 
         <variable
             name="savevm"
-            type="com.boostcamp.travery.mapservice.savecourse.CourseSaveViewModel" />
+            type="com.boostcamp.travery.mapservice.savecourse.CourseSaveViewModel"/>
     </data>
 
-    <LinearLayout
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
         <include
             android:id="@+id/toolbar"
-            layout="@layout/toolbar" />
+            layout="@layout/toolbar"/>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="@dimen/activity_content_padding">
+            android:orientation="vertical"
+            app:divider="@drawable/linear_divider"
+            app:showDividers="middle">
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:divider="@drawable/linear_divider_vertical"
+                app:showDividers="middle">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="3"
+                    android:padding="10dp"
+                    app:image="@{savevm.url}"
+                    tools:src="@mipmap/ic_launcher"/>
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="7"
+                    android:orientation="vertical"
+                    app:divider="@drawable/linear_divider"
+                    app:showDividers="middle">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tv_today"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="10dp"
+                        android:text="@{savevm.today}"
+                        android:textSize="@dimen/font_subtitle"
+                        tools:text="2019.02.18 금요일"/>
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tv_distance"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="10dp"
+                        android:text="@{savevm.distance}"
+                        android:textSize="@dimen/font_subtitle"
+                        tools:text="총 거리 : 12.3km"/>
+
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="10dp">
+
+                        <androidx.appcompat.widget.AppCompatEditText
+                            android:id="@+id/et_selected_theme"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@null"
+                            android:hint="@string/string_et_course_add_theme"
+                            android:maxLength="15"
+                            android:onTextChanged="@{(text, start, before, count) -> savevm.onThemeChange(text)}"
+                            android:textColor="@android:color/black"
+                            android:textSize="@dimen/font_subtitle"
+                            app:visibility="@{savevm.theme.equals(@string/string_input_theme)}"/>
+
+                        <androidx.appcompat.widget.AppCompatSpinner
+                            android:id="@+id/spinner_theme"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:onItemSelected="@{(parent,view,pos,id)->savevm.onSelectItem(parent,view,pos,id)}"
+                            android:theme="@style/AppTheme.Spinner"/>
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+                </androidx.appcompat.widget.LinearLayoutCompat>
+            </androidx.appcompat.widget.LinearLayoutCompat>
 
             <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/et_title"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:background="@null"
+                android:focusable="true"
                 android:hint="@string/string_et_course_add_hint"
-                android:inputType="text|textMultiLine"
+                android:inputType="text"
+                android:singleLine="true"
                 android:maxLength="20"
                 android:onTextChanged="@{(text, start, before, count) -> savevm.onTitleChange(text)}"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:padding="15dp"
+                android:textSize="@dimen/font_title"/>
 
             <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/et_content"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/bg_textfield"
+                android:background="@null"
                 android:hint="@string/string_et_course_add_content_hint"
                 android:inputType="text|textMultiLine"
                 android:maxLength="40"
+                android:maxLines="2"
                 android:onTextChanged="@{(text, start, before, count) -> savevm.onBodyChange(text)}"
-                android:padding="10dp"
-                app:layout_constraintEnd_toEndOf="@id/et_title"
-                app:layout_constraintStart_toStartOf="@id/et_title"
-                app:layout_constraintTop_toBottomOf="@id/et_title" />
+                android:padding="15dp"
+                android:textSize="@dimen/font_subtitle"/>
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_theme"
-                style="@style/TitleTextView"
-                android:layout_marginStart="@dimen/save_activity_keyline_margin_start"
-                android:layout_marginTop="20dp"
-                android:text="@string/string_tv_course_add"
-                app:layout_constraintStart_toStartOf="@id/et_title"
-                app:layout_constraintTop_toBottomOf="@id/et_content" />
-
-            <androidx.appcompat.widget.AppCompatEditText
-                android:id="@+id/et_selected_theme"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:background="@null"
-                android:hint="@string/string_et_course_add_theme"
-                android:maxLength="20"
-                android:onTextChanged="@{(text, start, before, count) -> savevm.onThemeChange(text)}"
-                android:textColor="@android:color/black"
-                android:textSize="18sp"
-                app:layout_constraintStart_toStartOf="@id/tv_theme"
-                app:layout_constraintTop_toBottomOf="@id/tv_theme"
-                app:visibility="@{savevm.theme.equals(@string/string_input_theme)}" />
-
-            <androidx.appcompat.widget.AppCompatSpinner
-                android:id="@+id/spinner_theme"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="5dp"
-                android:onItemSelected="@{(parent,view,pos,id)->savevm.onSelectItem(parent,view,pos,id)}"
-                app:layout_constraintStart_toEndOf="@id/et_selected_theme"
-                app:layout_constraintTop_toBottomOf="@id/tv_theme" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_date"
-                style="@style/TitleTextView"
-                android:layout_marginStart="@dimen/save_activity_keyline_margin_start"
-                android:layout_marginTop="20dp"
-                android:text="@string/string_tv_date"
-                app:layout_constraintStart_toStartOf="@id/et_title"
-                app:layout_constraintTop_toBottomOf="@id/spinner_theme" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_date_cur"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:textSize="18sp"
-                app:layout_constraintStart_toStartOf="@id/tv_date"
-                app:layout_constraintTop_toBottomOf="@id/tv_date" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </LinearLayout>
+    </androidx.appcompat.widget.LinearLayoutCompat>
 </layout>

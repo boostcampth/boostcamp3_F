@@ -16,6 +16,24 @@
     <dimen name="custom_profile_padding">2dp</dimen>
 
     <dimen name="chip_group_child_spacing">5dp</dimen>
-    <dimen name="chip_group_child_spacing_vertical">10dp</dimen>
+    <dimen name="chip_group_child_spacing_vertical">5dp</dimen>
     <dimen name="tv_address_size">15sp</dimen>
+
+    <dimen name="content_margin_top_n_bottom">10dp</dimen>
+
+    <!-- 공통 font size -->
+    <dimen name="font_very_large">24sp</dimen>
+    <dimen name="font_large">20sp</dimen>
+    <dimen name="font_small">14sp</dimen>
+    <dimen name="font_very_small">12sp</dimen>
+    <dimen name="font_title">18sp</dimen>
+    <dimen name="font_subtitle">17sp</dimen>
+    <dimen name="font_contents">16sp</dimen>
+
+    <!-- 화면 별 font size -->
+    <dimen name="font_course_user_action_title">19sp</dimen>
+    <dimen name="font_feed_nickname">16sp</dimen>
+    <dimen name="font_feed_date">12sp</dimen>
+    <dimen name="font_feed_title">15sp</dimen>
+    <dimen name="font_tracking_counter">14sp</dimen>
 </resources>

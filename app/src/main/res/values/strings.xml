@@ -35,15 +35,15 @@
     <string name="service_title">Travery Service</string>
     <string name="service_message">활동을 기록하고 있습니다.</string>
 
-    <string name="string_et_course_add_hint">제목을 입력하세요(20자 이내)</string>
-    <string name="string_et_course_add_content_hint">현재 코스를 한줄로 표현해주세요</string>
+    <string name="string_et_course_add_hint">제목(최대 20자)</string>
+    <string name="string_et_course_add_content_hint">현재 코스를 한줄로 표현한다면?</string>
     <string name="string_et_course_add_theme">테마를 입력하세요</string>
     <string name="string_tv_course_add">테마</string>
     <string name="string_tv_date">날짜</string>
     <string name="string_save_menu">저장</string>
     <string name="string_input_theme">직접 입력</string>
 
-    <string name="string_et_content_hint">내용을 입력하세요\n\n\n</string>
+    <string name="string_et_content_hint">내용을 입력하세요\n\n\n\n</string>
     <string name="string_tv_useraction_hashtag">해시태그</string>
     <string name="string_tv_location">위치</string>
     <string name="string_tv_image">사진</string>
@@ -83,4 +83,12 @@
     <string name="string_folder_title">Folder</string>
 
     <string name="base_image_url">http://35.229.76.14/uploads/</string>
+    <string name="string_tv_share">공유하기</string>
+    <string name="string_activity_save_useraction_toolbar">활동 추가</string>
+    <string name="string_activity_save_course_toolbar">코스 저장</string>
+    <string name="string_tracking_initial_distance">0m</string>
+
+    <string name="dialog_message">기록을 종료하시겠습니까?</string>
+    <string name="dialog_positive">예</string>
+    <string name="dialog_negative">아니오</string>
 </resources>
