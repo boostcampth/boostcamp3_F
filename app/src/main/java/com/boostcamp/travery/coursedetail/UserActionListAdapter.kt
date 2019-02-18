@@ -1,6 +1,5 @@
 package com.boostcamp.travery.coursedetail
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.ObservableList

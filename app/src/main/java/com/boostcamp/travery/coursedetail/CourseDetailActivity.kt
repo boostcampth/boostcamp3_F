@@ -100,7 +100,7 @@ class CourseDetailActivity : BaseActivity<ActivityCourseDetailBinding>(), OnMapR
             // 경로의 폴리라인과 시작점 끝점 마크를 맵위에 표시.
             map.addPolyline(PolylineOptions().color(ContextCompat.getColor(this, R.color.gray_alpha50))
                     .geodesic(true)
-                    .width(10f).addAll(it)).also { polyline ->  polyline.pattern= Arrays.asList(Gap(20f),Dash(20f)) }
+                    .width(10f).addAll(it)).also { polyline -> polyline.pattern = Arrays.asList(Gap(20f), Dash(20f)) }
 
             //seekbar max 설정
             detail_seekbar.max = viewModel.timeCodeListSize.get().toFloat()
