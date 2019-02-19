@@ -2,6 +2,7 @@ package com.boostcamp.travery.coursedetail
 
 import android.app.Application
 import android.location.Geocoder
+import android.util.Log
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableField
 import androidx.databinding.ObservableInt
@@ -38,11 +39,16 @@ class CourseDetailViewModel(application: Application) : BaseViewModel(applicatio
     val markerList = MutableLiveData<List<UserAction>>()
     val scrollTo = ObservableInt()
     val totalDistance = ObservableField<String>()
+    val userActionHashMap = HashMap<Int, Int>()
 
+    val seekProgress = MutableLiveData<Int>()
     val seekTimeCode = MutableLiveData<TimeCode>()
     val seekListener: OnSeekChangeListener = object : OnSeekChangeListener {
         override fun onSeeking(seekParams: SeekParams) {
             seekTimeCode.value = timeCodeList[seekParams.progress]
+            if (userActionHashMap.containsKey(seekParams.progress)) {
+                scrollTo.set(userActionHashMap[seekParams.progress] ?: 0)
+            }
         }
 
         override fun onStartTrackingTouch(seekBar: IndicatorSeekBar) {}
@@ -143,9 +149,18 @@ class CourseDetailViewModel(application: Application) : BaseViewModel(applicatio
                 .subscribe({
                     userActionList.addAll(it)
                     markerList.value = it
-                }, {
 
-                })
+                    var userActionPosition = 0
+                    latLngList.value?.let { list ->
+                        for (pos in 0 until list.size) {
+                            if (list[pos].longitude == userActionList[userActionPosition].longitude
+                                    && list[pos].latitude == userActionList[userActionPosition].latitude) {
+                                userActionHashMap[pos] = userActionPosition
+                                userActionPosition++
+                            }
+                        }
+                    }
+                }, {})
         )
     }
 
@@ -155,6 +170,12 @@ class CourseDetailViewModel(application: Application) : BaseViewModel(applicatio
      */
     fun markerClick(position: Int) {
         scrollTo.set(position)
+        seekTimeCode.value = TimeCode(LatLng(userActionList[position].latitude, userActionList[position].longitude))
+        userActionHashMap.forEach {
+            if (it.value == position) {
+                seekProgress.value = it.key
+            }
+        }
         //활동 마커에 대해서만 바텀 뷰를 보여주기 위함
     }
 
