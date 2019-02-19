@@ -8,6 +8,7 @@ import android.view.View
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.boostcamp.travery.Constants
+import com.boostcamp.travery.Constants.EXTRA_USER_ID
 import com.boostcamp.travery.R
 import com.boostcamp.travery.base.BaseActivity
 import com.boostcamp.travery.databinding.ActivityLoginBinding
@@ -44,12 +45,21 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>() {
             offProgress()
             when (it) {
                 "success" -> {
-                    //TODO 서버 처리 과정
-                    //setResult(Activity.RESULT_OK, Intent())
-                    //finish()
-                    startActivityForResult(Intent(this, SignInActivity::class.java), Constants.SIGN_IN_SERVER)
+                    //TODO 설정 창으로 돌아감
+                    setResult(Activity.RESULT_OK)
+                    finish()
                 }
-                else -> it.toast(this)
+                "nonexistent"->{
+                    val intent=Intent(this, SignInActivity::class.java)
+                    intent.putExtra(EXTRA_USER_ID,viewDataBinding.viewmodel?.userId)
+                    intent.flags=Intent.FLAG_ACTIVITY_FORWARD_RESULT
+                    startActivity(intent)
+                    finish()
+                }
+                else -> {
+                    it.toast(this)
+                    finish()
+                }
             }
         })
 

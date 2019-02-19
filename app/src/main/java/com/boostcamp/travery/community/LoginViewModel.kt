@@ -7,6 +7,8 @@ import com.google.firebase.auth.FirebaseAuth
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.boostcamp.travery.Constants
+import com.boostcamp.travery.data.UserRepository
+import com.boostcamp.travery.data.model.User
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.firebase.auth.FirebaseUser
@@ -16,8 +18,10 @@ class LoginViewModel(application: Application) : BaseViewModel(application) {
     private val mAuth by lazy {
         FirebaseAuth.getInstance()
     }
+    private val userRepository = UserRepository.getInstance()
 
     val loginSuccessString = MutableLiveData<String>()
+    var userId=""
 
     fun getCurrentUser(): FirebaseUser? {
         return mAuth.currentUser
@@ -25,38 +29,39 @@ class LoginViewModel(application: Application) : BaseViewModel(application) {
 
     fun firebaseAuthWithGoogle(acct: GoogleSignInAccount?) {
         acct?.let {
-            Log.d("lologin", "firebaseAuthWithGoogle:" + acct.id!!)
 
             val credential = GoogleAuthProvider.getCredential(acct.idToken, null)
             mAuth.signInWithCredential(credential).addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    loginSuccessString.value = "success"
-                    // Sign in success, update UI with the signed-in user's information
-                    Log.d("lologin", "signInWithCredential:success")
                     val user = mAuth.currentUser
-                    user?.let { _user -> savePreferences(_user.uid, _user.displayName ?: "") }
-
-                    //TODO user.uid, user?.photoUrl
-                    //updateUI(user)
+                    user?.let { _user ->
+                        //_user.uid 이게 서버에 있는지 체크해서 오기
+                        addDisposable(userRepository.registeredUserId(_user.uid)
+                                .subscribe({ remoteUser ->
+                                    if (!remoteUser.id.isEmpty()) {
+                                        savePreferences(remoteUser)
+                                        loginSuccessString.value = "success"
+                                    }else{
+                                        userId=_user.uid
+                                        loginSuccessString.value = "nonexistent"
+                                    }
+                                }, {t->
+                                    loginSuccessString.value = t.message
+                                }))
+                    }
                 } else {
                     loginSuccessString.value = task.exception?.message
-                    // If sign in fails, display a message to the user.
-                    //Log.w(TAG, "signInWithCredential:failure", task.getException())
-                    //Snackbar.make(findViewById(R.id.main_layout), "Authentication Failed.", Snackbar.LENGTH_SHORT)
-                    //    .show()
-                    //updateUI(null)
                 }
-
-                // ...
             }
         }
     }
 
-    private fun savePreferences(userID: String, userName: String) {
+    private fun savePreferences(user: User) {
         val pref = getApplication<Application>().getSharedPreferences(Constants.PREF_NAME_LOGIN, Context.MODE_PRIVATE)
         val editor = pref.edit()
-        editor.putString(Constants.PREF_USER_ID, userID)
-        editor.putString(Constants.PREF_USER_NAME, userName)
+        editor.putString(Constants.PREF_USER_ID, user.id)
+        editor.putString(Constants.PREF_USER_NAME, user.nickname)
+        editor.putString(Constants.PREF_USER_IMAGE, user.image)
         editor.apply()
     }
 }

@@ -1,5 +1,6 @@
 package com.boostcamp.travery.data.remote
 
+import com.boostcamp.travery.data.model.User
 import com.boostcamp.travery.data.remote.model.MyResponse
 import com.boostcamp.travery.data.remote.model.NewsFeed
 import com.facebook.stetho.okhttp3.StethoInterceptor
@@ -59,5 +60,24 @@ class ApiService {
          */
         @GET("boardList.php")
         fun getBoardList(@Query("start") start: Int): Single<Response<List<NewsFeed>>>
+
+        /**
+         * @return true : 사용 가능
+         *          false : 사용 불가
+         */
+        @GET("userValidate.php")
+        fun checkNickname(@Query("userNick") nickname:String):Single<Boolean>
+
+        /**
+         *
+         * @return 사용자 있다면 값반환 없다면 null
+         */
+        @FormUrlEncoded
+        @POST("userValidate.php")
+        fun registeredUserId(@Field("userId") userId:String):Single<User>
+
+        @Multipart
+        @POST("join.php")
+        fun postUserInfo(@Part("user")user:RequestBody,@Part file:MultipartBody.Part?):Single<MyResponse>
     }
 }
