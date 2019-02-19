@@ -3,6 +3,7 @@ package com.boostcamp.travery.useraction.detail
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AlertDialog
@@ -78,12 +79,11 @@ class UserActionDetailActivity : BaseActivity<ActivityUserActionDetailBinding>()
                 data?.let {
                     val userAction = it.getParcelableExtra<UserAction>(Constants.EXTRA_USER_ACTION)
                     viewModel.init(userAction)
+                    piv_action_image.setSelected(0)
 
                     setResult(Activity.RESULT_OK, Intent().apply {
                         putExtra(Constants.EXTRA_USER_ACTION, userAction)
                     })
-
-                    piv_action_image.setSelected(0)
                 }
             }
         }

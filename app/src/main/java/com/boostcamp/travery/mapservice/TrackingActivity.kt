@@ -8,6 +8,7 @@ import android.content.ServiceConnection
 import android.graphics.Color
 import android.os.Bundle
 import android.os.IBinder
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import androidx.appcompat.app.AlertDialog
@@ -34,6 +35,7 @@ import com.orhanobut.dialogplus.DialogPlus
 import io.reactivex.Completable
 import kotlinx.android.synthetic.main.activity_tracking.*
 import kotlinx.android.synthetic.main.item_dialog_footer.*
+import java.lang.Exception
 
 class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     override val layoutResourceId: Int
@@ -94,7 +96,7 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
             else -> {
                 startActivityForResult(Intent(this, UserActionDetailActivity::class.java).apply {
                     putExtra(Constants.EXTRA_USER_ACTION, viewModel.getUserAction(marker.tag as Long))
-                }, Constants.REQUEST_CODE_USERACTION_REMOVE)
+                }, Constants.REQUEST_CODE_USERACTION_EDIT)
             }
         }
         return true
@@ -327,35 +329,45 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
 
                 }
 
-                Constants.REQUEST_CODE_USERACTION_REMOVE -> data?.let {
+                Constants.REQUEST_CODE_USERACTION_EDIT -> data?.let {
+                    //삭제했을때는 여기서 실행
                     val time: Long? = it.getLongExtra(Constants.EXTRA_USER_ACTION_DATE, 0L)
                     time?.let { _time ->
                         viewModel.deleteUserAction(_time)
                         userActionMarkers.forEach { marker ->
                             if (marker.tag == _time) {
+                                //리스트에서삭제
                                 userActionMarkers.remove(marker)
+                                //맵에서 삭제
                                 marker.remove()
                             }
                         }
                     }
-                    val userAction: UserAction? = it.getParcelableExtra(Constants.EXTRA_USER_ACTION)
-                    userAction?.let {user->
-                        viewModel.deleteUserAction(user.date.time)
 
-                        userActionMarkers.forEach { marker ->
-                            if (marker.tag == user.date.time) {
-                                userActionMarkers.remove(marker)
-                                marker.remove()
+                    //수정했을 때는 여기서 실행
+                    //TODO 우선 삭제하고 새로 넣는 방식으로 구현
+                    //TODO hashmap 데이터를 변경하는 것도 생각해봐야함
+                    try {
+                        val userAction: UserAction = it.getParcelableExtra(Constants.EXTRA_USER_ACTION)
+                        Completable.fromAction {
+                            viewModel.deleteUserAction(userAction.date.time)
+                            userActionMarkers.forEach { marker ->
+                                if (marker.tag == userAction.date.time) {
+                                    userActionMarkers.remove(marker)
+                                    marker.remove()
+                                }
                             }
-                        }
+                        }.doOnComplete {
+                            val userMarker = mMap.addMarker(MarkerOptions().position(
+                                    LatLng(userAction.latitude, userAction.longitude))
+                                    .icon(BitmapDescriptorFactory.fromBitmap(CustomMarker.create(this@TrackingActivity, userAction.mainImage))))
+                            userMarker.tag = userAction.date.time
 
-                        val userMarker = mMap.addMarker(MarkerOptions().position(
-                                LatLng(user.latitude, user.longitude))
-                                .icon(BitmapDescriptorFactory.fromBitmap(CustomMarker.create(this@TrackingActivity, user.mainImage))))
-                        userMarker.tag = user.date.time
+                            userActionMarkers.add(userMarker)
+                            viewModel.addUserAction(userAction)
+                        }.subscribe().dispose()
 
-                        userActionMarkers.add(userMarker)
-                        viewModel.addUserAction(user)
+                    } catch (e: Exception) {
                     }
                 }
             }

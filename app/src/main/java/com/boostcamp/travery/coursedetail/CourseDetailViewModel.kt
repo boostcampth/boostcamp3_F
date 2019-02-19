@@ -24,7 +24,8 @@ import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
-
+//TODO 활동 삭제와 수정시 맵이 꼬이는 문제가 있음. 예외처리로 수정
+//TODO 마커 배경 지워줘야함
 class CourseDetailViewModel(application: Application) : BaseViewModel(application) {
     private lateinit var course: Course
     private val courseDetailRepository = Injection.provideCourseRepository(application)
