@@ -13,6 +13,7 @@ object Constants {
     const val EXTRA_COURSE_CODE = "COURSE_CODE"
 
     const val EXTRA_USER_ACTION = "USER_ACTION"
+    const val EXTRA_USER_ACTION_DATE = "USER_ACTION_DATE"
 
     const val SIGN_IN_GOOGLE = 900
     const val SIGN_IN_SERVER = 22
@@ -20,6 +21,9 @@ object Constants {
     const val REQUEST_CODE_USERACTION_REMOVE = 1003
     const val REQUEST_CODE_USERACTION = 1004
     const val REQUEST_CODE_LOGIN = 701
+    const val REQUEST_CODE_USERACTION_EDIT = 1234
+
+    const val EDIT_MODE = "edit"
 
     const val GPS_ENABLE_REQUEST_CODE = 2001
 

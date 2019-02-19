@@ -2,8 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/menu_course_save"
-        android:icon="@drawable/ic_create_white_24dp"
-        android:title="@string/string_save_menu"
-        app:showAsAction="always" />
+        android:id="@+id/menu_course_edit"
+        android:title="@string/string_edit_menu"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_course_delete"
+        android:title="@string/string_delete_menu"
+        app:showAsAction="never" />
 </menu>

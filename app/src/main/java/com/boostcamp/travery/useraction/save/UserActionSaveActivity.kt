@@ -3,6 +3,7 @@ package com.boostcamp.travery.useraction.save
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.location.Location
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -18,10 +19,13 @@ import androidx.lifecycle.ViewModelProviders
 import com.boostcamp.travery.Constants
 import com.boostcamp.travery.R
 import com.boostcamp.travery.base.BaseActivity
+import com.boostcamp.travery.data.model.UserAction
 import com.boostcamp.travery.databinding.ActivitySaveUserActionBinding
 import com.boostcamp.travery.utils.toast
 import com.esafirm.imagepicker.features.ImagePicker
 import com.google.android.material.chip.Chip
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_save_user_action.*
 
 class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), UserActionSaveViewModel.View {
@@ -32,15 +36,24 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
 
     private var hashTagSwitch = false
 
+    private var editMode = false
+
+    private var location: Location? = null
+
+    private val disposable = CompositeDisposable()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(viewDataBinding.root)
+
+        editMode = intent.extras?.getBoolean(Constants.EDIT_MODE, false) ?: false
 
         setSupportActionBar(toolbar as Toolbar)
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
             setDisplayShowHomeEnabled(true)
-            title = resources.getString(R.string.string_activity_save_useraction_toolbar)
+            title = if (editMode) resources.getString(R.string.string_activity_edit_useraction_toolbar)
+            else resources.getString(R.string.string_activity_save_useraction_toolbar)
         }
 
         viewModel = ViewModelProviders.of(this).get(UserActionSaveViewModel::class.java).apply {
@@ -50,29 +63,58 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
 
         initViewModel()
         initAddButtonList()
+
+        if (editMode) {
+            // editMode 일 경우, detail 액티비티로부터 받은 데이터 세팅
+            viewModel.setUserAction(intent.getParcelableExtra(Constants.EXTRA_USER_ACTION))
+
+            if (viewModel.imageList.isNotEmpty()) {
+                buttonSwitch(rv_save_useraction_image_list, btn_image_add, true)
+            }
+
+            if (viewModel.getHashTagCount() > 0) {
+                buttonSwitch(chip_group, btn_hash_tag_add, true)
+            }
+        }
+    }
+
+    private fun buttonSwitch(view: View, button: View, on: Boolean) {
+        if (on) {
+            view.visibility = View.VISIBLE
+            button.isSelected = true
+        } else {
+            view.visibility = View.GONE
+            button.isSelected = false
+        }
     }
 
     private fun initViewModel() {
         // Chip 생성 후 그룹에 추가
-        viewModel.getHashTag().observe(this@UserActionSaveActivity, Observer {
-            createChip(it)
-            et_hashtag.setText("")
-        })
+        disposable.add(viewModel.psHashTag.observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    createChip(it)
+                    et_hashtag.setText("")
+                })
 
-        // 주소 세팅 및 observe
-        // 전달 된 위치가 없을 경우(트래킹중이 아닐 경우 현재위치 로딩안되므로)
-        val defaultLocation = viewModel.getLastKnownLocation()
-        viewModel.setAddress(
-                intent.getDoubleExtra(
-                        Constants.EXTRA_LATITUDE, defaultLocation?.latitude
-                        ?: 0.0
-                ),
-                intent.getDoubleExtra(
-                        Constants.EXTRA_LONGITUDE, defaultLocation?.longitude
-                        ?: 0.0
-                )
-        )
-        viewModel.getAddress().observe(this@UserActionSaveActivity, Observer { tv_location_cur.text = it })
+        if (!editMode) {
+            // 주소 세팅 및 observe
+            // 전달 된 위치가 없을 경우(트래킹중이 아닐 경우 현재위치 로딩안되므로)
+            location = viewModel.getLastKnownLocation()
+            viewModel.setAddress(
+                    intent.getDoubleExtra(
+                            Constants.EXTRA_LATITUDE, location?.latitude
+                            ?: 0.0
+                    ),
+                    intent.getDoubleExtra(
+                            Constants.EXTRA_LONGITUDE, location?.longitude
+                            ?: 0.0
+                    )
+            )
+            viewModel.getAddress().observe(this@UserActionSaveActivity, Observer { tv_location_cur.text = it })
+        } else {
+            val data = intent.extras?.getParcelable<UserAction>(Constants.EXTRA_USER_ACTION)
+            viewModel.setAddress(data?.latitude ?: 0.0, data?.longitude ?: 0.0)
+        }
     }
 
     private fun initAddButtonList() {
@@ -97,12 +139,10 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
 
             if (hashTagSwitch) {
                 if (viewModel.getHashTagCount() == 0) {
-                    chip_group.visibility = View.GONE
-                    btn_hash_tag_add.isSelected = false
+                    buttonSwitch(chip_group, btn_hash_tag_add, false)
                 }
             } else {
-                chip_group.visibility = View.VISIBLE
-                btn_hash_tag_add.isSelected = true
+                buttonSwitch(chip_group, btn_hash_tag_add, true)
                 currentFocus?.let {
                     imm.showSoftInput(it, 0)
                 }
@@ -123,17 +163,16 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
                 bottomMargin = R.dimen.content_margin_top_n_bottom
             }
             setOnCloseIconClickListener {
-                chip_group.removeView(this as View)
+                chip_group.removeView(this)
                 viewModel.removeHashTag((it as Chip).text as String)
                 // 해시태그가 모두 사라졌을 때 처리
                 if (chip_group.childCount == 1) {
                     hashTagSwitch = false
-                    btn_hash_tag_add.isSelected = false
-                    chip_group.visibility = View.GONE
+                    buttonSwitch(chip_group, btn_hash_tag_add, false)
                 }
             }
         }.also {
-            chip_group.addView(it as View, chip_group.childCount - 1)
+            chip_group.addView(it, chip_group.childCount - 1)
         }
     }
 
@@ -144,13 +183,30 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
 
     override fun onOptionsItemSelected(item: MenuItem?) = when (item?.itemId) {
         R.id.menu_course_save -> {
-            setResult(Activity.RESULT_OK, Intent().apply {
-                putExtra(Constants.EXTRA_USER_ACTION, viewModel.saveUserAction(
-                        intent.getDoubleExtra(Constants.EXTRA_LATITUDE, 0.0),
-                        intent.getDoubleExtra(Constants.EXTRA_LONGITUDE, 0.0),
-                        intent.getLongExtra(Constants.EXTRA_COURSE_CODE, 0)
-                ))
-            })
+            onProgress()
+
+            if (editMode) {
+                viewModel.updateUserAction()
+
+                setResult(Activity.RESULT_OK, Intent().apply {
+                    putExtra(Constants.EXTRA_USER_ACTION, viewModel.userAction.get())
+                })
+            } else {
+                with(intent) {
+                    viewModel.saveUserAction(
+                            getDoubleExtra(Constants.EXTRA_LATITUDE, location?.latitude ?: 0.0),
+                            getDoubleExtra(Constants.EXTRA_LONGITUDE, location?.longitude ?: 0.0),
+                            getLongExtra(Constants.EXTRA_COURSE_CODE, 0)
+                    )
+                }
+
+                setResult(Activity.RESULT_OK, Intent().apply {
+                    putExtra(Constants.EXTRA_LATITUDE, intent.getDoubleExtra(Constants.EXTRA_LATITUDE, 0.0))
+                    putExtra(Constants.EXTRA_LONGITUDE, intent.getDoubleExtra(Constants.EXTRA_LONGITUDE, 0.0))
+                })
+            }
+
+            getString(R.string.string_activity_user_action_save_success).toast(this)
 
             finish()
             true
@@ -164,8 +220,7 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
     }
 
     override fun imageListEmpty() {
-        rv_save_useraction_image_list.visibility = View.GONE
-        btn_image_add.isSelected = false
+        buttonSwitch(rv_save_useraction_image_list, btn_image_add, false)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -181,6 +236,16 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
             }
         }
         super.onActivityResult(requestCode, resultCode, data)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        offProgress()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        disposable.clear()
     }
 
     override fun onBackPressed() {

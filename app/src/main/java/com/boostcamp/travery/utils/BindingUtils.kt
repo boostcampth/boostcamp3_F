@@ -14,13 +14,13 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.boostcamp.travery.GlideApp
 import com.boostcamp.travery.R
-import com.boostcamp.travery.feed.ViewPagerAdapter
 import com.boostcamp.travery.course.list.CourseListViewModel
 import com.boostcamp.travery.course.list.adapter.CourseListAdapter
+import com.boostcamp.travery.feed.ViewPagerAdapter
 import com.boostcamp.travery.search.SearchResultViewModel
 import com.boostcamp.travery.search.UserActionSearchAdapter
+import com.boostcamp.travery.useraction.detail.ImagesViewPagerAdapter
 import com.boostcamp.travery.useraction.detail.UserActionDetailViewModel
-import com.boostcamp.travery.useraction.detail.UserActionImageAdapter
 import com.boostcamp.travery.useraction.save.UserActionImageListAdapter
 import com.boostcamp.travery.useraction.save.UserActionSaveViewModel
 import com.bumptech.glide.load.DataSource
@@ -37,7 +37,6 @@ import com.warkiz.widget.OnSeekChangeListener
 import org.json.JSONArray
 import java.util.*
 import kotlin.collections.ArrayList
-
 
 object BindingUtils {
 
@@ -117,7 +116,7 @@ object BindingUtils {
     @JvmStatic
     @BindingAdapter("android:date")
     fun setDate(textView: TextView, date: Date?) {
-        date?.let{textView.text = DateUtils.parseDateAsString(date, "yyyy.MM.dd")}
+        date?.let { textView.text = DateUtils.parseDateAsString(date, "yyyy.MM.dd") }
     }
 
     @JvmStatic
@@ -196,18 +195,6 @@ object BindingUtils {
         }
     }
 
-    @JvmStatic
-    @BindingAdapter("imageAdapter")
-    fun setAdapter(recyclerView: RecyclerView, viewModel: UserActionDetailViewModel) {
-        val adapter = UserActionImageAdapter(viewModel.imageList).apply {
-            onItemClickListener = { item: Any -> viewModel.onItemClick(item) }
-        }
-        recyclerView.apply {
-            layoutManager = LinearLayoutManager(recyclerView.context, LinearLayoutManager.HORIZONTAL, false)
-            this.adapter = adapter
-        }
-    }
-
     /**
      * 리사이클러뷰 해당 position이 리사이클러뷰의 최상단에 보이게 스크롤
      */
@@ -267,14 +254,19 @@ object BindingUtils {
     @JvmStatic
     @BindingAdapter("hashTag")
     fun setHashTag(chipGroup: ChipGroup, hashTagList: List<String>) {
-        hashTagList.forEach { hashTag ->
-            Chip(chipGroup.context).apply {
-                text = hashTag
-                isClickable = true
-                isChipIconVisible = false
-                isCheckedIconVisible = false
-            }.also {
-                chipGroup.addView(it)
+        if (hashTagList.isNotEmpty()) {
+            if (chipGroup.childCount > 0) {
+                chipGroup.removeAllViews()
+            }
+            hashTagList.forEach { hashTag ->
+                Chip(chipGroup.context).apply {
+                    text = hashTag
+                    isClickable = true
+                    isChipIconVisible = false
+                    isCheckedIconVisible = false
+                }.also {
+                    chipGroup.addView(it)
+                }
             }
         }
     }
@@ -307,7 +299,6 @@ object BindingUtils {
                 (viewpager.adapter as ViewPagerAdapter).itemChange(imageList)
             }
         }
-
     }
 
     @JvmStatic
@@ -334,5 +325,15 @@ object BindingUtils {
     @BindingAdapter("onSeekChanged")
     fun onSeekChangedListener(view: IndicatorSeekBar, listener: OnSeekChangeListener) {
         view.onSeekChangeListener = listener
+    }
+
+    @JvmStatic
+    @BindingAdapter("viewPagerAdapter")
+    fun setViewPagerAdapter(viewPager: ViewPager, viewModel: UserActionDetailViewModel) {
+        if (viewModel.imageList.isEmpty()) {
+            viewPager.visibility = View.GONE
+        } else {
+            viewPager.adapter = ImagesViewPagerAdapter(viewModel.imageList)
+        }
     }
 }

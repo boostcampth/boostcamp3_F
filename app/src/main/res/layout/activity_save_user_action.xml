@@ -44,6 +44,7 @@
                     android:onTextChanged="@{(text, start, before, count) -> viewmodel.onTitleChange(text)}"
                     android:padding="15dp"
                     android:singleLine="true"
+                    android:text="@{viewmodel.userAction.title}"
                     android:textSize="@dimen/font_title"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
@@ -56,6 +57,7 @@
                     android:paddingTop="15dp"
                     android:paddingEnd="10dp"
                     android:paddingBottom="15dp"
+                    android:text="@{viewmodel.userAction.address}"
                     android:textColor="#000"
                     android:textSize="@dimen/font_subtitle"
                     tools:text="강남구 역삼동 테헤란로 부캠쓰zzzzzzzzzzzzzzzzzzㅋㅋㅋㅋㅋㅋㅋㅋㅋ"/>
@@ -70,6 +72,7 @@
                     android:inputType="text|textMultiLine"
                     android:onTextChanged="@{(text, start, before, count) -> viewmodel.onContentChange(text)}"
                     android:padding="15dp"
+                    android:text="@{viewmodel.userAction.body}"
                     android:textSize="@dimen/font_contents"/>
 
                 <com.google.android.material.chip.ChipGroup

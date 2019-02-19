@@ -45,6 +45,8 @@
     <string name="string_tv_course_add">테마</string>
     <string name="string_tv_date">날짜</string>
     <string name="string_save_menu">저장</string>
+    <string name="string_edit_menu">수정</string>
+    <string name="string_delete_menu">삭제</string>
     <string name="string_input_theme">직접 입력</string>
 
     <string name="string_et_content_hint">내용을 입력하세요\n\n\n\n</string>
@@ -102,10 +104,17 @@
     <string name="string_activity_sign_toolbar">가입</string>
     <string name="string_activity_setting_toolbar">설정</string>
     <string name="string_activity_save_useraction_toolbar">활동 추가</string>
+    <string name="string_activity_edit_useraction_toolbar">활동 수정</string>
     <string name="string_activity_save_course_toolbar">코스 저장</string>
     <string name="string_tracking_initial_distance">0m</string>
 
     <string name="dialog_message">기록을 종료하시겠습니까?</string>
     <string name="dialog_positive">예</string>
     <string name="dialog_negative">아니오</string>
+
+    <string name="string_activity_title_action_detail">활동 상세보기</string>
+
+    <string name="dialog_message_delete">정말 삭제하시겠습니까?</string>
+    <string name="string_activity_user_action_save_success">활동 기록이 완료되었습니다!</string>
+    <string name="string_activity_course_save_success">코스 기록이 완료되었습니다!</string>
 </resources>

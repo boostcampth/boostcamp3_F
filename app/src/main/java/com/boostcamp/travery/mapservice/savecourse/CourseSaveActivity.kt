@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.boostcamp.travery.R
 import com.boostcamp.travery.base.BaseActivity
 import com.boostcamp.travery.databinding.ActivityCourseSaveBinding
+import com.boostcamp.travery.utils.toast
 import kotlinx.android.synthetic.main.activity_course_save.*
 
 class CourseSaveActivity : BaseActivity<ActivityCourseSaveBinding>() {
@@ -53,6 +54,7 @@ class CourseSaveActivity : BaseActivity<ActivityCourseSaveBinding>() {
     override fun onOptionsItemSelected(item: MenuItem?) = when (item?.itemId) {
         R.id.menu_course_save -> {
             viewDataBinding.savevm?.saveCourseToDatabase(intent.extras)
+            getString(R.string.string_activity_course_save_success).toast(this)
             finish()
             true
         }

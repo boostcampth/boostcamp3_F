@@ -17,14 +17,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.boostcamp.travery.Constants
 import com.boostcamp.travery.R
 import com.boostcamp.travery.base.BaseActivity
-import com.boostcamp.travery.community.LoginActivity
 import com.boostcamp.travery.community.SettingActivity
 import com.boostcamp.travery.course.list.CourseListActivity
 import com.boostcamp.travery.databinding.MainFeedBinding
 import com.boostcamp.travery.mapservice.TrackingActivity
-import com.boostcamp.travery.mapservice.savecourse.CourseSaveActivity
-import com.boostcamp.travery.useraction.detail.UserActionDetailActivity
 import com.boostcamp.travery.useraction.list.UserActionListActivity
+import com.boostcamp.travery.useraction.save.UserActionSaveActivity
 import com.google.android.material.navigation.NavigationView
 import com.tedpark.tedpermission.rx2.TedRx2Permission
 import kotlinx.android.synthetic.main.main_feed.*
@@ -97,7 +95,7 @@ class NewsFeedActivity : BaseActivity<MainFeedBinding>(), NavigationView.OnNavig
                 startActivity(Intent(this, CourseListActivity::class.java))
             }
             R.id.nav_useraction_add -> {
-                startActivity(Intent(this, UserActionDetailActivity::class.java))
+                startActivity(Intent(this, UserActionSaveActivity::class.java))
             }
 
             R.id.nav_setting -> {
