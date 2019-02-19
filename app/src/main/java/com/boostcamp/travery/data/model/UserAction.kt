@@ -28,12 +28,9 @@ data class UserAction(
         @ColumnInfo(name = "latitude") var latitude: Double,
         @ColumnInfo(name = "longitude") var longitude: Double,
         @ColumnInfo(name = "course_code", index = true) var courseCode: Long? = null,
-        @ColumnInfo(name = "address") var address: String = " "
+        @ColumnInfo(name = "address") var address: String = " ",
+        @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "seq") var seq: Int? = null
 ) : Parcelable {
-    @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "seq")
-    var seq: Int? = null
-
     override fun equals(other: Any?): Boolean {
         if (other is UserAction) {
             return this.seq == other.seq

@@ -39,7 +39,7 @@ abstract class BaseActivity<T : ViewDataBinding> : AppCompatActivity() {
         )
     }
 
-    fun onProgress(message: String?) {
+    fun onProgress(message: String = resources.getString(R.string.progress_bar_message)) {
         if (this.isFinishing) {
             return
         }

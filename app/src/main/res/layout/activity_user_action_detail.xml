@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:attrs="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -21,28 +22,28 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="10dp"
-            android:padding="@dimen/activity_content_padding">
+            android:layout_marginTop="10dp">
 
             <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/iv_loc"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:src="@drawable/ic_location_on_black_24dp"
-                app:layout_constraintBottom_toBottomOf="@+id/tv_user_action_detail_title"
+                android:id="@+id/profile"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_margin="10dp"
+                android:src="@mipmap/ic_launcher_round"
+                app:layout_constraintBottom_toBottomOf="@id/tv_user_action_detail_date"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/tv_user_action_detail_title"
-                app:tint="@color/colorAccent"/>
+                app:layout_constraintTop_toTopOf="@id/tv_user_action_detail_title"/>
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_user_action_detail_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="10dp"
                 android:layout_marginStart="5dp"
                 android:text="@{viewmodel.userAction.title}"
-                android:textSize="18sp"
+                android:textSize="@dimen/font_title"
                 android:textStyle="bold"
-                app:layout_constraintStart_toEndOf="@+id/iv_loc"
+                app:layout_constraintStart_toEndOf="@+id/profile"
                 app:layout_constraintTop_toTopOf="parent"
                 app:tint="@color/colorAccent"
                 tools:text="강남역에서의 점심"/>
@@ -53,43 +54,65 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:text="@{viewmodel.userAction.address}"
-                android:textSize="@dimen/tv_address_size"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_user_action_detail_title"/>
+                android:textSize="@dimen/font_contents"
+                app:layout_constraintStart_toStartOf="@id/tv_user_action_detail_title"
+                app:layout_constraintTop_toBottomOf="@id/tv_user_action_detail_title"
+                tools:text="서울특별시 강남구 역삼동 1234"/>
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_user_action_detail_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:date="@{viewmodel.userAction.date}"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="5dp"
+                android:text="@{viewmodel.today}"
+                app:layout_constraintStart_toStartOf="@id/tv_user_action_detail_title"
                 app:layout_constraintTop_toBottomOf="@id/tv_user_action_detail_location"
                 tools:text="2019.02.04 AM 02:39"/>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_image_list"
+            <androidx.viewpager.widget.ViewPager
+                android:id="@+id/vp_image_list"
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
-                android:layout_marginTop="5dp"
-                app:imageAdapter="@{viewmodel}"
+                android:layout_marginTop="10dp"
+                app:viewPagerAdapter="@{viewmodel}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_user_action_detail_date"/>
+
+            <com.rd.PageIndicatorView
+                android:id="@+id/piv_action_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/vp_image_list"
+                app:piv_animationType="drop"
+                app:piv_count="0"
+                app:piv_dynamicCount="true"
+                app:piv_interactiveAnimation="true"
+                app:piv_selectedColor="@color/colorPrimaryDark"
+                app:piv_unselectedColor="#E0E0E0"
+                app:piv_viewPager="@id/vp_image_list"
+                attrs:piv_padding="10dp"
+                attrs:piv_radius="5dp"/>
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_margin="10dp"
                 android:padding="5dp"
                 android:text="@{viewmodel.userAction.body}"
                 android:textSize="17sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/rv_image_list"
+                app:layout_constraintTop_toBottomOf="@+id/piv_action_image"
                 tools:text="텍스트뷰 입니다. 입니다. 입니다."/>
 
             <com.google.android.material.chip.ChipGroup
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginTop="10dp"
+                android:layout_margin="10dp"
                 app:chipSpacing="@dimen/chip_group_child_spacing"
                 app:chipSpacingVertical="@dimen/chip_group_child_spacing_vertical"
                 app:hashTag="@{viewmodel.hashTagList}"
