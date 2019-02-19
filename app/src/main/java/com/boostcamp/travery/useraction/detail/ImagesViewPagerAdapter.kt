@@ -54,6 +54,10 @@ class ImagesViewPagerAdapter(private val images: ObservableList<String>) : Pager
         return images.size
     }
 
+    override fun getItemPosition(`object`: Any): Int {
+        return PagerAdapter.POSITION_NONE
+    }
+
     override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
         container.invalidate()
     }

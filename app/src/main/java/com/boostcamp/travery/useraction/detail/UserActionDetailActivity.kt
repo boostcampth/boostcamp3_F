@@ -38,6 +38,7 @@ class UserActionDetailActivity : BaseActivity<ActivityUserActionDetailBinding>()
 
         viewModel.init(intent.getParcelableExtra(Constants.EXTRA_USER_ACTION))
         viewModel.setContract(this)
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -74,7 +75,11 @@ class UserActionDetailActivity : BaseActivity<ActivityUserActionDetailBinding>()
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == Constants.REQUEST_CODE_USERACTION_EDIT) {
             if (resultCode == Activity.RESULT_OK) {
-                data?.let { viewModel.init(it.getParcelableExtra(Constants.EXTRA_USER_ACTION)) }
+                data?.let {
+                    val userAction = it.getParcelableExtra<UserAction>(Constants.EXTRA_USER_ACTION)
+                    viewModel.init(userAction)
+                    piv_action_image.setSelected(0)
+                }
             }
         }
     }
