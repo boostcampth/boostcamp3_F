@@ -13,6 +13,7 @@ object Constants {
     const val EXTRA_COURSE_CODE = "COURSE_CODE"
 
     const val EXTRA_USER_ACTION = "USER_ACTION"
+    const val EXTRA_USER_ACTION_DATE = "USER_ACTION_DATE"
 
     const val SIGN_IN_GOOGLE = 900
     const val SIGN_IN_SERVER = 22

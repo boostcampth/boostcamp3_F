@@ -12,6 +12,7 @@ import com.boostcamp.travery.data.model.Course
 import com.boostcamp.travery.data.model.TimeCode
 import com.boostcamp.travery.data.model.UserAction
 import com.boostcamp.travery.eventbus.EventBus
+import com.boostcamp.travery.useraction.detail.UserActionDeleteEvent
 import com.boostcamp.travery.useraction.save.UserActionUpdateEvent
 import com.boostcamp.travery.utils.DateUtils
 import com.google.android.gms.maps.model.LatLng
@@ -50,11 +51,22 @@ class CourseDetailViewModel(application: Application) : BaseViewModel(applicatio
     }
 
     init {
-        addDisposable(EventBus.getEvents().ofType(UserActionUpdateEvent::class.java).subscribe {
-            // 중간에 껴넣기가 구현되어있지 않아서 그냥 새로 갱신해버림
-            userActionList.clear()
-            loadUserActionList()
-        })
+        // 활동 수정사항 이벤트 observe
+        addDisposable(EventBus.getEvents()
+                .ofType(UserActionUpdateEvent::class.java)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    userActionList.clear()
+                    loadUserActionList()
+                })
+
+        addDisposable(EventBus.getEvents()
+                .ofType(UserActionDeleteEvent::class.java)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    userActionList.clear()
+                    loadUserActionList()
+                })
     }
 
     private var eventListener: ViewModelEventListener? = null

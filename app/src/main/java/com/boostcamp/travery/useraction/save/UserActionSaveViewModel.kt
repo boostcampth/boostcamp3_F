@@ -130,11 +130,12 @@ class UserActionSaveViewModel(application: Application) : BaseViewModel(applicat
         this.userAction.set(data)
 
 
-        data?.let {
-            addDisposable(
-                    userActionRepository.updateUserAction(it).subscribeOn(Schedulers.io()).subscribe()
-            )
-            EventBus.sendEvent(UserActionUpdateEvent(it))
+        data?.let { user ->
+            addDisposable(userActionRepository.updateUserAction(user)
+                    .subscribeOn(Schedulers.io())
+                    .subscribe {
+                        EventBus.sendEvent(UserActionUpdateEvent(user))
+                    })
         }
     }
 
@@ -178,7 +179,11 @@ class UserActionSaveViewModel(application: Application) : BaseViewModel(applicat
      */
     private fun listToString(list: List<String>, divider: Char): String {
         return list.fold("") { acc, item ->
-            if (acc.isEmpty()) item else "$acc$divider$item"
+            if (!item.startsWith("#")) {
+                if (acc.isEmpty()) "#$item" else "$acc$divider#$item"
+            } else {
+                if (acc.isEmpty()) item else "$acc$divider$item"
+            }
         }
     }
 

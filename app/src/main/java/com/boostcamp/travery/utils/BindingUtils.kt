@@ -330,6 +330,10 @@ object BindingUtils {
     @JvmStatic
     @BindingAdapter("viewPagerAdapter")
     fun setViewPagerAdapter(viewPager: ViewPager, viewModel: UserActionDetailViewModel) {
-        viewPager.adapter = ImagesViewPagerAdapter(viewModel.imageList)
+        if (viewModel.imageList.isEmpty()) {
+            viewPager.visibility = View.GONE
+        } else {
+            viewPager.adapter = ImagesViewPagerAdapter(viewModel.imageList)
+        }
     }
 }
