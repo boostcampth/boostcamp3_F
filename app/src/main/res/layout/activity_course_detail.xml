@@ -7,9 +7,9 @@
         <variable name="viewModel" type="com.boostcamp.travery.coursedetail.CourseDetailViewModel"/>
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
-
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@android:color/white">
 
         <include
             android:id="@+id/toolbar"
@@ -25,18 +25,23 @@
             android:layout_height="0dp"
             app:layout_constraintBottom_toTopOf="@+id/detail_seekbar"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@+id/toolbar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar"
             tools:context=".MapsActivity"/>
+
+        <View android:layout_width="match_parent" android:layout_height="6dp"
+              android:background="@drawable/shadow_reverse"
+              app:layout_constraintBottom_toBottomOf="@+id/fragment_map"
+              />
 
         <com.warkiz.widget.IndicatorSeekBar
             android:id="@+id/detail_seekbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
-           android:padding="20dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
             android:background="@android:color/white"
-
-
+            android:padding="20dp"
             app:isb_indicator_color="@color/ef_black_alpha_50"
             app:isb_indicator_top_content_layout="@layout/item_seekbar_content"
             app:isb_max="0"
@@ -83,9 +88,9 @@
             android:id="@+id/rv_useraction_list"
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:orientation="horizontal"
             android:background="@android:color/white"
             android:clipToPadding="false"
+            android:orientation="horizontal"
 
 
             app:layout_constraintBottom_toBottomOf="parent"

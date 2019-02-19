@@ -93,7 +93,7 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
             null -> return false
             else -> {
                 startActivityForResult(Intent(this, UserActionDetailActivity::class.java).apply {
-                    putExtra(Constants.EXTRA_USER_ACTION, viewModel.getUserAction(marker.tag.toString().toLong()))
+                    putExtra(Constants.EXTRA_USER_ACTION, viewModel.getUserAction(marker.tag as Long))
                 },Constants.REQUEST_CODE_USERACTION_REMOVE)
             }
         }

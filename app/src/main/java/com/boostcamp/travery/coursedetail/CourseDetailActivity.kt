@@ -29,16 +29,7 @@ import java.util.*
 
 class CourseDetailActivity : BaseActivity<ActivityCourseDetailBinding>(), OnMapReadyCallback {
     override val layoutResourceId: Int = R.layout.activity_course_detail
-    private val seekerMarker by lazy {
-        val myLocation = LatLng(37.56, 126.97)
-        map.addMarker(
-                MarkerOptions()
-                        .position(myLocation)
-                        .flat(true)
-                        .anchor(0.5f, 0.5f)
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.map_position_no_heading))
-        )
-    }
+    private lateinit var seekerMarker: Marker
     private val viewModel by lazy {
         ViewModelProviders.of(this).get(CourseDetailViewModel::class.java)
     }
@@ -60,6 +51,7 @@ class CourseDetailActivity : BaseActivity<ActivityCourseDetailBinding>(), OnMapR
         mapFragment.getMapAsync(this)
         setupBindings(savedInstanceState)
         rv_useraction_list.setOnSnapListener { viewModel.updateCurUseraction(it) }
+
         viewModel.setEventListener(object : CourseDetailViewModel.ViewModelEventListener {
             override fun onItemClick(item: Any) {
                 if (item is UserAction) {
@@ -112,13 +104,24 @@ class CourseDetailActivity : BaseActivity<ActivityCourseDetailBinding>(), OnMapR
                                 LatLngBounds.builder().include(it[0]).include(it[it.size - 1]).build()
                                 , 110.toPx())
                 )
+                seekerMarker = map.addMarker(
+                        MarkerOptions()
+                                .position(it.first())
+                                .flat(true)
+                                .anchor(0.5f, 0.5f)
+                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.map_position_no_heading))
+                )
             }
 
         })
 
+        viewModel.seekProgress.observe(this, Observer {
+            detail_seekbar.setProgress(it.toFloat())
+        })
+
         viewModel.seekTimeCode.observe(this, Observer {
             seekerMarker.position = it.coordinate
-            map.moveCamera(CameraUpdateFactory.newLatLng(it.coordinate))
+            map.animateCamera(CameraUpdateFactory.newLatLng(it.coordinate), 150, null)
             detail_seekbar.indicator.topContentView.tv_time?.text = DateUtils.parseDateAsString(it.timeStamp, "a h시 mm분 ss초")
         })
 
