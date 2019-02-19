@@ -162,6 +162,7 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
                 topMargin = R.dimen.content_margin_top_n_bottom
                 bottomMargin = R.dimen.content_margin_top_n_bottom
             }
+
             setOnCloseIconClickListener {
                 chip_group.removeView(this)
                 viewModel.removeHashTag((it as Chip).text as String)
@@ -192,17 +193,12 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
                     putExtra(Constants.EXTRA_USER_ACTION, viewModel.userAction.get())
                 })
             } else {
-                with(intent) {
-                    viewModel.saveUserAction(
-                            getDoubleExtra(Constants.EXTRA_LATITUDE, location?.latitude ?: 0.0),
-                            getDoubleExtra(Constants.EXTRA_LONGITUDE, location?.longitude ?: 0.0),
-                            getLongExtra(Constants.EXTRA_COURSE_CODE, 0)
-                    )
-                }
-
                 setResult(Activity.RESULT_OK, Intent().apply {
-                    putExtra(Constants.EXTRA_LATITUDE, intent.getDoubleExtra(Constants.EXTRA_LATITUDE, 0.0))
-                    putExtra(Constants.EXTRA_LONGITUDE, intent.getDoubleExtra(Constants.EXTRA_LONGITUDE, 0.0))
+                    putExtra(Constants.EXTRA_USER_ACTION, viewModel.saveUserAction(
+                            intent.getDoubleExtra(Constants.EXTRA_LATITUDE, 0.0),
+                            intent.getDoubleExtra(Constants.EXTRA_LONGITUDE, 0.0),
+                            intent.getLongExtra(Constants.EXTRA_COURSE_CODE, 0)
+                    ))
                 })
             }
 

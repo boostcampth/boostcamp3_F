@@ -84,7 +84,7 @@ class UserActionSaveViewModel(application: Application) : BaseViewModel(applicat
         return result
     }
 
-    fun saveUserAction(latitude: Double, longitude: Double, courseCode: Long) {
+    fun saveUserAction(latitude: Double, longitude: Double, courseCode: Long): UserAction {
         val result = parseImagesToJsonArray()
 
         val userAction = UserAction(
@@ -110,6 +110,8 @@ class UserActionSaveViewModel(application: Application) : BaseViewModel(applicat
 //        addDisposable(newsFeedRepository.uploadFeed(userAction, "temp").subscribe({
 //            Log.e("TEST", it.message)
 //        }, { Log.e("TEST", it.message) }))
+
+        return userAction
     }
 
     fun updateUserAction() {
