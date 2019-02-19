@@ -118,7 +118,7 @@ class MapTrackingRepository {
     }
 
     fun addUserAction(userAction: UserAction) {
-        userActionList.put(userAction.date.time, userAction)
+        userActionList[userAction.date.time] = userAction
     }
 
     fun getUserAction(date: Long): UserAction? {

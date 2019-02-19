@@ -122,7 +122,6 @@ class UserActionSaveViewModel(application: Application) : BaseViewModel(applicat
         data?.apply {
             title = this@UserActionSaveViewModel.title
             body = this@UserActionSaveViewModel.content
-            date = Date(System.currentTimeMillis())
             hashTag = listToString(hashTagList, ' ')
             mainImage = if (result.length() > 0) result.getString(0) else ""
             subImage = result.toString()
