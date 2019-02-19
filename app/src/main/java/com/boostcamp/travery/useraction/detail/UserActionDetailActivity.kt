@@ -78,6 +78,11 @@ class UserActionDetailActivity : BaseActivity<ActivityUserActionDetailBinding>()
                 data?.let {
                     val userAction = it.getParcelableExtra<UserAction>(Constants.EXTRA_USER_ACTION)
                     viewModel.init(userAction)
+
+                    setResult(Activity.RESULT_OK, Intent().apply {
+                        putExtra(Constants.EXTRA_USER_ACTION, userAction)
+                    })
+
                     piv_action_image.setSelected(0)
                 }
             }
@@ -90,7 +95,7 @@ class UserActionDetailActivity : BaseActivity<ActivityUserActionDetailBinding>()
      */
     override fun deletedUserAction(userAction: UserAction) {
         setResult(Activity.RESULT_OK, Intent().apply {
-            putExtra(Constants.EXTRA_USER_ACTION_DATE, userAction.date)
+            putExtra(Constants.EXTRA_USER_ACTION_DATE, userAction.date.time)
         })
         finish()
     }

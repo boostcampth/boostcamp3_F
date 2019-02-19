@@ -2,7 +2,6 @@ package com.boostcamp.travery.coursedetail
 
 import android.app.Application
 import android.location.Geocoder
-import android.util.Log
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableField
 import androidx.databinding.ObservableInt

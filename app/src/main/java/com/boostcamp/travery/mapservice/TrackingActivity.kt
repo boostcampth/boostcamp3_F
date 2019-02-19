@@ -94,7 +94,7 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
             else -> {
                 startActivityForResult(Intent(this, UserActionDetailActivity::class.java).apply {
                     putExtra(Constants.EXTRA_USER_ACTION, viewModel.getUserAction(marker.tag as Long))
-                },Constants.REQUEST_CODE_USERACTION_REMOVE)
+                }, Constants.REQUEST_CODE_USERACTION_REMOVE)
             }
         }
         return true
@@ -328,13 +328,34 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
                 }
 
                 Constants.REQUEST_CODE_USERACTION_REMOVE -> data?.let {
-                    val userAction: UserAction = it.getParcelableExtra(Constants.EXTRA_USER_ACTION)
-                    viewModel.deleteUserAction(userAction.date.time)
-                    userActionMarkers.forEach {marker->
-                        if(marker.tag == userAction.date.time){
-                            userActionMarkers.remove(marker)
-                            marker.remove()
+                    val time: Long? = it.getLongExtra(Constants.EXTRA_USER_ACTION_DATE, 0L)
+                    time?.let { _time ->
+                        viewModel.deleteUserAction(_time)
+                        userActionMarkers.forEach { marker ->
+                            if (marker.tag == _time) {
+                                userActionMarkers.remove(marker)
+                                marker.remove()
+                            }
                         }
+                    }
+                    val userAction: UserAction? = it.getParcelableExtra(Constants.EXTRA_USER_ACTION)
+                    userAction?.let {user->
+                        viewModel.deleteUserAction(user.date.time)
+
+                        userActionMarkers.forEach { marker ->
+                            if (marker.tag == user.date.time) {
+                                userActionMarkers.remove(marker)
+                                marker.remove()
+                            }
+                        }
+
+                        val userMarker = mMap.addMarker(MarkerOptions().position(
+                                LatLng(user.latitude, user.longitude))
+                                .icon(BitmapDescriptorFactory.fromBitmap(CustomMarker.create(this@TrackingActivity, user.mainImage))))
+                        userMarker.tag = user.date.time
+
+                        userActionMarkers.add(userMarker)
+                        viewModel.addUserAction(user)
                     }
                 }
             }
