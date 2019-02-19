@@ -105,9 +105,9 @@ class CourseRepository private constructor(private val courseDataSource: CourseD
                 .doOnComplete {
                     //경로위에 있는 활동일 때
                     if (userAction.courseCode != null) {
-                        mCachedCourse[userAction.courseCode
-                                ?: 0]?.userActionList?.remove(userAction)
-                        mCachedCourse[userAction.courseCode ?: 0]?.userActionList?.add(userAction)
+                        val index=mCachedCourse[userAction.courseCode ?: 0]?.userActionList?.indexOf(userAction)?:-1
+                        mCachedCourse[userAction.courseCode ?: 0]?.userActionList?.removeAt(index)
+                        mCachedCourse[userAction.courseCode ?: 0]?.userActionList?.add(index,userAction)
                     }
                 }
     }
