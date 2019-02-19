@@ -25,6 +25,7 @@ import com.boostcamp.travery.useraction.save.UserActionImageListAdapter
 import com.boostcamp.travery.useraction.save.UserActionSaveViewModel
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.MultiTransformation
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -97,6 +98,8 @@ object BindingUtils {
                 .load(path)
                 .circleCrop()
                 .error(R.mipmap.ic_launcher)
+                .skipMemoryCache(false)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(imageView)
     }
 

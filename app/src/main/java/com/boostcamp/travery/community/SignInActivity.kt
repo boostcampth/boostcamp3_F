@@ -1,15 +1,19 @@
 package com.boostcamp.travery.community
 
+import android.app.Activity
 import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.ViewModelProviders
+import com.boostcamp.travery.Constants
 import com.boostcamp.travery.GlideApp
 import com.boostcamp.travery.R
 import com.boostcamp.travery.base.BaseActivity
 import com.boostcamp.travery.databinding.ActivitySignInBinding
+import com.boostcamp.travery.utils.ImageUtils
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
@@ -21,12 +25,35 @@ class SignInActivity : BaseActivity<ActivitySignInBinding>() {
     override val layoutResourceId: Int
         get() = R.layout.activity_sign_in
 
+    private val view= object :SignInViewModel.View{
+        override fun toastMessage(message:String) {
+            Toast.makeText(this@SignInActivity,message,Toast.LENGTH_SHORT).show()
+        }
+
+        override fun returnResult() {
+            setResult(Activity.RESULT_OK)
+            finish()
+        }
+
+        override fun onLoading() {
+            onProgress(resources.getString(R.string.progress_bar_message))
+        }
+
+        override fun offLoading() {
+            offProgress()
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewDataBinding.viewModel = ViewModelProviders.of(this).get(SignInViewModel::class.java)
+        viewDataBinding.viewModel = ViewModelProviders.of(this).get(SignInViewModel::class.java).apply {
+            setView(view)
+        }
         setContentView(viewDataBinding.root)
 
         setSupportActionBar(toolBar_sign as Toolbar)
+
+        viewDataBinding.viewModel?.setUserId(intent.getStringExtra(Constants.EXTRA_USER_ID))
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
             setDisplayShowHomeEnabled(true)
@@ -47,34 +74,14 @@ class SignInActivity : BaseActivity<ActivitySignInBinding>() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (ImagePicker.shouldHandle(requestCode, resultCode, data)) {
-            ImagePicker.getImages(data).forEach {
-                GlideApp.with(img_user)
-                        .load(it.path)
-                        .circleCrop()
-                        .listener(object : RequestListener<Drawable> {
-                            override fun onLoadFailed(
-                                    e: GlideException?,
-                                    model: Any?,
-                                    target: Target<Drawable>?,
-                                    isFirstResource: Boolean
-                            ): Boolean {
-                                img_user.visibility = View.GONE
-                                return false
-                            }
-
-                            override fun onResourceReady(
-                                    resource: Drawable?,
-                                    model: Any?,
-                                    target: Target<Drawable>?,
-                                    dataSource: DataSource?,
-                                    isFirstResource: Boolean
-                            ): Boolean {
-                                return false
-                            }
-                        })
-                        .into(img_user)
-            }
+            viewDataBinding.viewModel?.setUserImage(ImagePicker.getFirstImageOrNull(data).path)
+            GlideApp.with(this)
+                    .load(ImagePicker.getFirstImageOrNull(data).path)
+                    .circleCrop()
+                    .into(img_user)
         }
         super.onActivityResult(requestCode, resultCode, data)
     }
+
+
 }

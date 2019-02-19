@@ -12,6 +12,7 @@ object Constants {
     const val EXTRA_LONGITUDE = "LONGITUDE"
     const val EXTRA_COURSE_CODE = "COURSE_CODE"
 
+    const val EXTRA_USER_ID="USER_ID"
     const val EXTRA_USER_ACTION = "USER_ACTION"
     const val EXTRA_USER_ACTION_DATE = "USER_ACTION_DATE"
 
