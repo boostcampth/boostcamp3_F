@@ -18,7 +18,7 @@ class MapTrackingRepository {
     private val second: PublishSubject<Int> = PublishSubject.create()
     private val distance: PublishSubject<Long> = PublishSubject.create()
 
-    private val userActionList = ArrayList<UserAction>()
+    private val userActionList = HashMap<Long, UserAction>()
 
     private var startTime = 0L
     private var totalDistance = 0L
@@ -118,15 +118,19 @@ class MapTrackingRepository {
     }
 
     fun addUserAction(userAction: UserAction) {
-        userActionList.add(userAction)
+        userActionList.put(userAction.date.time, userAction)
     }
 
-    fun getUserAction(position: Int): UserAction {
-        return userActionList[position]
+    fun getUserAction(date: Long): UserAction? {
+        return userActionList[date]
     }
 
-    fun getUserActionList(): ArrayList<UserAction> {
+    fun getUserActionList(): HashMap<Long, UserAction> {
         return userActionList
+    }
+
+    fun removeUserAction(date: Long) {
+        userActionList.remove(date)
     }
 }
 

@@ -25,7 +25,6 @@ import com.boostcamp.travery.mapservice.savecourse.CourseSaveActivity
 import com.boostcamp.travery.useraction.detail.UserActionDetailActivity
 import com.boostcamp.travery.useraction.save.UserActionSaveActivity
 import com.boostcamp.travery.utils.CustomMarker
-import com.boostcamp.travery.utils.toast
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -47,7 +46,7 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
     private var polyline: Polyline? = null
     private var polylineOptions: PolylineOptions = PolylineOptions()
     private var isBound = false
-    private var tagNum = 0
+    private val userActionMarkers = ArrayList<Marker>()
 
     private val viewModel by lazy {
         ViewModelProviders.of(this).get(TrackingViewModel::class.java)
@@ -93,9 +92,9 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
         when (marker.tag) {
             null -> return false
             else -> {
-                startActivity(Intent(this, UserActionDetailActivity::class.java).apply {
-                    putExtra(Constants.EXTRA_USER_ACTION, viewModel.getUserAction(marker.tag.toString().toInt()))
-                })
+                startActivityForResult(Intent(this, UserActionDetailActivity::class.java).apply {
+                    putExtra(Constants.EXTRA_USER_ACTION, viewModel.getUserAction(marker.tag.toString().toLong()))
+                },Constants.REQUEST_CODE_USERACTION_REMOVE)
             }
         }
         return true
@@ -269,12 +268,12 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
                         polylineOptions.add(it.coordinate)
                     }
                     viewModel.userActionList.forEach {
-                        mMap.addMarker(MarkerOptions().position(
-                                LatLng(it.latitude, it.longitude))
-                                .icon(BitmapDescriptorFactory.fromBitmap(CustomMarker.create(this@TrackingActivity, it.mainImage))))
-                                .tag = tagNum
+                        val userMarker = mMap.addMarker(MarkerOptions().position(
+                                LatLng(it.value.latitude, it.value.longitude))
+                                .icon(BitmapDescriptorFactory.fromBitmap(CustomMarker.create(this@TrackingActivity, it.value.mainImage))))
+                        userMarker.tag = it.value.date.time
 
-                        tagNum++
+                        userActionMarkers.add(userMarker)
                     }
                 }.doOnComplete {
                     polyline = mMap.addPolyline(polylineOptions)
@@ -316,16 +315,26 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
         if (resultCode == RESULT_OK) {
             when (requestCode) {
                 Constants.REQUEST_CODE_USERACTION -> data?.let {
-                    if (viewModel.getIsServiceState()) {
-                        val userAction: UserAction = it.getParcelableExtra(Constants.EXTRA_USER_ACTION)
-                        mMap.addMarker(MarkerOptions().position(
-                                LatLng(userAction.latitude, userAction.longitude))
-                                .icon(BitmapDescriptorFactory.fromBitmap(CustomMarker.create(this@TrackingActivity, userAction.mainImage))))
-                                .tag = tagNum
+                    val userAction: UserAction = it.getParcelableExtra(Constants.EXTRA_USER_ACTION)
 
-                        tagNum++
+                    val userMarker = mMap.addMarker(MarkerOptions().position(
+                            LatLng(userAction.latitude, userAction.longitude))
+                            .icon(BitmapDescriptorFactory.fromBitmap(CustomMarker.create(this@TrackingActivity, userAction.mainImage))))
+                    userMarker.tag = userAction.date.time
 
-                        viewModel.addUserAction(userAction)
+                    userActionMarkers.add(userMarker)
+                    viewModel.addUserAction(userAction)
+
+                }
+
+                Constants.REQUEST_CODE_USERACTION_REMOVE -> data?.let {
+                    val userAction: UserAction = it.getParcelableExtra(Constants.EXTRA_USER_ACTION)
+                    viewModel.deleteUserAction(userAction.date.time)
+                    userActionMarkers.forEach {marker->
+                        if(marker.tag == userAction.date.time){
+                            userActionMarkers.remove(marker)
+                            marker.remove()
+                        }
                     }
                 }
             }

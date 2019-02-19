@@ -1,6 +1,7 @@
 package com.boostcamp.travery.mapservice
 
 import android.app.Application
+import android.util.Log
 import android.view.View
 import android.widget.BaseAdapter
 import androidx.databinding.ObservableBoolean
@@ -125,6 +126,11 @@ class TrackingViewModel(application: Application) : BaseViewModel(application) {
         ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe()
     }
 
+    fun deleteUserAction(date: Long){
+        getUserAction(date)?.let {
+            mapTrackingRepository.removeUserAction(date) }
+    }
+
     fun removeSuggestItem(position: Int) {
         mapTrackingRepository.removeSuggestItem(position)
     }
@@ -137,8 +143,8 @@ class TrackingViewModel(application: Application) : BaseViewModel(application) {
         mapTrackingRepository.addUserAction(userAction)
     }
 
-    fun getUserAction(position: Int): UserAction {
-        return mapTrackingRepository.getUserAction(position)
+    fun getUserAction(date: Long): UserAction? {
+        return mapTrackingRepository.getUserAction(date)
     }
 
     fun getSuggestAdapter(): BaseAdapter {

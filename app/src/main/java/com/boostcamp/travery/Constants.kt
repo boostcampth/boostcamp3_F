@@ -17,6 +17,7 @@ object Constants {
     const val SIGN_IN_GOOGLE = 900
     const val SIGN_IN_SERVER = 22
 
+    const val REQUEST_CODE_USERACTION_REMOVE = 1003
     const val REQUEST_CODE_USERACTION = 1004
     const val REQUEST_CODE_LOGIN = 701
 
