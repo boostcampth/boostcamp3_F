@@ -132,7 +132,7 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
     }
 
     private fun startCourseSaveActivity() {
-        if (viewModel.totalDistance >= 10) {
+        if (viewModel.totalDistance >= 5) {
             val saveIntent = Intent(this@TrackingActivity, CourseSaveActivity::class.java)
                     .apply {
                         putParcelableArrayListExtra(Constants.EXTRA_COURSE_LOCATION_LIST, viewModel.getTimeCodeList())
@@ -151,16 +151,35 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
                         )
                     }
             startActivity(saveIntent)
-        } else getString(R.string.string_save_course_error).toast(this)
 
-        doUnbindService()
+            doUnbindService()
 
-        val serviceIntent = Intent(this, MapTrackingService::class.java)
-        stopService(serviceIntent)
-        removeSuggestionMarker()
-        mMap.clear()
+            val serviceIntent = Intent(this, MapTrackingService::class.java)
+            stopService(serviceIntent)
+            removeSuggestionMarker()
+            mMap.clear()
 
-        doBindService()
+            doBindService()
+
+        } else {
+            AlertDialog.Builder(this).apply {
+                setMessage(resources.getString(R.string.string_save_course_error))
+                setPositiveButton(resources.getString(R.string.dialog_positive)) { _, _ ->
+                    doUnbindService()
+
+                    val serviceIntent = Intent(this@TrackingActivity, MapTrackingService::class.java)
+                    stopService(serviceIntent)
+                    removeSuggestionMarker()
+                    mMap.clear()
+
+                    doBindService()
+                }
+                setNegativeButton(resources.getString(R.string.dialog_negative)) { dialog, _ ->
+                    dialog.cancel()
+                }
+            }.create().show()
+            //getString(R.string.string_save_course_error).toast(this)
+        }
     }
 
     fun saveUserAction(v: View) {
