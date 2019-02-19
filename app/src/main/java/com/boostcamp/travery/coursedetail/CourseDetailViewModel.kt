@@ -11,6 +11,8 @@ import com.boostcamp.travery.base.BaseViewModel
 import com.boostcamp.travery.data.model.Course
 import com.boostcamp.travery.data.model.TimeCode
 import com.boostcamp.travery.data.model.UserAction
+import com.boostcamp.travery.eventbus.EventBus
+import com.boostcamp.travery.useraction.save.UserActionUpdateEvent
 import com.boostcamp.travery.utils.DateUtils
 import com.google.android.gms.maps.model.LatLng
 import com.warkiz.widget.IndicatorSeekBar
@@ -32,7 +34,7 @@ class CourseDetailViewModel(application: Application) : BaseViewModel(applicatio
     val curUseraction = MutableLiveData<UserAction>()
     val userActionListAdapter = UserActionListAdapter(userActionList)
     val latLngList = MutableLiveData<List<LatLng>>() //저장된 코스를 맵에 보여주기 위한 좌표리스트
-    val markerList = MutableLiveData<List<UserAction>>() //지
+    val markerList = MutableLiveData<List<UserAction>>()
     val scrollTo = ObservableInt()
     val totalDistance = ObservableField<String>()
 
@@ -45,6 +47,14 @@ class CourseDetailViewModel(application: Application) : BaseViewModel(applicatio
         override fun onStartTrackingTouch(seekBar: IndicatorSeekBar) {}
 
         override fun onStopTrackingTouch(seekBar: IndicatorSeekBar) {}
+    }
+
+    init {
+        addDisposable(EventBus.getEvents().ofType(UserActionUpdateEvent::class.java).subscribe {
+            // 중간에 껴넣기가 구현되어있지 않아서 그냥 새로 갱신해버림
+            userActionList.clear()
+            loadUserActionList()
+        })
     }
 
     private var eventListener: ViewModelEventListener? = null
@@ -82,7 +92,6 @@ class CourseDetailViewModel(application: Application) : BaseViewModel(applicatio
         )
 
         userActionListAdapter.onItemClickListener = { item: Any -> onItemClick(item as UserAction) }
-
     }
 
     //코스에 대한 활동 리스트를 가져옴

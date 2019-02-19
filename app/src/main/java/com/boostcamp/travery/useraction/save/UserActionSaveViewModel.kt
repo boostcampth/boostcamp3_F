@@ -10,6 +10,7 @@ import com.boostcamp.travery.Injection
 import com.boostcamp.travery.base.BaseViewModel
 import com.boostcamp.travery.data.NewsFeedRepository
 import com.boostcamp.travery.data.model.UserAction
+import com.boostcamp.travery.eventbus.EventBus
 import com.boostcamp.travery.utils.ImageUtils
 import io.reactivex.Observable.just
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -133,6 +134,7 @@ class UserActionSaveViewModel(application: Application) : BaseViewModel(applicat
             addDisposable(
                     userActionRepository.updateUserAction(it).subscribeOn(Schedulers.io()).subscribe()
             )
+            EventBus.sendEvent(UserActionUpdateEvent(it))
         }
     }
 
@@ -202,3 +204,5 @@ class UserActionSaveViewModel(application: Application) : BaseViewModel(applicat
         this.content = userAction.body
     }
 }
+
+data class UserActionUpdateEvent(val userAction: UserAction)
