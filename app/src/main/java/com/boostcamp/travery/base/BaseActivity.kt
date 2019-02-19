@@ -2,6 +2,8 @@ package com.boostcamp.travery.base
 
 import android.content.Context
 import android.content.pm.ActivityInfo
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.location.LocationManager
 import android.os.Bundle
 import android.widget.ImageView
@@ -10,8 +12,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDialog
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import com.boostcamp.travery.GlideApp
 import com.boostcamp.travery.R
-import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import kotlinx.android.synthetic.main.progressbar_loading.*
 
 
@@ -46,7 +49,8 @@ abstract class BaseActivity<T : ViewDataBinding> : AppCompatActivity() {
             progressDialog = AppCompatDialog(this)
                     .apply {
                         setCancelable(false)
-                        setContentView(R.layout.progressbar_loading)
+                        window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                        setContentView(R.layout.loading_dialog)
                         show()
                     }
         }
@@ -54,9 +58,12 @@ abstract class BaseActivity<T : ViewDataBinding> : AppCompatActivity() {
         progressDialog?.let {
             it.findViewById<TextView>(R.id.tv_pregress_message)?.text = message
             val imageView = it.findViewById<ImageView>(R.id.iv_frame_loading) ?: return
-            Glide.with(this)
-                    .load(R.drawable.progress_bar)
-                    .into(imageView)
+            GlideApp.with(this)
+                .asGif()
+                .load(R.drawable.progress_bar)
+                .placeholder(R.drawable.progress_bar)
+                .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                .into(imageView)
         }
     }
 
