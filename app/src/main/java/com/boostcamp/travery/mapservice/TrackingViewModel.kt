@@ -1,6 +1,7 @@
 package com.boostcamp.travery.mapservice
 
 import android.app.Application
+import android.util.Log
 import android.view.View
 import android.widget.BaseAdapter
 import androidx.databinding.ObservableBoolean
@@ -11,6 +12,7 @@ import com.boostcamp.travery.data.CourseRepository
 import com.boostcamp.travery.data.local.db.AppDatabase
 import com.boostcamp.travery.data.model.Course
 import com.boostcamp.travery.data.model.TimeCode
+import com.boostcamp.travery.data.model.UserAction
 import com.boostcamp.travery.data.repository.MapTrackingRepository
 import com.boostcamp.travery.data.repository.ServiceStartEvent
 import com.boostcamp.travery.eventbus.EventBus
@@ -38,7 +40,7 @@ class TrackingViewModel(application: Application) : BaseViewModel(application) {
     val totalDistance by lazy { mapTrackingRepository.getTotalDistance() }
     val startTime by lazy { mapTrackingRepository.getStartTime() }
     private val startTimeTxt by lazy { DateUtils.parseDateAsString(Date(startTime)) }
-    val userActionLocateList by lazy { mapTrackingRepository.getUserActionLocateList() }
+    val userActionList by lazy { mapTrackingRepository.getUserActionList() }
     private var suggestAdapter: BaseAdapter? = null
 
     init {
@@ -124,6 +126,11 @@ class TrackingViewModel(application: Application) : BaseViewModel(application) {
         ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe()
     }
 
+    fun deleteUserAction(date: Long){
+        getUserAction(date)?.let {
+            mapTrackingRepository.removeUserAction(date) }
+    }
+
     fun removeSuggestItem(position: Int) {
         mapTrackingRepository.removeSuggestItem(position)
     }
@@ -132,8 +139,12 @@ class TrackingViewModel(application: Application) : BaseViewModel(application) {
         return isService.get()
     }
 
-    fun addUserActionLocate(locate: LatLng) {
-        mapTrackingRepository.addUserActionLocate(locate)
+    fun addUserAction(userAction: UserAction) {
+        mapTrackingRepository.addUserAction(userAction)
+    }
+
+    fun getUserAction(date: Long): UserAction? {
+        return mapTrackingRepository.getUserAction(date)
     }
 
     fun getSuggestAdapter(): BaseAdapter {

@@ -67,7 +67,7 @@ class UserActionSaveViewModel(application: Application) : BaseViewModel(applicat
         })
     }
 
-    fun saveUserAction(latitude: Double, longitude: Double, courseCode: Long) {
+    fun saveUserAction(latitude: Double, longitude: Double, courseCode: Long): UserAction {
         val fileList = ArrayList<File>()
         for (image in imageList) {
             if (!image.filePath.isEmpty()) {
@@ -96,6 +96,9 @@ class UserActionSaveViewModel(application: Application) : BaseViewModel(applicat
         addDisposable(
                 userActionRepository.saveUserAction(userAction).subscribeOn(Schedulers.io()).subscribe()
         )
+
+
+        return userAction
 
         //TODO 서버로 전송하는 부분 주석처리 해놈 설정시에만 보낼수 있도록 추후 변경
 //        addDisposable(newsFeedRepository.uploadFeed(userAction, "temp").subscribe({

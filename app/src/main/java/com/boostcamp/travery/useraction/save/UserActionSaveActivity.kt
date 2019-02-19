@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -143,18 +144,14 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
 
     override fun onOptionsItemSelected(item: MenuItem?) = when (item?.itemId) {
         R.id.menu_course_save -> {
-            with(intent) {
-                viewModel.saveUserAction(
-                        getDoubleExtra(Constants.EXTRA_LATITUDE, 0.0),
-                        getDoubleExtra(Constants.EXTRA_LONGITUDE, 0.0),
-                        getLongExtra(Constants.EXTRA_COURSE_CODE, 0)
-                )
-
-            }
             setResult(Activity.RESULT_OK, Intent().apply {
-                putExtra(Constants.EXTRA_LATITUDE, intent.getDoubleExtra(Constants.EXTRA_LATITUDE, 0.0))
-                putExtra(Constants.EXTRA_LONGITUDE, intent.getDoubleExtra(Constants.EXTRA_LONGITUDE, 0.0))
+                putExtra(Constants.EXTRA_USER_ACTION, viewModel.saveUserAction(
+                        intent.getDoubleExtra(Constants.EXTRA_LATITUDE, 0.0),
+                        intent.getDoubleExtra(Constants.EXTRA_LONGITUDE, 0.0),
+                        intent.getLongExtra(Constants.EXTRA_COURSE_CODE, 0)
+                ))
             })
+
             finish()
             true
         }
