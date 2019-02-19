@@ -3,6 +3,7 @@ package com.boostcamp.travery.useraction.save
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.location.Location
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -36,6 +37,8 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
     private var hashTagSwitch = false
 
     private var editMode = false
+
+    private var location: Location? = null
 
     private val disposable = CompositeDisposable()
 
@@ -96,14 +99,14 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
         if (!editMode) {
             // 주소 세팅 및 observe
             // 전달 된 위치가 없을 경우(트래킹중이 아닐 경우 현재위치 로딩안되므로)
-            val defaultLocation = viewModel.getLastKnownLocation()
+            location = viewModel.getLastKnownLocation()
             viewModel.setAddress(
                     intent.getDoubleExtra(
-                            Constants.EXTRA_LATITUDE, defaultLocation?.latitude
+                            Constants.EXTRA_LATITUDE, location?.latitude
                             ?: 0.0
                     ),
                     intent.getDoubleExtra(
-                            Constants.EXTRA_LONGITUDE, defaultLocation?.longitude
+                            Constants.EXTRA_LONGITUDE, location?.longitude
                             ?: 0.0
                     )
             )
@@ -191,8 +194,8 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
             } else {
                 with(intent) {
                     viewModel.saveUserAction(
-                            getDoubleExtra(Constants.EXTRA_LATITUDE, 0.0),
-                            getDoubleExtra(Constants.EXTRA_LONGITUDE, 0.0),
+                            getDoubleExtra(Constants.EXTRA_LATITUDE, location?.latitude ?: 0.0),
+                            getDoubleExtra(Constants.EXTRA_LONGITUDE, location?.longitude ?: 0.0),
                             getLongExtra(Constants.EXTRA_COURSE_CODE, 0)
                     )
                 }
@@ -202,6 +205,8 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
                     putExtra(Constants.EXTRA_LONGITUDE, intent.getDoubleExtra(Constants.EXTRA_LONGITUDE, 0.0))
                 })
             }
+
+            getString(R.string.string_activity_user_action_save_success).toast(this)
 
             finish()
             true

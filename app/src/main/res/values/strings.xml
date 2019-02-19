@@ -115,4 +115,6 @@
     <string name="string_activity_title_action_detail">활동 상세보기</string>
 
     <string name="dialog_message_delete">정말 삭제하시겠습니까?</string>
+    <string name="string_activity_user_action_save_success">활동 기록이 완료되었습니다!</string>
+    <string name="string_activity_course_save_success">코스 기록이 완료되었습니다!</string>
 </resources>
