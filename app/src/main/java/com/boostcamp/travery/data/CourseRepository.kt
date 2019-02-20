@@ -44,14 +44,15 @@ class CourseRepository private constructor(private val courseDataSource: CourseD
     override fun saveUserAction(userAction: UserAction): Observable<Long> {
         return courseDataSource.saveUserAction(userAction)
                 .doOnNext {
-                    Log.d("teslog", it.toString())
                 }
                 .doOnComplete {
+                    Log.d("lolotest",userAction.courseCode.toString())
                     userAction.courseCode?.let{
-                        if (mCachedCourse[it]?.userActionList == null) {
-                            mCachedCourse[it]?.userActionList = ArrayList()
+                        courseCode->
+                        if (mCachedCourse[courseCode]?.userActionList == null) {
+                            mCachedCourse[courseCode]?.userActionList = ArrayList()
                         }
-                        mCachedCourse[it]?.userActionList?.add(userAction)
+                        mCachedCourse[courseCode]?.userActionList?.add(userAction)
                     }
                 }
     }
