@@ -39,7 +39,6 @@ class TrackingViewModel(application: Application) : BaseViewModel(application) {
     val isService = ObservableBoolean(false)
     val curLocation = MutableLiveData<Location>()
     var suggestCountString = ObservableField<String>("0")
-    val totalDistance by lazy { mapTrackingRepository.getTotalDistance() }
     var startTime: Long = 0L
     val userActionList by lazy { mapTrackingRepository.getUserActionList() }
     private var suggestAdapter: BaseAdapter? = null
@@ -103,7 +102,6 @@ class TrackingViewModel(application: Application) : BaseViewModel(application) {
 
         addDisposable(
                 EventBus.getEvents().ofType(ServiceStartEvent::class.java).subscribe {
-                    Log.d("lolotest2", it.startTime.toString())
                     startTime = it.startTime
 
                     if (it.startTime != 0L) {
@@ -117,6 +115,10 @@ class TrackingViewModel(application: Application) : BaseViewModel(application) {
         )
         if (mapTrackingRepository.getStartTime() != 0L)
             isService.set(true)
+    }
+
+    fun getTotalDistance(): Long{
+        return mapTrackingRepository.getTotalDistance()
     }
 
     private fun setIntToTime(timeInt: Int): String {

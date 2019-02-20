@@ -155,7 +155,7 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
     }
 
     private fun startCourseSaveActivity() {
-        if (viewModel.totalDistance >= 5) {
+        if (viewModel.getTotalDistance() >= 5) {
             val saveIntent = Intent(this@TrackingActivity, CourseSaveActivity::class.java)
                     .apply {
                         putParcelableArrayListExtra(Constants.EXTRA_COURSE_LOCATION_LIST, viewModel.getTimeCodeList())
@@ -167,7 +167,7 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
                                         "",
                                         viewModel.startTime,
                                         System.currentTimeMillis(),
-                                        viewModel.totalDistance,
+                                        viewModel.getTotalDistance(),
                                         viewModel.startTime.toString(),
                                         viewModel.startTime.toString()
                                 )
