@@ -2,8 +2,7 @@ package com.boostcamp.travery.coursedetail
 
 import android.app.Application
 import android.location.Geocoder
-import android.location.Location
-import android.util.Log
+import android.view.MotionEvent
 import android.view.View
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableField
@@ -28,7 +27,6 @@ import io.reactivex.Flowable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import java.lang.Exception
 
 //TODO 활동 삭제와 수정시 맵이 꼬이는 문제가 있음. 예외처리로 수정
 //TODO 마커 배경 지워줘야함
@@ -67,6 +65,16 @@ class CourseDetailViewModel(application: Application) : BaseViewModel(applicatio
         override fun onStartTrackingTouch(seekBar: IndicatorSeekBar) {}
 
         override fun onStopTrackingTouch(seekBar: IndicatorSeekBar) {}
+    }
+
+    var isSeekTouch = false
+    val seekTouchListener:View.OnTouchListener = View.OnTouchListener { view, motionEvent ->
+        when (motionEvent.action) {
+            MotionEvent.ACTION_DOWN -> isSeekTouch = true
+            MotionEvent.ACTION_UP -> isSeekTouch = false
+        }
+
+        false
     }
 
     init {
@@ -168,19 +176,20 @@ class CourseDetailViewModel(application: Application) : BaseViewModel(applicatio
                     userActionList.addAll(it)
                     markerList.value = it
 
-                    Log.d("loloser", userActionList.size.toString())
+                    val actionSize = it.size
                     var userActionPosition = 0
                     latLngList.value?.let { list ->
                         for (pos in 0 until list.size) {
                             if (list[pos].longitude == userActionList[userActionPosition].longitude
                                     && list[pos].latitude == userActionList[userActionPosition].latitude) {
                                 userActionHashMap[pos] = userActionList[userActionPosition]
-                                Log.d("loloser3", pos.toString())
-                                userActionPosition++
+                                userActionPosition += 1
+                                if (userActionPosition == actionSize) {
+                                    break
+                                }
                             }
                         }
                     }
-                    Log.d("loloser2", userActionPosition.toString())
                 }, {})
         )
     }
@@ -190,9 +199,6 @@ class CourseDetailViewModel(application: Application) : BaseViewModel(applicatio
      * 맵상의 마커가 클릭 되었을때 현재 선택된 아이템 포지션과 활동 마커인지를 체크
      */
     fun markerClick(userAction: UserAction) {
-        val pos = userActionList.indexOf(userAction)
-        scrollTo.set(pos)
-        seekTimeCode.value = TimeCode(LatLng(userActionList[pos].latitude, userActionList[pos].longitude))
         userActionHashMap.forEach {
             if (it.value == userAction) {
                 seekProgress.value = it.key
@@ -204,16 +210,15 @@ class CourseDetailViewModel(application: Application) : BaseViewModel(applicatio
 
 
     fun updateCurUseraction(position: Int) {
-        //val userAction = markerList.value?.get(position)
-        //val pos = userActionList.indexOf(userAction)
-        //seekTimeCode.value = TimeCode(LatLng(userActionList[pos].latitude, userActionList[pos].longitude))
-        val userAction = markerList.value?.get(position)
-        userActionHashMap.forEach {
-            if (it.value == userAction) {
-                seekProgress.value = it.key
+
+        if(!isSeekTouch) {
+            val userAction = userActionList[position]
+            userActionHashMap.forEach {
+                if (it.value == userAction) {
+                    seekProgress.value = it.key
+                }
             }
         }
-        //curUseraction.value = userAction*/
     }
 
     private fun onItemClick(userAction: UserAction) {

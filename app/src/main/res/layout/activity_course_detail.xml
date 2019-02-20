@@ -58,7 +58,8 @@
             app:layout_constraintBottom_toTopOf="@+id/rv_useraction_list"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:onSeekChanged="@{viewModel.seekListener}"/>
+            app:onSeekChanged="@{viewModel.seekListener}"
+            app:onTouch="@{viewModel.seekTouchListener}"/>
 
         <TextView
             android:id="@+id/tv_endDistance"
@@ -91,8 +92,6 @@
             android:background="@android:color/white"
             android:clipToPadding="false"
             android:orientation="horizontal"
-
-
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
