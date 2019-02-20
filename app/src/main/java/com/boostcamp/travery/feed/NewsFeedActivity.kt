@@ -26,6 +26,7 @@ import com.boostcamp.travery.course.list.CourseListActivity
 import com.boostcamp.travery.databinding.MainFeedBinding
 import com.boostcamp.travery.databinding.NavHeaderMainBinding
 import com.boostcamp.travery.mapservice.TrackingActivity
+import com.boostcamp.travery.search.SearchResultActivity
 import com.boostcamp.travery.useraction.list.UserActionListActivity
 import com.boostcamp.travery.useraction.save.UserActionSaveActivity
 import com.google.android.material.navigation.NavigationView
@@ -101,6 +102,10 @@ class NewsFeedActivity : BaseActivity<MainFeedBinding>(), NavigationView.OnNavig
             }
             R.id.nav_useraction_add -> {
                 startActivity(Intent(this, UserActionSaveActivity::class.java))
+            }
+
+            R.id.nav_search->{
+                startActivity(Intent(this,SearchResultActivity::class.java))
             }
 
             R.id.nav_setting -> {
