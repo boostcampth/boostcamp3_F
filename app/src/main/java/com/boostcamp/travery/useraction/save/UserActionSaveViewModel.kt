@@ -16,6 +16,7 @@ import com.boostcamp.travery.eventbus.EventBus
 import com.boostcamp.travery.utils.ImageUtils
 import com.boostcamp.travery.utils.toLatLng
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.libraries.places.internal.it
 import io.reactivex.Observable.just
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -35,21 +36,16 @@ class UserActionSaveViewModel(application: Application) : BaseViewModel(applicat
     val hashTagList = ObservableArrayList<String>()
     val psHashTag = PublishSubject.create<String>()
 
+    val address = ObservableField<String>()
     private val geoCoder = Geocoder(application)
-    private val address = MutableLiveData<String>()
     private var location = getLastKnownLocation()?.toLatLng()
 
-    fun getAddress(): LiveData<String> = address
     fun getLocation() = location
 
     private var title = ""
         get() = if (field.isEmpty()) "empty" else field
     private var content = ""
         get() = if (field.isEmpty()) "empty" else field
-
-    init {
-        address.value = getApplication<MyApplication>().resources.getString(R.string.string_activity_user_action_save)
-    }
 
     fun setUserAction(userAction: UserAction) {
         this.userAction.set(userAction)
@@ -88,8 +84,9 @@ class UserActionSaveViewModel(application: Application) : BaseViewModel(applicat
             val split = it.split(" ")
             split.subList(1, split.size).fold("") { acc, s -> "$acc $s" }
         }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe {
-            address.setValue(it)
+            address.set(it)
         })
+
     }
 
     fun saveUserAction(): UserAction? {
@@ -105,7 +102,7 @@ class UserActionSaveViewModel(application: Application) : BaseViewModel(applicat
             latitude = location?.latitude ?: 0.0
             longitude = location?.longitude ?: 0.0
             courseCode = if (this.courseCode == 0L) null else this.courseCode
-            address = this@UserActionSaveViewModel.address.value ?: " "
+            address = this@UserActionSaveViewModel.address.get() ?: " "
         }
 
         userAction?.run {
@@ -130,7 +127,7 @@ class UserActionSaveViewModel(application: Application) : BaseViewModel(applicat
             hashTag = listToString(hashTagList, ' ')
             mainImage = if (result.length() > 0) result.getString(0) else ""
             subImage = result.toString()
-            address = this@UserActionSaveViewModel.address.value ?: " "
+            address = this@UserActionSaveViewModel.address.get() ?: " "
         }
 
         userAction?.let { user ->

@@ -12,7 +12,6 @@ import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.appcompat.widget.Toolbar
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.boostcamp.travery.Constants
 import com.boostcamp.travery.R
@@ -73,10 +72,6 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>() {
                     createChip(it)
                     et_hashtag.setText("")
                 })
-
-        viewModel.getAddress().observe(this@UserActionSaveActivity, Observer {
-            tv_location_cur.text = it
-        })
     }
 
     private fun setMode() {
