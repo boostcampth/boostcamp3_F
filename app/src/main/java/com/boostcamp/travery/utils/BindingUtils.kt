@@ -345,4 +345,10 @@ object BindingUtils {
             viewPager.adapter = ImagesViewPagerAdapter(viewModel.imageList)
         }
     }
+
+    @JvmStatic
+    @BindingAdapter("selected")
+    fun isSelected(view: View, selected: Boolean) {
+        view.isSelected = selected
+    }
 }

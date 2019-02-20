@@ -27,29 +27,32 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_save_user_action.*
 
-class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), UserActionSaveViewModel.View {
+class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>() {
     override val layoutResourceId: Int
         get() = R.layout.activity_save_user_action
 
     private lateinit var viewModel: UserActionSaveViewModel
-
-    private var hashTagSwitch = false
+    private val disposable = CompositeDisposable()
 
     private var editMode = false
     private var singleMode = false
 
-    private var location: LatLng? = null
+    private lateinit var receivedData: UserAction
 
-    private val disposable = CompositeDisposable()
+    private var location: LatLng? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(viewDataBinding.root)
 
-        editMode = intent.extras?.getBoolean(Constants.EDIT_MODE, false) ?: false
-        singleMode = intent.extras?.getBoolean(Constants.SINGLE_ADD_USER_ACTION_MODE, false)
-                ?: false
+        setToolbar()
+        initViewModel()
+        setMode()
+        initUserAction()
+        initAddButtonList()
+    }
 
+    private fun setToolbar() {
         setSupportActionBar(toolbar as Toolbar)
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
@@ -57,40 +60,13 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
             title = if (editMode) resources.getString(R.string.string_activity_edit_useraction_toolbar)
             else resources.getString(R.string.string_activity_save_useraction_toolbar)
         }
-
-        viewModel = ViewModelProviders.of(this).get(UserActionSaveViewModel::class.java).apply {
-            viewDataBinding.viewmodel = this
-            setView(this@UserActionSaveActivity)
-        }
-
-        initViewModel()
-        initAddButtonList()
-
-        if (editMode) {
-            // editMode 일 경우, detail 액티비티로부터 받은 데이터 세팅
-            viewModel.setUserAction(intent.getParcelableExtra(Constants.EXTRA_USER_ACTION))
-
-            if (viewModel.imageList.isNotEmpty()) {
-                buttonSwitch(rv_save_useraction_image_list, btn_image_add, true)
-            }
-
-            if (viewModel.getHashTagCount() > 0) {
-                buttonSwitch(chip_group, btn_hash_tag_add, true)
-            }
-        }
-    }
-
-    private fun buttonSwitch(view: View, button: View, on: Boolean) {
-        if (on) {
-            view.visibility = View.VISIBLE
-            button.isSelected = true
-        } else {
-            view.visibility = View.GONE
-            button.isSelected = false
-        }
     }
 
     private fun initViewModel() {
+        viewModel = ViewModelProviders.of(this).get(UserActionSaveViewModel::class.java).apply {
+            viewDataBinding.viewmodel = this
+        }
+
         // Chip 생성 후 그룹에 추가
         disposable.add(viewModel.psHashTag.observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
@@ -98,42 +74,40 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
                     et_hashtag.setText("")
                 })
 
-        if (!editMode) {
-            // 주소 세팅 및 observe
-            // 전달 된 위치가 없을 경우(트래킹중이 아닐 경우 현재위치 로딩안되므로)
-            location = viewModel.getLocation()
-            viewModel.setAddress(
-                    intent.getDoubleExtra(
-                            Constants.EXTRA_LATITUDE, location?.latitude
-                            ?: 0.0
-                    ),
-                    intent.getDoubleExtra(
-                            Constants.EXTRA_LONGITUDE, location?.longitude
-                            ?: 0.0
-                    )
-            )
+        viewModel.getAddress().observe(this@UserActionSaveActivity, Observer {
+            tv_location_cur.text = it
+        })
+    }
 
-            viewModel.getAddress().observe(this@UserActionSaveActivity, Observer {
-                tv_location_cur.text = it
-                location = viewModel.getLocation()
-            })
-        } else {
-            val data = intent.extras?.getParcelable<UserAction>(Constants.EXTRA_USER_ACTION)
-            viewModel.setAddress(data?.latitude ?: 0.0, data?.longitude ?: 0.0)
-        }
+    private fun setMode() {
+        editMode = intent.extras?.getBoolean(Constants.EDIT_MODE, false) ?: false
+        singleMode = intent.extras?.getBoolean(Constants.SINGLE_ADD_USER_ACTION_MODE, false)
+                ?: false
+    }
+
+    private fun initUserAction() {
+        val location = viewModel.getLocation() ?: LatLng(0.0, 0.0)
+        val latitude = intent.getDoubleExtra(Constants.EXTRA_LATITUDE, location.latitude)
+        val longitude = intent.getDoubleExtra(Constants.EXTRA_LONGITUDE, location.longitude)
+        val courseCode = intent.getLongExtra(Constants.EXTRA_COURSE_CODE, 0)
+
+        receivedData = intent.getParcelableExtra(Constants.EXTRA_USER_ACTION) ?: UserAction(
+                latitude = latitude,
+                longitude = longitude,
+                courseCode = courseCode
+        )
+        viewModel.setUserAction(receivedData)
     }
 
     private fun initAddButtonList() {
         btn_location_add.isSelected = true
         btn_location_add.setOnClickListener {
-            if (singleMode) {
-                val intent = Intent(this, FindLocationActivity::class.java).apply {
-                    putExtra(Constants.EXTRA_LAT_LNG, location)
-                }
-                startActivityForResult(intent, Constants.REQUEST_CODE_SELECT_LOCATION)
-            } else {
-                getString(R.string.string_toast_warning_message_location_select).toast(this)
-            }
+            selectLocation()
+        }
+
+        // 현재 주소를 클릭했을 경우에도 위치를 선택할 수 있도록 추가
+        tv_location_cur.setOnClickListener {
+            selectLocation()
         }
 
         btn_image_add.setOnClickListener {
@@ -146,21 +120,12 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
         }
 
         btn_hash_tag_add.setOnClickListener {
+            chip_group.visibility = if (chip_group.visibility == View.VISIBLE && chip_group.childCount < 1) View.GONE else View.VISIBLE
             et_hashtag.requestFocus()
-
             val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-
-            if (hashTagSwitch) {
-                if (viewModel.getHashTagCount() == 0) {
-                    buttonSwitch(chip_group, btn_hash_tag_add, false)
-                }
-            } else {
-                buttonSwitch(chip_group, btn_hash_tag_add, true)
-                currentFocus?.let {
-                    imm.showSoftInput(it, 0)
-                }
+            currentFocus?.let {
+                imm.showSoftInput(it, 0)
             }
-            hashTagSwitch = !hashTagSwitch
         }
     }
 
@@ -179,14 +144,20 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
             setOnCloseIconClickListener {
                 chip_group.removeView(this)
                 viewModel.removeHashTag((it as Chip).text as String)
-                // 해시태그가 모두 사라졌을 때 처리
-                if (chip_group.childCount == 1) {
-                    hashTagSwitch = false
-                    buttonSwitch(chip_group, btn_hash_tag_add, false)
-                }
             }
         }.also {
             chip_group.addView(it, chip_group.childCount - 1)
+        }
+    }
+
+    private fun selectLocation() {
+        if (singleMode) {
+            val intent = Intent(this, FindLocationActivity::class.java).apply {
+                putExtra(Constants.EXTRA_LAT_LNG, location)
+            }
+            startActivityForResult(intent, Constants.REQUEST_CODE_SELECT_LOCATION)
+        } else {
+            getString(R.string.string_toast_warning_message_location_select).toast(this)
         }
     }
 
@@ -199,48 +170,26 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
         R.id.menu_course_save -> {
             onProgress()
 
-            when {
-                // 수정 모드
-                editMode -> {
-                    viewModel.updateUserAction()
-
-                    setResult(Activity.RESULT_OK, Intent().apply {
-                        putExtra(Constants.EXTRA_USER_ACTION, viewModel.userAction.get())
-                    })
-                }
-
-                // 개별 활동 추가 모드
-                singleMode -> {
-                    val loc = viewModel.getLocation()
-                    loc?.run {
-                        viewModel.saveUserAction(latitude, longitude, 0L)
-                    } ?: getString(R.string.string_toast_error_message_useraction_save).toast(this)
-                }
-
-                // 기록 중 활동 추가 모드
-                else -> setResult(Activity.RESULT_OK, Intent().apply {
-                    putExtra(Constants.EXTRA_USER_ACTION, viewModel.saveUserAction(
-                            intent.getDoubleExtra(Constants.EXTRA_LATITUDE, 0.0),
-                            intent.getDoubleExtra(Constants.EXTRA_LONGITUDE, 0.0),
-                            intent.getLongExtra(Constants.EXTRA_COURSE_CODE, 0)
-                    ))
+            // 수정 모드
+            if (editMode) {
+                setResult(Activity.RESULT_OK, Intent().apply {
+                    putExtra(Constants.EXTRA_USER_ACTION, viewModel.updateUserAction())
                 })
+            } else {
+                // 활동 추가 모드
+                val resultData = viewModel.saveUserAction()
+                resultData?.let {
+                    setResult(Activity.RESULT_OK, Intent().apply {
+                        putExtra(Constants.EXTRA_USER_ACTION, resultData)
+                    })
+                    getString(R.string.string_activity_user_action_save_success).toast(this)
+                } ?: getString(R.string.string_toast_error_message_useraction_save).toast(this)
             }
-
-            getString(R.string.string_activity_user_action_save_success).toast(this)
             finish()
             true
         }
 
         else -> super.onOptionsItemSelected(item)
-    }
-
-    override fun saveSelectedImage() {
-        // nothing
-    }
-
-    override fun imageListEmpty() {
-        buttonSwitch(rv_save_useraction_image_list, btn_image_add, false)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -251,7 +200,6 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
                     visibility = View.VISIBLE
                     scrollToPosition(0)
                 }
-
                 viewModel.imageList.add(0, UserActionImage(it.path))
             }
         }
