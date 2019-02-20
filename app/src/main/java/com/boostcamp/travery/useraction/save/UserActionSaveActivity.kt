@@ -47,7 +47,8 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
         setContentView(viewDataBinding.root)
 
         editMode = intent.extras?.getBoolean(Constants.EDIT_MODE, false) ?: false
-        singleMode = intent.extras?.getBoolean(Constants.SINGLE_ADD_USER_ACTION_MODE, false) ?: false
+        singleMode = intent.extras?.getBoolean(Constants.SINGLE_ADD_USER_ACTION_MODE, false)
+                ?: false
 
         setSupportActionBar(toolbar as Toolbar)
         supportActionBar?.apply {
@@ -92,24 +93,24 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
     private fun initViewModel() {
         // Chip 생성 후 그룹에 추가
         disposable.add(viewModel.psHashTag.observeOn(AndroidSchedulers.mainThread())
-            .subscribe {
-                createChip(it)
-                et_hashtag.setText("")
-            })
+                .subscribe {
+                    createChip(it)
+                    et_hashtag.setText("")
+                })
 
         if (!editMode) {
             // 주소 세팅 및 observe
             // 전달 된 위치가 없을 경우(트래킹중이 아닐 경우 현재위치 로딩안되므로)
             location = viewModel.getLocation()
             viewModel.setAddress(
-                intent.getDoubleExtra(
-                    Constants.EXTRA_LATITUDE, location?.latitude
-                        ?: 0.0
-                ),
-                intent.getDoubleExtra(
-                    Constants.EXTRA_LONGITUDE, location?.longitude
-                        ?: 0.0
-                )
+                    intent.getDoubleExtra(
+                            Constants.EXTRA_LATITUDE, location?.latitude
+                            ?: 0.0
+                    ),
+                    intent.getDoubleExtra(
+                            Constants.EXTRA_LONGITUDE, location?.longitude
+                            ?: 0.0
+                    )
             )
 
             viewModel.getAddress().observe(this@UserActionSaveActivity, Observer {
@@ -130,16 +131,18 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
                     putExtra(Constants.EXTRA_LAT_LNG, location)
                 }
                 startActivityForResult(intent, Constants.REQUEST_CODE_SELECT_LOCATION)
+            } else {
+                getString(R.string.string_toast_warning_message_location_select).toast(this)
             }
         }
 
         btn_image_add.setOnClickListener {
             ImagePicker.create(this)
-                .folderMode(true)
-                .imageDirectory(resources.getString(R.string.app_name))
-                .toolbarFolderTitle(getString(R.string.string_folder_title))
-                .theme(R.style.ImagePickerTheme)
-                .start()
+                    .folderMode(true)
+                    .imageDirectory(resources.getString(R.string.app_name))
+                    .toolbarFolderTitle(getString(R.string.string_folder_title))
+                    .theme(R.style.ImagePickerTheme)
+                    .start()
         }
 
         btn_hash_tag_add.setOnClickListener {
@@ -166,8 +169,8 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
             text = hashTag
             isCloseIconVisible = true
             layoutParams = LinearLayoutCompat.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
             ).apply {
                 topMargin = R.dimen.content_margin_top_n_bottom
                 bottomMargin = R.dimen.content_margin_top_n_bottom
@@ -196,14 +199,26 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
         R.id.menu_course_save -> {
             onProgress()
 
-            if (editMode) {
-                viewModel.updateUserAction()
+            when {
+                // 수정 모드
+                editMode -> {
+                    viewModel.updateUserAction()
 
-                setResult(Activity.RESULT_OK, Intent().apply {
-                    putExtra(Constants.EXTRA_USER_ACTION, viewModel.userAction.get())
-                })
-            } else {
-                setResult(Activity.RESULT_OK, Intent().apply {
+                    setResult(Activity.RESULT_OK, Intent().apply {
+                        putExtra(Constants.EXTRA_USER_ACTION, viewModel.userAction.get())
+                    })
+                }
+
+                // 개별 활동 추가 모드
+                singleMode -> {
+                    val loc = viewModel.getLocation()
+                    loc?.run {
+                        viewModel.saveUserAction(latitude, longitude, 0L)
+                    } ?: getString(R.string.string_toast_error_message_useraction_save).toast(this)
+                }
+
+                // 기록 중 활동 추가 모드
+                else -> setResult(Activity.RESULT_OK, Intent().apply {
                     putExtra(Constants.EXTRA_USER_ACTION, viewModel.saveUserAction(
                             intent.getDoubleExtra(Constants.EXTRA_LATITUDE, 0.0),
                             intent.getDoubleExtra(Constants.EXTRA_LONGITUDE, 0.0),
@@ -213,7 +228,6 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
             }
 
             getString(R.string.string_activity_user_action_save_success).toast(this)
-
             finish()
             true
         }

@@ -117,4 +117,6 @@
     <string name="string_activity_find_location_title">현재 위치가 표시됩니다</string>
 
     <string name="string_dialog_message_select_location">선택한 위치를 추가하시겠습니까?</string>
+    <string name="string_toast_error_message_useraction_save">위치가 없어 저장되지 않았습니다.</string>
+    <string name="string_toast_warning_message_location_select">기록중에는 위치를 수정할 수 없습니다.</string>
 </resources>
