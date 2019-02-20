@@ -30,20 +30,24 @@
         <activity android:name=".community.SettingActivity"/>
         <activity android:name=".community.LoginActivity"/>
         <activity android:name=".useraction.list.UserActionListActivity"/>
-        <activity android:name=".useraction.detail.UserActionDetailActivity"/>
+        <activity android:name=".useraction.detail.UserActionDetailActivity"
+                  android:launchMode="singleTask"/>
         <activity
             android:name=".useraction.save.UserActionSaveActivity"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustResize"/>
-        <activity android:name=".mapservice.savecourse.CourseSaveActivity"/>
+        <activity android:name=".mapservice.savecourse.CourseSaveActivity"
+                  android:launchMode="singleTask"/>
         <activity
             android:name=".mapservice.TrackingActivity"
             android:launchMode="singleTask"
-            android:parentActivityName=".course.list.CourseListActivity"
-            android:screenOrientation="portrait" />
-        <activity android:name=".search.SearchResultActivity" />
-        <activity android:name=".course.list.CourseListActivity" />
-        <activity android:name=".coursedetail.CourseDetailActivity" />
-        <activity android:name=".feed.NewsFeedActivity" />
+            android:parentActivityName=".feed.NewsFeedActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".search.SearchResultActivity"/>
+        <activity android:name=".course.list.CourseListActivity"/>
+        <activity android:name=".coursedetail.CourseDetailActivity"
+                  android:launchMode="singleTask"/>
+        <activity android:name=".feed.NewsFeedActivity"/>
         <activity
             android:name=".SplashActivity"
             android:theme="@style/AppTheme.NoActionBar.Fullscreen">
