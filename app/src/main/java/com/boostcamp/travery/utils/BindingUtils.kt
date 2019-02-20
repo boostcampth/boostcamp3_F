@@ -130,8 +130,8 @@ object BindingUtils {
         textView.text = String.format(
                 textView.context.resources.getString(
                         R.string.string_place_holder_date,
-                        DateUtils.parseDateAsString(startTime, "yyyy.MM.dd - HH:mm"),
-                        DateUtils.parseDateAsString(endTime, "HH:mm")
+                        DateUtils.parseDateAsString(startTime, "aaa hh:mm"),
+                        DateUtils.parseDateAsString(endTime, "aaa hh:mm")
                 )
         )
     }
