@@ -7,7 +7,7 @@
         <item
             android:id="@+id/nav_recode_course"
             android:icon="@drawable/ic_course"
-            android:title="경로 기록"/>
+            android:title="@string/string_activity_save_course_toolbar"/>
 
         <item
             android:id="@+id/nav_useraction_map"
@@ -25,12 +25,12 @@
         <item
             android:id="@+id/nav_useraction_add"
             android:icon="@drawable/ic_calendar"
-            android:title="개별 활동 저장"/>
+            android:title="@string/string_activity_save_useraction_toolbar"/>
 
         <item
             android:id="@+id/nav_setting"
             android:icon="@drawable/ic_settings_work_tool"
-            android:title="설정"/>
+            android:title="@string/all_setting"/>
     </group>
 
 </menu>

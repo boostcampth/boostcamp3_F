@@ -5,7 +5,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
@@ -24,19 +26,34 @@ import com.boostcamp.travery.databinding.MainFeedBinding
 import com.boostcamp.travery.databinding.NavHeaderMainBinding
 import com.boostcamp.travery.mapservice.TrackingActivity
 import com.boostcamp.travery.search.SearchResultActivity
+import com.boostcamp.travery.search.SearchResultActivity
 import com.boostcamp.travery.useraction.list.UserActionListActivity
 import com.boostcamp.travery.useraction.save.UserActionSaveActivity
 import com.google.android.material.navigation.NavigationView
 import com.tedpark.tedpermission.rx2.TedRx2Permission
+import io.reactivex.disposables.CompositeDisposable
+import kotlinx.android.synthetic.main.activity_find_location.*
 import kotlinx.android.synthetic.main.main_feed.*
 import kotlinx.android.synthetic.main.main_layout_newsfeed.*
 
 class NewsFeedActivity : BaseActivity<MainFeedBinding>(), NavigationView.OnNavigationItemSelectedListener {
     override val layoutResourceId: Int = R.layout.main_feed
+
     private val viewModel by lazy {
         ViewModelProviders.of(this).get(NewsFeedViewModel::class.java)
     }
     lateinit var navHeaderMainBinding: NavHeaderMainBinding
+
+    private val disposable = CompositeDisposable()
+
+    // Animation
+    private val fabMenuOpen by lazy { AnimationUtils.loadAnimation(baseContext, R.anim.fab_menu_open) }
+    private val fabMenuClose by lazy { AnimationUtils.loadAnimation(baseContext, R.anim.fab_menu_close) }
+    private val fabOpen by lazy { AnimationUtils.loadAnimation(baseContext, R.anim.fab_open) }
+    private val fabClose by lazy { AnimationUtils.loadAnimation(baseContext, R.anim.fab_close) }
+    private val fadeIn by lazy { AnimationUtils.loadAnimation(baseContext, R.anim.fade_in) }
+    private val fadeOut by lazy { AnimationUtils.loadAnimation(baseContext, R.anim.fade_out) }
+    private var isFabOpen = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +61,7 @@ class NewsFeedActivity : BaseActivity<MainFeedBinding>(), NavigationView.OnNavig
         viewDataBinding.viewmodel = viewModel
         navHeaderMainBinding = DataBindingUtil.bind(viewDataBinding.navView.getHeaderView(0))!!
         navHeaderMainBinding.user = viewModel.getPreferences()
+        DataBindingUtil.bind<NavHeaderMainBinding>(viewDataBinding.navView.getHeaderView(0))?.user = viewModel.getPreferences()
         setSupportActionBar(toolBar as Toolbar)
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
@@ -62,10 +80,11 @@ class NewsFeedActivity : BaseActivity<MainFeedBinding>(), NavigationView.OnNavig
 
         nav_view.setNavigationItemSelectedListener(this)
 
-        //refreshListner onRefresh
+        //refreshListener onRefresh
         sl_feed.setOnRefreshListener {
             viewModel.refreshList()
         }
+
         viewModel.isLoding.observe(this, Observer {
             sl_feed.isRefreshing = it
         })
@@ -75,7 +94,27 @@ class NewsFeedActivity : BaseActivity<MainFeedBinding>(), NavigationView.OnNavig
         }
 
         initView()
+        initButton()
+    }
 
+    private fun initButton() {
+        fab_menu.setOnClickListener {
+            startAnim()
+        }
+
+        fab_course.setOnClickListener {
+            startAnim()
+            permissionCheck()
+        }
+
+        fab_userAction.setOnClickListener {
+            startAnim()
+            startActivity(Intent(this, UserActionSaveActivity::class.java))
+        }
+
+        main_background.setOnClickListener {
+            startAnim()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -100,9 +139,11 @@ class NewsFeedActivity : BaseActivity<MainFeedBinding>(), NavigationView.OnNavig
                 onProgress(resources.getString(R.string.progress_bar_message))
                 startActivity(Intent(this, UserActionListActivity::class.java))
             }
+
             R.id.nav_useraction_list -> {
                 startActivity(Intent(this, CourseListActivity::class.java))
             }
+
             R.id.nav_useraction_add -> {
                 val intent = Intent(this, UserActionSaveActivity::class.java).apply {
                     putExtra(Constants.SINGLE_ADD_USER_ACTION_MODE, true)
@@ -132,11 +173,10 @@ class NewsFeedActivity : BaseActivity<MainFeedBinding>(), NavigationView.OnNavig
         }
     }
 
-
     private fun initView() {
 
         //코스 기록을 위한 버튼
-        fab.setOnClickListener {
+        fab_menu.setOnClickListener {
             permissionCheck()
         }
         rv_newsfeed_list.layoutManager = LinearLayoutManager(this)
@@ -145,6 +185,7 @@ class NewsFeedActivity : BaseActivity<MainFeedBinding>(), NavigationView.OnNavig
             private var isAnimated = false
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
+
                 val totalItemCount = recyclerView.layoutManager?.itemCount
                 if (totalItemCount == (recyclerView.layoutManager as LinearLayoutManager).findLastVisibleItemPosition()) {
                     viewModel.loadFeedList()
@@ -152,20 +193,19 @@ class NewsFeedActivity : BaseActivity<MainFeedBinding>(), NavigationView.OnNavig
 
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                     isAnimated = false
-                    fab.animate().translationY(0F).withLayer()
+                    fab_menu.animate().translationY(0F).withLayer()
                 }
             }
 
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 if (dy > 0 && !isAnimated) {
                     isAnimated = true
-                    val moveDistance = (fab.height + (fab.layoutParams as ViewGroup.MarginLayoutParams).bottomMargin).toFloat()
-                    fab.animate().translationY(moveDistance).withLayer()
+                    val moveDistance = (fab_menu.height + (fab_menu.layoutParams as ViewGroup.MarginLayoutParams).bottomMargin).toFloat()
+                    fab_menu.animate().translationY(moveDistance).withLayer()
                 }
             }
         })
     }
-
 
     private fun showDialogForLocationServiceSetting() {
         AlertDialog.Builder(this@NewsFeedActivity, R.style.dialogTheme).apply {
@@ -199,7 +239,7 @@ class NewsFeedActivity : BaseActivity<MainFeedBinding>(), NavigationView.OnNavig
     }
 
     private fun permissionCheck() {
-        TedRx2Permission.with(this)
+        disposable.add(TedRx2Permission.with(this)
                 .setRationaleTitle(getString(R.string.permission_title))
                 .setRationaleMessage(getString(R.string.permission_message)) // "we need permission for read contact and find your location"
                 .setPermissions(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
@@ -215,7 +255,12 @@ class NewsFeedActivity : BaseActivity<MainFeedBinding>(), NavigationView.OnNavig
                     } else {
                         //"Permission Denied\n" + tedPermissionResult.deniedPermissions.toString().toast()
                     }
-                }, { })
+                }, { }))
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        disposable.clear()
     }
 
     override fun onStop() {
@@ -223,4 +268,67 @@ class NewsFeedActivity : BaseActivity<MainFeedBinding>(), NavigationView.OnNavig
         offProgress()
     }
 
+    // View animation
+    private fun startAnim() {
+        if (isFabOpen) {
+            main_background.apply {
+                startAnimation(fadeOut)
+                isClickable = false
+            }
+
+            fab_menu.startAnimation(fabMenuOpen)
+            fab_course.apply {
+                visibility = View.INVISIBLE
+                startAnimation(fabClose)
+                isClickable = false
+            }
+
+            tv_floating_course.apply {
+                visibility = View.INVISIBLE
+                startAnimation(fabClose)
+            }
+
+            fab_userAction.apply {
+                visibility = View.INVISIBLE
+                startAnimation(fabClose)
+                isClickable = false
+            }
+
+            tv_floating_user_action.apply {
+                visibility = View.INVISIBLE
+                startAnimation(fabClose)
+            }
+            isFabOpen = false
+        } else {
+            main_background.apply {
+                startAnimation(fadeIn)
+                isClickable = true
+            }
+
+            fab_menu.startAnimation(fabMenuClose)
+            fab_course.apply {
+                visibility = View.VISIBLE
+                startAnimation(fabOpen)
+                isClickable = true
+            }
+
+            tv_floating_course.apply {
+                visibility = View.VISIBLE
+                startAnimation(fabOpen)
+            }
+
+            fab_userAction.apply {
+                visibility = View.VISIBLE
+                startAnimation(fabOpen)
+                isClickable = true
+            }
+
+            tv_floating_user_action.apply {
+                visibility = View.VISIBLE
+                startAnimation(fabOpen)
+            }
+
+            isFabOpen = true
+        }
+    }
 }
