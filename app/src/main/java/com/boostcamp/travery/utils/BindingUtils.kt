@@ -17,8 +17,6 @@ import com.boostcamp.travery.R
 import com.boostcamp.travery.course.list.CourseListViewModel
 import com.boostcamp.travery.course.list.adapter.CourseListAdapter
 import com.boostcamp.travery.feed.ViewPagerAdapter
-import com.boostcamp.travery.search.SearchResultViewModel
-import com.boostcamp.travery.search.UserActionSearchAdapter
 import com.boostcamp.travery.useraction.detail.ImagesViewPagerAdapter
 import com.boostcamp.travery.useraction.detail.UserActionDetailViewModel
 import com.boostcamp.travery.useraction.save.UserActionImageListAdapter
@@ -71,7 +69,7 @@ object BindingUtils {
                             target: Target<Drawable>?,
                             isFirstResource: Boolean
                     ): Boolean {
-                        imageView.visibility = View.GONE
+                        imageView.visibility = View.INVISIBLE
                         return false
                     }
 
@@ -82,6 +80,7 @@ object BindingUtils {
                             dataSource: DataSource?,
                             isFirstResource: Boolean
                     ): Boolean {
+                        imageView.visibility = View.VISIBLE
                         return false
                     }
                 })
@@ -219,17 +218,6 @@ object BindingUtils {
         }
     }
 
-    @JvmStatic
-    @BindingAdapter("listAdapter")
-    fun setAdapter(recyclerView: RecyclerView, viewModel: SearchResultViewModel) {
-        val adapter = UserActionSearchAdapter(viewModel.data).apply {
-            onItemClickListener = { item: Any -> viewModel.onItemClick(item) }
-        }
-        recyclerView.apply {
-            layoutManager = LinearLayoutManager(recyclerView.context)
-            this.adapter = adapter
-        }
-    }
 
     /**
      * 선택한 테마에 맞추어 배경 변경(총 5가지 색상)
