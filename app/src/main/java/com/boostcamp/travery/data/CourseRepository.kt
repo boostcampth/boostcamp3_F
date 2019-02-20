@@ -1,5 +1,6 @@
 package com.boostcamp.travery.data
 
+import android.util.Log
 import com.boostcamp.travery.data.local.CourseLocalDataSource
 import com.boostcamp.travery.data.local.db.dao.CourseDao
 import com.boostcamp.travery.data.local.db.dao.UserActionDao
@@ -40,8 +41,11 @@ class CourseRepository private constructor(private val courseDataSource: CourseD
                 }
     }
 
-    override fun saveUserAction(userAction: UserAction): Observable<Boolean> {
+    override fun saveUserAction(userAction: UserAction): Observable<Long> {
         return courseDataSource.saveUserAction(userAction)
+                .doOnNext {
+                    userAction.seq = it.toInt()
+                }
                 .doOnComplete {
                     if (userAction.courseCode != null) {
                         //코스가 있는 활동 정보이라면 코스의 userActionList에 넣는다.
@@ -105,9 +109,11 @@ class CourseRepository private constructor(private val courseDataSource: CourseD
                 .doOnComplete {
                     //경로위에 있는 활동일 때
                     if (userAction.courseCode != null) {
-                        val index=mCachedCourse[userAction.courseCode ?: 0]?.userActionList?.indexOf(userAction)?:-1
+                        val index = mCachedCourse[userAction.courseCode
+                                ?: 0]?.userActionList?.indexOf(userAction) ?: -1
                         mCachedCourse[userAction.courseCode ?: 0]?.userActionList?.removeAt(index)
-                        mCachedCourse[userAction.courseCode ?: 0]?.userActionList?.add(index,userAction)
+                        mCachedCourse[userAction.courseCode
+                                ?: 0]?.userActionList?.add(index, userAction)
                     }
                 }
     }

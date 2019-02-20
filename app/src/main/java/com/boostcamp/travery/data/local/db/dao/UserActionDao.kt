@@ -6,7 +6,7 @@ import com.boostcamp.travery.data.model.UserAction
 @Dao
 interface UserActionDao {
     @Insert
-    fun insert(userAction: UserAction)
+    fun insert(userAction: UserAction):Long
 
     @Insert
     fun insert(userActionList: List<UserAction>)
