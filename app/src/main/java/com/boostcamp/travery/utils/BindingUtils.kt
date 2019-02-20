@@ -319,6 +319,12 @@ object BindingUtils {
     }
 
     @JvmStatic
+    @BindingAdapter("onTouch")
+    fun onTouchListener(view: IndicatorSeekBar, listener: View.OnTouchListener) {
+        view.setOnTouchListener(listener)
+    }
+
+    @JvmStatic
     @BindingAdapter("viewPagerAdapter")
     fun setViewPagerAdapter(viewPager: ViewPager, viewModel: UserActionDetailViewModel) {
         if (viewModel.imageList.isEmpty()) {
