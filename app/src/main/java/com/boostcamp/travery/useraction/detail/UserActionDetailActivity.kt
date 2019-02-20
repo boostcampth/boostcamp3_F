@@ -83,6 +83,7 @@ class UserActionDetailActivity : BaseActivity<ActivityUserActionDetailBinding>()
 
                     setResult(Activity.RESULT_OK, Intent().apply {
                         putExtra(Constants.EXTRA_USER_ACTION, userAction)
+                        putExtra(Constants.EXTRA_USERACTION_STATE, Constants.EDIT_STATE)
                     })
                 }
             }
@@ -96,6 +97,7 @@ class UserActionDetailActivity : BaseActivity<ActivityUserActionDetailBinding>()
     override fun deletedUserAction(userAction: UserAction) {
         setResult(Activity.RESULT_OK, Intent().apply {
             putExtra(Constants.EXTRA_USER_ACTION_DATE, userAction.date.time)
+            putExtra(Constants.EXTRA_USERACTION_STATE, Constants.DELETE_STATE)
         })
         finish()
     }

@@ -25,11 +25,13 @@ import com.google.android.gms.maps.model.*
 import kotlinx.android.synthetic.main.activity_course_detail.*
 import kotlinx.android.synthetic.main.item_seekbar_content.view.*
 import java.util.*
+import kotlin.collections.HashMap
 
 
 class CourseDetailActivity : BaseActivity<ActivityCourseDetailBinding>(), OnMapReadyCallback {
     override val layoutResourceId: Int = R.layout.activity_course_detail
     private lateinit var seekerMarker: Marker
+    private val markersHashMap = HashMap<Long, Marker>()
     private val viewModel by lazy {
         ViewModelProviders.of(this).get(CourseDetailViewModel::class.java)
     }
@@ -79,7 +81,7 @@ class CourseDetailActivity : BaseActivity<ActivityCourseDetailBinding>(), OnMapR
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
         map.setOnMarkerClickListener { marker ->
-            marker?.tag?.let { viewModel.markerClick(it as Int) }
+            marker?.tag?.let { viewModel.markerClick(it as UserAction) }
             false
         }
         observeViewModel()
@@ -126,16 +128,47 @@ class CourseDetailActivity : BaseActivity<ActivityCourseDetailBinding>(), OnMapR
         })
 
         viewModel.markerList.observe(this, Observer { actionList ->
-            for (i in actionList.indices) {
-                when (i) {
-                    0 -> map.addMarker(MarkerOptions().position(LatLng(actionList[i].latitude, actionList[i].longitude)).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_start))).tag = i
-                    actionList.size - 1 -> map.addMarker(MarkerOptions().position(LatLng(actionList[i].latitude, actionList[i].longitude)).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_arrive))).tag = i
-                    else -> map.addMarker(MarkerOptions().position(LatLng(actionList[i].latitude, actionList[i].longitude)).icon(BitmapDescriptorFactory.fromBitmap(CustomMarker.create(this, actionList[i].mainImage)))).tag = i
+            for (i in 0 until actionList.size) {
+                with(actionList[i]) {
+                    when (i) {
+                        0 -> {
+                            markersHashMap[this.date.time] = map.addMarker(MarkerOptions()
+                                    .position(LatLng(this.latitude, this.longitude))
+                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_start)))
+                            markersHashMap[this.date.time]?.tag = this
+                        }
+                        actionList.size - 1 -> {
+                            markersHashMap[this.date.time] = map.addMarker(MarkerOptions().position(LatLng(this.latitude, this.longitude))
+                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_arrive)))
+                            markersHashMap[this.date.time]?.tag = this
+                        }
+                        else -> {
+                            markersHashMap[this.date.time] = map.addMarker(MarkerOptions().position(LatLng(this.latitude, this.longitude))
+                                    .icon(BitmapDescriptorFactory.fromBitmap(CustomMarker.create(this@CourseDetailActivity, this.mainImage))))
+                            markersHashMap[this.date.time]?.tag = this
+                        }
+                    }
                 }
             }
         })
+
         viewModel.curUseraction.observe(this, Observer {
             map.animateCamera(CameraUpdateFactory.newLatLng(LatLng(it.latitude, it.longitude)))
+        })
+
+        viewModel.userActionStateChange.observe(this, Observer {
+            when (it.state) {
+                Constants.EDIT_STATE -> {
+                    markersHashMap[it.userAction.date.time]?.remove()
+                    markersHashMap[it.userAction.date.time] = map.addMarker(MarkerOptions().position(LatLng(it.userAction.latitude, it.userAction.longitude))
+                            .icon(BitmapDescriptorFactory.fromBitmap(CustomMarker.create(this@CourseDetailActivity, it.userAction.mainImage))))
+                            .apply { tag = it.userAction }
+                }
+                Constants.DELETE_STATE -> {
+                    markersHashMap[it.userAction.date.time]?.remove()
+                    markersHashMap.remove(it.userAction.date.time)
+                }
+            }
         })
     }
 

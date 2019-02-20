@@ -12,7 +12,7 @@ interface CourseDataSource {
 
     fun saveCourse(course: Course): Observable<Boolean>
 
-    fun saveUserAction(userAction: UserAction): Observable<Boolean>
+    fun saveUserAction(userAction: UserAction): Observable<Long>
 
     fun deleteCourse(course: Course): Observable<Boolean>
 

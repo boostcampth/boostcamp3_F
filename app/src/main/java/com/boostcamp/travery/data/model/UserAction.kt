@@ -38,3 +38,8 @@ data class UserAction(
         return super.equals(other)
     }
 }
+
+data class EditUserAction(
+        val state:String,
+        val userAction: UserAction
+)
