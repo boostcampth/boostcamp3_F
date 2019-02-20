@@ -42,10 +42,9 @@ class CourseLocalDataSource private constructor(
         }
     }
 
-    override fun saveUserAction(userAction: UserAction): Observable<Boolean> {
+    override fun saveUserAction(userAction: UserAction): Observable<Long> {
         return Observable.fromCallable {
             userActionDao.insert(userAction)
-            true
         }
     }
 
