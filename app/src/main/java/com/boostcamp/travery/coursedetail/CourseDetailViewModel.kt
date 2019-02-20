@@ -2,13 +2,18 @@ package com.boostcamp.travery.coursedetail
 
 import android.app.Application
 import android.location.Geocoder
+import android.location.Location
+import android.util.Log
+import android.view.View
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableField
 import androidx.databinding.ObservableInt
 import androidx.lifecycle.MutableLiveData
+import com.boostcamp.travery.Constants
 import com.boostcamp.travery.Injection
 import com.boostcamp.travery.base.BaseViewModel
 import com.boostcamp.travery.data.model.Course
+import com.boostcamp.travery.data.model.EditUserAction
 import com.boostcamp.travery.data.model.TimeCode
 import com.boostcamp.travery.data.model.UserAction
 import com.boostcamp.travery.eventbus.EventBus
@@ -23,15 +28,17 @@ import io.reactivex.Flowable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import java.lang.Exception
 
-
+//TODO 활동 삭제와 수정시 맵이 꼬이는 문제가 있음. 예외처리로 수정
+//TODO 마커 배경 지워줘야함
 class CourseDetailViewModel(application: Application) : BaseViewModel(application) {
     private lateinit var course: Course
     private val courseDetailRepository = Injection.provideCourseRepository(application)
     private val timeCodeList = ArrayList<TimeCode>() //활동 추가를 위한 경로 좌표리스트
     val timeCodeListSize = ObservableInt(0)
 
-    private val userActionList = ObservableArrayList<UserAction>()
+    private val userActionList = ObservableArrayList<UserAction>()//리스트 변경
     val curUseraction = MutableLiveData<UserAction>()
     val userActionListAdapter = UserActionListAdapter(userActionList)
     val latLngList = MutableLiveData<List<LatLng>>() //저장된 코스를 맵에 보여주기 위한 좌표리스트
@@ -39,10 +46,22 @@ class CourseDetailViewModel(application: Application) : BaseViewModel(applicatio
     val scrollTo = ObservableInt()
     val totalDistance = ObservableField<String>()
 
+    //유저 엑션이 경로 리스트 몇번째에 있는지 확인 하기 위하여
+    //99번째에 유저액션을 저장했다면 키가 99인 userAction이 들어감
+    val userActionHashMap = HashMap<Int, UserAction>()
+    val userActionStateChange = MutableLiveData<EditUserAction>()
+
+    val seekProgress = MutableLiveData<Int>()
     val seekTimeCode = MutableLiveData<TimeCode>()
     val seekListener: OnSeekChangeListener = object : OnSeekChangeListener {
         override fun onSeeking(seekParams: SeekParams) {
             seekTimeCode.value = timeCodeList[seekParams.progress]
+            if (userActionHashMap.containsKey(seekParams.progress)) {
+                when (userActionList.indexOf(userActionHashMap[seekParams.progress])) {
+                    -1 -> userActionHashMap.remove(seekParams.progress)
+                    else -> scrollTo.set(userActionList.indexOf(userActionHashMap[seekParams.progress]))
+                }
+            }
         }
 
         override fun onStartTrackingTouch(seekBar: IndicatorSeekBar) {}
@@ -56,16 +75,18 @@ class CourseDetailViewModel(application: Application) : BaseViewModel(applicatio
                 .ofType(UserActionUpdateEvent::class.java)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-                    userActionList.clear()
-                    loadUserActionList()
+                    userActionList[userActionList.indexOf(it.userAction)] = it.userAction
+                    userActionStateChange.value = EditUserAction(Constants.EDIT_STATE, it.userAction)
                 })
 
+        //삭제 observe
         addDisposable(EventBus.getEvents()
                 .ofType(UserActionDeleteEvent::class.java)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-                    userActionList.clear()
-                    loadUserActionList()
+                    seekProgress.value = 0
+                    userActionList.remove(it.userAction)
+                    userActionStateChange.value = EditUserAction(Constants.DELETE_STATE, it.userAction)
                 })
     }
 
@@ -116,10 +137,12 @@ class CourseDetailViewModel(application: Application) : BaseViewModel(applicatio
                         " ~ " + DateUtils.parseDateAsString(course.endTime, "HH:mm"),
                 subImage = "${String.format("%.2f", course.distance / 1000.0)}km",
                 latitude = latLngList.value?.let { it[0].latitude } ?: .0,
-                longitude = latLngList.value?.let { it[0].longitude } ?: .0
+                longitude = latLngList.value?.let { it[0].longitude } ?: .0,
+                seq = -1
         )
         val endLatLng = latLngList.value?.get(latLngList.value?.size?.minus(1) ?: 0)
                 ?: LatLng(0.0, 0.0)
+
         addDisposable(Single.fromCallable {
             Geocoder(getApplication()).getFromLocation(endLatLng.latitude, endLatLng.longitude, 1)[0]
         }.map {
@@ -131,7 +154,8 @@ class CourseDetailViewModel(application: Application) : BaseViewModel(applicatio
                     latitude = latLngList.value?.let { latLng -> latLng[latLng.size - 1].latitude }
                             ?: .0,
                     longitude = latLngList.value?.let { latLng -> latLng[latLng.size - 1].longitude }
-                            ?: .0
+                            ?: .0,
+                    seq = -2
             )
         }.flatMap {
             Flowable.merge(Flowable.just(start),
@@ -143,9 +167,21 @@ class CourseDetailViewModel(application: Application) : BaseViewModel(applicatio
                 .subscribe({
                     userActionList.addAll(it)
                     markerList.value = it
-                }, {
 
-                })
+                    Log.d("loloser", userActionList.size.toString())
+                    var userActionPosition = 0
+                    latLngList.value?.let { list ->
+                        for (pos in 0 until list.size) {
+                            if (list[pos].longitude == userActionList[userActionPosition].longitude
+                                    && list[pos].latitude == userActionList[userActionPosition].latitude) {
+                                userActionHashMap[pos] = userActionList[userActionPosition]
+                                Log.d("loloser3", pos.toString())
+                                userActionPosition++
+                            }
+                        }
+                    }
+                    Log.d("loloser2", userActionPosition.toString())
+                }, {})
         )
     }
 
@@ -153,14 +189,31 @@ class CourseDetailViewModel(application: Application) : BaseViewModel(applicatio
     /**
      * 맵상의 마커가 클릭 되었을때 현재 선택된 아이템 포지션과 활동 마커인지를 체크
      */
-    fun markerClick(position: Int) {
-        scrollTo.set(position)
+    fun markerClick(userAction: UserAction) {
+        val pos = userActionList.indexOf(userAction)
+        scrollTo.set(pos)
+        seekTimeCode.value = TimeCode(LatLng(userActionList[pos].latitude, userActionList[pos].longitude))
+        userActionHashMap.forEach {
+            if (it.value == userAction) {
+                seekProgress.value = it.key
+            }
+        }
+
         //활동 마커에 대해서만 바텀 뷰를 보여주기 위함
     }
 
 
     fun updateCurUseraction(position: Int) {
-        curUseraction.value = markerList.value?.get(position)
+        //val userAction = markerList.value?.get(position)
+        //val pos = userActionList.indexOf(userAction)
+        //seekTimeCode.value = TimeCode(LatLng(userActionList[pos].latitude, userActionList[pos].longitude))
+        val userAction = markerList.value?.get(position)
+        userActionHashMap.forEach {
+            if (it.value == userAction) {
+                seekProgress.value = it.key
+            }
+        }
+        //curUseraction.value = userAction*/
     }
 
     private fun onItemClick(userAction: UserAction) {

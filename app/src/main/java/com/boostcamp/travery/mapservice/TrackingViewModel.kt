@@ -38,8 +38,7 @@ class TrackingViewModel(application: Application) : BaseViewModel(application) {
     val curLocation = MutableLiveData<LatLng>()
     var suggestCountString = ObservableField<String>("0")
     val totalDistance by lazy { mapTrackingRepository.getTotalDistance() }
-    val startTime by lazy { mapTrackingRepository.getStartTime() }
-    private val startTimeTxt by lazy { DateUtils.parseDateAsString(Date(startTime)) }
+    var startTime: Long = 0L
     val userActionList by lazy { mapTrackingRepository.getUserActionList() }
     private var suggestAdapter: BaseAdapter? = null
 
@@ -93,6 +92,9 @@ class TrackingViewModel(application: Application) : BaseViewModel(application) {
 
         addDisposable(
                 EventBus.getEvents().ofType(ServiceStartEvent::class.java).subscribe {
+                    Log.d("lolotest2", it.startTime.toString())
+                    startTime = it.startTime
+
                     if (it.startTime != 0L) {
                         saveInitCourse(it.startTime)
                         isService.set(true)
@@ -126,9 +128,10 @@ class TrackingViewModel(application: Application) : BaseViewModel(application) {
         ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe()
     }
 
-    fun deleteUserAction(date: Long){
+    fun deleteUserAction(date: Long) {
         getUserAction(date)?.let {
-            mapTrackingRepository.removeUserAction(date) }
+            mapTrackingRepository.removeUserAction(date)
+        }
     }
 
     fun removeSuggestItem(position: Int) {
@@ -155,17 +158,4 @@ class TrackingViewModel(application: Application) : BaseViewModel(application) {
     fun onClickInfo(view: View) {
     }
 
-    private fun makeInfoTxt(second: Int): String {
-        val hours = second / 3600
-        val minutes = (second % 3600) / 60
-        val seconds = second % 60
-        var timeTxt = ""
-        if (hours != 0)
-            timeTxt += "${hours}시간 "
-        if (minutes != 0)
-            timeTxt += "${minutes}분 "
-        timeTxt += "${seconds}초"
-
-        return "기록 시작 : $startTimeTxt\n경과 시간 : $timeTxt\n기록 거리 :  $distanceTxt"
-    }
 }

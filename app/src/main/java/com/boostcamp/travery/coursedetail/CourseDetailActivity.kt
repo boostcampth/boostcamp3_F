@@ -3,6 +3,7 @@ package com.boostcamp.travery.coursedetail
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
@@ -25,20 +26,13 @@ import com.google.android.gms.maps.model.*
 import kotlinx.android.synthetic.main.activity_course_detail.*
 import kotlinx.android.synthetic.main.item_seekbar_content.view.*
 import java.util.*
+import kotlin.collections.HashMap
 
 
 class CourseDetailActivity : BaseActivity<ActivityCourseDetailBinding>(), OnMapReadyCallback {
     override val layoutResourceId: Int = R.layout.activity_course_detail
-    private val seekerMarker by lazy {
-        val myLocation = LatLng(37.56, 126.97)
-        map.addMarker(
-                MarkerOptions()
-                        .position(myLocation)
-                        .flat(true)
-                        .anchor(0.5f, 0.5f)
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.map_position_no_heading))
-        )
-    }
+    private lateinit var seekerMarker: Marker
+    private val markersHashMap = HashMap<Long, Marker>()
     private val viewModel by lazy {
         ViewModelProviders.of(this).get(CourseDetailViewModel::class.java)
     }
@@ -59,7 +53,10 @@ class CourseDetailActivity : BaseActivity<ActivityCourseDetailBinding>(), OnMapR
         val mapFragment = fragment_map as SupportMapFragment
         mapFragment.getMapAsync(this)
         setupBindings(savedInstanceState)
-        rv_useraction_list.setOnSnapListener { viewModel.updateCurUseraction(it) }
+        rv_useraction_list.setOnSnapListener {
+            viewModel.updateCurUseraction(it)
+        }
+
         viewModel.setEventListener(object : CourseDetailViewModel.ViewModelEventListener {
             override fun onItemClick(item: Any) {
                 if (item is UserAction) {
@@ -87,7 +84,7 @@ class CourseDetailActivity : BaseActivity<ActivityCourseDetailBinding>(), OnMapR
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
         map.setOnMarkerClickListener { marker ->
-            marker?.tag?.let { viewModel.markerClick(it as Int) }
+            marker?.tag?.let { viewModel.markerClick(it as UserAction) }
             false
         }
         observeViewModel()
@@ -112,27 +109,70 @@ class CourseDetailActivity : BaseActivity<ActivityCourseDetailBinding>(), OnMapR
                                 LatLngBounds.builder().include(it[0]).include(it[it.size - 1]).build()
                                 , 110.toPx())
                 )
+                seekerMarker = map.addMarker(
+                        MarkerOptions()
+                                .position(it.first())
+                                .flat(true)
+                                .anchor(0.5f, 0.5f)
+                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.map_position_no_heading))
+                )
             }
 
+        })
+
+        viewModel.seekProgress.observe(this, Observer {
+            detail_seekbar.setProgress(it.toFloat())
         })
 
         viewModel.seekTimeCode.observe(this, Observer {
             seekerMarker.position = it.coordinate
-            map.moveCamera(CameraUpdateFactory.newLatLng(it.coordinate))
+            map.animateCamera(CameraUpdateFactory.newLatLng(it.coordinate), 150, null)
             detail_seekbar.indicator.topContentView.tv_time?.text = DateUtils.parseDateAsString(it.timeStamp, "a h시 mm분 ss초")
         })
 
         viewModel.markerList.observe(this, Observer { actionList ->
-            for (i in actionList.indices) {
-                when (i) {
-                    0 -> map.addMarker(MarkerOptions().position(LatLng(actionList[i].latitude, actionList[i].longitude)).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_start))).tag = i
-                    actionList.size - 1 -> map.addMarker(MarkerOptions().position(LatLng(actionList[i].latitude, actionList[i].longitude)).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_arrive))).tag = i
-                    else -> map.addMarker(MarkerOptions().position(LatLng(actionList[i].latitude, actionList[i].longitude)).icon(BitmapDescriptorFactory.fromBitmap(CustomMarker.create(this, actionList[i].mainImage)))).tag = i
+            for (i in 0 until actionList.size) {
+                with(actionList[i]) {
+                    when (i) {
+                        0 -> {
+                            markersHashMap[this.date.time] = map.addMarker(MarkerOptions()
+                                    .position(LatLng(this.latitude, this.longitude))
+                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_start)))
+                            markersHashMap[this.date.time]?.tag = this
+                        }
+                        actionList.size - 1 -> {
+                            markersHashMap[this.date.time] = map.addMarker(MarkerOptions().position(LatLng(this.latitude, this.longitude))
+                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_arrive)))
+                            markersHashMap[this.date.time]?.tag = this
+                        }
+                        else -> {
+                            markersHashMap[this.date.time] = map.addMarker(MarkerOptions().position(LatLng(this.latitude, this.longitude))
+                                    .icon(BitmapDescriptorFactory.fromBitmap(CustomMarker.create(this@CourseDetailActivity, this.mainImage))))
+                            markersHashMap[this.date.time]?.tag = this
+                        }
+                    }
+                    Log.d("testlog",this.courseCode.toString())
                 }
             }
         })
+
         viewModel.curUseraction.observe(this, Observer {
             map.animateCamera(CameraUpdateFactory.newLatLng(LatLng(it.latitude, it.longitude)))
+        })
+
+        viewModel.userActionStateChange.observe(this, Observer {
+            when (it.state) {
+                Constants.EDIT_STATE -> {
+                    markersHashMap[it.userAction.date.time]?.remove()
+                    markersHashMap[it.userAction.date.time] = map.addMarker(MarkerOptions().position(LatLng(it.userAction.latitude, it.userAction.longitude))
+                            .icon(BitmapDescriptorFactory.fromBitmap(CustomMarker.create(this@CourseDetailActivity, it.userAction.mainImage))))
+                            .apply { tag = it.userAction }
+                }
+                Constants.DELETE_STATE -> {
+                    markersHashMap[it.userAction.date.time]?.remove()
+                    markersHashMap.remove(it.userAction.date.time)
+                }
+            }
         })
     }
 

@@ -3,6 +3,7 @@ package com.boostcamp.travery.useraction.detail
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AlertDialog
@@ -79,6 +80,11 @@ class UserActionDetailActivity : BaseActivity<ActivityUserActionDetailBinding>()
                     val userAction = it.getParcelableExtra<UserAction>(Constants.EXTRA_USER_ACTION)
                     viewModel.init(userAction)
                     piv_action_image.setSelected(0)
+
+                    setResult(Activity.RESULT_OK, Intent().apply {
+                        putExtra(Constants.EXTRA_USER_ACTION, userAction)
+                        putExtra(Constants.EXTRA_USERACTION_STATE, Constants.EDIT_STATE)
+                    })
                 }
             }
         }
@@ -90,7 +96,8 @@ class UserActionDetailActivity : BaseActivity<ActivityUserActionDetailBinding>()
      */
     override fun deletedUserAction(userAction: UserAction) {
         setResult(Activity.RESULT_OK, Intent().apply {
-            putExtra(Constants.EXTRA_USER_ACTION_DATE, userAction.date)
+            putExtra(Constants.EXTRA_USER_ACTION_DATE, userAction.date.time)
+            putExtra(Constants.EXTRA_USERACTION_STATE, Constants.DELETE_STATE)
         })
         finish()
     }

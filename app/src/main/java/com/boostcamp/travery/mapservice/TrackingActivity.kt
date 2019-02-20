@@ -8,6 +8,7 @@ import android.content.ServiceConnection
 import android.graphics.Color
 import android.os.Bundle
 import android.os.IBinder
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import androidx.appcompat.app.AlertDialog
@@ -34,6 +35,7 @@ import com.orhanobut.dialogplus.DialogPlus
 import io.reactivex.Completable
 import kotlinx.android.synthetic.main.activity_tracking.*
 import kotlinx.android.synthetic.main.item_dialog_footer.*
+import java.lang.Exception
 
 class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     override val layoutResourceId: Int
@@ -46,7 +48,7 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
     private var polyline: Polyline? = null
     private var polylineOptions: PolylineOptions = PolylineOptions()
     private var isBound = false
-    private val userActionMarkers = ArrayList<Marker>()
+    private val userActionMarkers = HashMap<Long, Marker>()
 
     private val viewModel by lazy {
         ViewModelProviders.of(this).get(TrackingViewModel::class.java)
@@ -93,8 +95,8 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
             null -> return false
             else -> {
                 startActivityForResult(Intent(this, UserActionDetailActivity::class.java).apply {
-                    putExtra(Constants.EXTRA_USER_ACTION, viewModel.getUserAction(marker.tag.toString().toLong()))
-                },Constants.REQUEST_CODE_USERACTION_REMOVE)
+                    putExtra(Constants.EXTRA_USER_ACTION, viewModel.getUserAction(marker.tag as Long))
+                }, Constants.REQUEST_CODE_USERACTION_EDIT)
             }
         }
         return true
@@ -268,12 +270,7 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
                         polylineOptions.add(it.coordinate)
                     }
                     viewModel.userActionList.forEach {
-                        val userMarker = mMap.addMarker(MarkerOptions().position(
-                                LatLng(it.value.latitude, it.value.longitude))
-                                .icon(BitmapDescriptorFactory.fromBitmap(CustomMarker.create(this@TrackingActivity, it.value.mainImage))))
-                        userMarker.tag = it.value.date.time
-
-                        userActionMarkers.add(userMarker)
+                        addCustomMarker(it.value)
                     }
                 }.doOnComplete {
                     polyline = mMap.addPolyline(polylineOptions)
@@ -311,30 +308,57 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
         }
     }
 
+    private fun addCustomMarker(userAction: UserAction){
+        userActionMarkers[userAction.date.time] = mMap.addMarker(MarkerOptions().position(
+                LatLng(userAction.latitude, userAction.longitude))
+                .icon(BitmapDescriptorFactory.fromBitmap(CustomMarker.create(this@TrackingActivity, userAction.mainImage)))).apply { tag = userAction.date.time }
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == RESULT_OK) {
             when (requestCode) {
                 Constants.REQUEST_CODE_USERACTION -> data?.let {
                     val userAction: UserAction = it.getParcelableExtra(Constants.EXTRA_USER_ACTION)
 
-                    val userMarker = mMap.addMarker(MarkerOptions().position(
-                            LatLng(userAction.latitude, userAction.longitude))
-                            .icon(BitmapDescriptorFactory.fromBitmap(CustomMarker.create(this@TrackingActivity, userAction.mainImage))))
-                    userMarker.tag = userAction.date.time
-
-                    userActionMarkers.add(userMarker)
+                    addCustomMarker(userAction)
                     viewModel.addUserAction(userAction)
 
                 }
 
-                Constants.REQUEST_CODE_USERACTION_REMOVE -> data?.let {
-                    val userAction: UserAction = it.getParcelableExtra(Constants.EXTRA_USER_ACTION)
-                    viewModel.deleteUserAction(userAction.date.time)
-                    userActionMarkers.forEach {marker->
-                        if(marker.tag == userAction.date.time){
-                            userActionMarkers.remove(marker)
-                            marker.remove()
+                Constants.REQUEST_CODE_USERACTION_EDIT -> data?.let {
+                    val state = it.getStringExtra(Constants.EXTRA_USERACTION_STATE)
+                    when (state) {
+                        Constants.DELETE_STATE -> {
+                            val time: Long? = it.getLongExtra(Constants.EXTRA_USER_ACTION_DATE, 0L)
+                            time?.let { _time ->
+                                viewModel.deleteUserAction(_time)
+                                userActionMarkers[_time]?.remove()
+                                userActionMarkers.remove(_time)
+                            }
                         }
+
+                        //삭제했을때는 여기서 실행
+                        //수정했을 때는 여기서 실행
+                        //TODO 우선 삭제하고 새로 넣는 방식으로 구현
+                        //TODO hashmap 데이터를 변경하는 것도 생각해봐야함
+                        Constants.EDIT_STATE -> {
+                            try {
+                                val userAction: UserAction = it.getParcelableExtra(Constants.EXTRA_USER_ACTION)
+                                Completable.fromAction {
+                                    viewModel.deleteUserAction(userAction.date.time)
+                                    userActionMarkers[userAction.date.time]?.remove()
+                                    userActionMarkers.remove(userAction.date.time)
+
+                                }.doOnComplete {
+                                    addCustomMarker(userAction)
+                                    viewModel.addUserAction(userAction)
+                                }.subscribe().dispose()
+
+                            } catch (e: Exception) {
+                            }
+                        }
+
+                        else -> return
                     }
                 }
             }
