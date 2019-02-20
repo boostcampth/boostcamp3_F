@@ -1,5 +1,6 @@
 package com.boostcamp.travery.data
 
+import android.util.Log
 import com.boostcamp.travery.data.local.CourseLocalDataSource
 import com.boostcamp.travery.data.local.db.dao.CourseDao
 import com.boostcamp.travery.data.local.db.dao.UserActionDao

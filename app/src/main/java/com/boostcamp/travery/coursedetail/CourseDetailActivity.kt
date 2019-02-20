@@ -3,6 +3,7 @@ package com.boostcamp.travery.coursedetail
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
@@ -52,7 +53,9 @@ class CourseDetailActivity : BaseActivity<ActivityCourseDetailBinding>(), OnMapR
         val mapFragment = fragment_map as SupportMapFragment
         mapFragment.getMapAsync(this)
         setupBindings(savedInstanceState)
-        rv_useraction_list.setOnSnapListener { viewModel.updateCurUseraction(it) }
+        rv_useraction_list.setOnSnapListener {
+            viewModel.updateCurUseraction(it)
+        }
 
         viewModel.setEventListener(object : CourseDetailViewModel.ViewModelEventListener {
             override fun onItemClick(item: Any) {
@@ -148,6 +151,7 @@ class CourseDetailActivity : BaseActivity<ActivityCourseDetailBinding>(), OnMapR
                             markersHashMap[this.date.time]?.tag = this
                         }
                     }
+                    Log.d("testlog",this.courseCode.toString())
                 }
             }
         })

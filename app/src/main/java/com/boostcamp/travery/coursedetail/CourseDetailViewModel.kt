@@ -57,8 +57,6 @@ class CourseDetailViewModel(application: Application) : BaseViewModel(applicatio
         override fun onSeeking(seekParams: SeekParams) {
             seekTimeCode.value = timeCodeList[seekParams.progress]
             if (userActionHashMap.containsKey(seekParams.progress)) {
-                Log.d("lolosi",seekParams.progress.toString())
-                Log.d("lolosi",userActionList.indexOf(userActionHashMap[seekParams.progress]).toString())
                 when (userActionList.indexOf(userActionHashMap[seekParams.progress])) {
                     -1 -> userActionHashMap.remove(seekParams.progress)
                     else -> scrollTo.set(userActionList.indexOf(userActionHashMap[seekParams.progress]))
@@ -206,7 +204,16 @@ class CourseDetailViewModel(application: Application) : BaseViewModel(applicatio
 
 
     fun updateCurUseraction(position: Int) {
-        curUseraction.value = markerList.value?.get(position)
+        //val userAction = markerList.value?.get(position)
+        //val pos = userActionList.indexOf(userAction)
+        //seekTimeCode.value = TimeCode(LatLng(userActionList[pos].latitude, userActionList[pos].longitude))
+        val userAction = markerList.value?.get(position)
+        userActionHashMap.forEach {
+            if (it.value == userAction) {
+                seekProgress.value = it.key
+            }
+        }
+        //curUseraction.value = userAction*/
     }
 
     private fun onItemClick(userAction: UserAction) {
