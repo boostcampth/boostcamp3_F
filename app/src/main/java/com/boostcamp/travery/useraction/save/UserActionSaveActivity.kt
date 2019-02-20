@@ -36,6 +36,7 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
     private var hashTagSwitch = false
 
     private var editMode = false
+    private var singleMode = false
 
     private var location: LatLng? = null
 
@@ -46,6 +47,7 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
         setContentView(viewDataBinding.root)
 
         editMode = intent.extras?.getBoolean(Constants.EDIT_MODE, false) ?: false
+        singleMode = intent.extras?.getBoolean(Constants.SINGLE_ADD_USER_ACTION_MODE, false) ?: false
 
         setSupportActionBar(toolbar as Toolbar)
         supportActionBar?.apply {
@@ -123,10 +125,12 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
     private fun initAddButtonList() {
         btn_location_add.isSelected = true
         btn_location_add.setOnClickListener {
-            val intent = Intent(this, FindLocationActivity::class.java).apply {
-                putExtra(Constants.EXTRA_LAT_LNG, location)
+            if (singleMode) {
+                val intent = Intent(this, FindLocationActivity::class.java).apply {
+                    putExtra(Constants.EXTRA_LAT_LNG, location)
+                }
+                startActivityForResult(intent, Constants.REQUEST_CODE_SELECT_LOCATION)
             }
-            startActivityForResult(intent, Constants.REQUEST_CODE_SELECT_LOCATION)
         }
 
         btn_image_add.setOnClickListener {

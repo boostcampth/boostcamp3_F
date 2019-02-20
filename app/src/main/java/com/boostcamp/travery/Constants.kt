@@ -31,6 +31,7 @@ object Constants {
     const val REQUEST_CODE_SELECT_LOCATION = 9999
 
     const val EDIT_MODE = "edit"
+    const val SINGLE_ADD_USER_ACTION_MODE = "add user action"
 
     const val GPS_ENABLE_REQUEST_CODE = 2001
 
