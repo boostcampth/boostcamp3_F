@@ -100,6 +100,13 @@ class CourseSaveViewModel(application: Application) : BaseViewModel(application)
         theme.set(parent.selectedItem.toString())
     }
 
+    fun cancelCourse(bundle: Bundle?) {
+        bundle?.let {
+            val mCourse = it.getParcelable<Course>(Constants.EXTRA_COURSE)!!
+            courseRepository.deleteCourse(mCourse)
+        }
+    }
+
     fun saveCourseToDatabase(bundle: Bundle?) {
         bundle?.let {
             it.getParcelableArrayList<LatLng>(Constants.EXTRA_COURSE_LOCATION_LIST)

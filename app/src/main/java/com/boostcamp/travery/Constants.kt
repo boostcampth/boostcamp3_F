@@ -15,6 +15,9 @@ object Constants {
     const val EXTRA_USER_ID="USER_ID"
     const val EXTRA_USER_ACTION = "USER_ACTION"
     const val EXTRA_USER_ACTION_DATE = "USER_ACTION_DATE"
+    const val EXTRA_USERACTION_STATE = "USER_ACTION_STATE"
+    const val EDIT_STATE = "EDIT"
+    const val DELETE_STATE = "DELETE"
 
     const val SIGN_IN_GOOGLE = 900
     const val SIGN_IN_SERVER = 22

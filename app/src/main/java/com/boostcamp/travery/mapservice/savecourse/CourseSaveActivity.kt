@@ -66,6 +66,7 @@ class CourseSaveActivity : BaseActivity<ActivityCourseSaveBinding>() {
         AlertDialog.Builder(this).apply {
             setMessage(resources.getString(R.string.dialog_message))
             setPositiveButton(resources.getString(R.string.dialog_positive)) { _, _ ->
+                viewDataBinding.savevm?.cancelCourse(intent.extras)
                 super.onBackPressed()
             }
             setNegativeButton(resources.getString(R.string.dialog_negative)) { dialog, _ ->

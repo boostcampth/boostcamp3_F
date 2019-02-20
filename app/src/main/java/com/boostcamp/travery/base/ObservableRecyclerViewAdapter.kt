@@ -33,7 +33,7 @@ abstract class ObservableRecyclerViewAdapter<T, Holder : RecyclerView.ViewHolder
             }
 
             override fun onItemRangeChanged(sender: ObservableList<T>?, positionStart: Int, itemCount: Int) {
-                notifyItemRangeChanged(positionStart + 1, itemCount)
+                notifyItemRangeChanged(positionStart, itemCount)
             }
         })
     }
