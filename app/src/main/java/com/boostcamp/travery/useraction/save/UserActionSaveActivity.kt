@@ -3,9 +3,7 @@ package com.boostcamp.travery.useraction.save
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.location.Location
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -23,6 +21,7 @@ import com.boostcamp.travery.data.model.UserAction
 import com.boostcamp.travery.databinding.ActivitySaveUserActionBinding
 import com.boostcamp.travery.utils.toast
 import com.esafirm.imagepicker.features.ImagePicker
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.chip.Chip
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -38,7 +37,7 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
 
     private var editMode = false
 
-    private var location: Location? = null
+    private var location: LatLng? = null
 
     private val disposable = CompositeDisposable()
 
@@ -91,26 +90,30 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
     private fun initViewModel() {
         // Chip 생성 후 그룹에 추가
         disposable.add(viewModel.psHashTag.observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    createChip(it)
-                    et_hashtag.setText("")
-                })
+            .subscribe {
+                createChip(it)
+                et_hashtag.setText("")
+            })
 
         if (!editMode) {
             // 주소 세팅 및 observe
             // 전달 된 위치가 없을 경우(트래킹중이 아닐 경우 현재위치 로딩안되므로)
-            location = viewModel.getLastKnownLocation()
+            location = viewModel.getLocation()
             viewModel.setAddress(
-                    intent.getDoubleExtra(
-                            Constants.EXTRA_LATITUDE, location?.latitude
-                            ?: 0.0
-                    ),
-                    intent.getDoubleExtra(
-                            Constants.EXTRA_LONGITUDE, location?.longitude
-                            ?: 0.0
-                    )
+                intent.getDoubleExtra(
+                    Constants.EXTRA_LATITUDE, location?.latitude
+                        ?: 0.0
+                ),
+                intent.getDoubleExtra(
+                    Constants.EXTRA_LONGITUDE, location?.longitude
+                        ?: 0.0
+                )
             )
-            viewModel.getAddress().observe(this@UserActionSaveActivity, Observer { tv_location_cur.text = it })
+
+            viewModel.getAddress().observe(this@UserActionSaveActivity, Observer {
+                tv_location_cur.text = it
+                location = viewModel.getLocation()
+            })
         } else {
             val data = intent.extras?.getParcelable<UserAction>(Constants.EXTRA_USER_ACTION)
             viewModel.setAddress(data?.latitude ?: 0.0, data?.longitude ?: 0.0)
@@ -120,16 +123,19 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
     private fun initAddButtonList() {
         btn_location_add.isSelected = true
         btn_location_add.setOnClickListener {
-            "위치 검색 추가 예정".toast(this)
+            val intent = Intent(this, FindLocationActivity::class.java).apply {
+                putExtra(Constants.EXTRA_LAT_LNG, location)
+            }
+            startActivityForResult(intent, Constants.REQUEST_CODE_SELECT_LOCATION)
         }
 
         btn_image_add.setOnClickListener {
             ImagePicker.create(this)
-                    .folderMode(true)
-                    .imageDirectory(resources.getString(R.string.app_name))
-                    .toolbarFolderTitle(getString(R.string.string_folder_title))
-                    .theme(R.style.ImagePickerTheme)
-                    .start()
+                .folderMode(true)
+                .imageDirectory(resources.getString(R.string.app_name))
+                .toolbarFolderTitle(getString(R.string.string_folder_title))
+                .theme(R.style.ImagePickerTheme)
+                .start()
         }
 
         btn_hash_tag_add.setOnClickListener {
@@ -156,8 +162,8 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
             text = hashTag
             isCloseIconVisible = true
             layoutParams = LinearLayoutCompat.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
             ).apply {
                 topMargin = R.dimen.content_margin_top_n_bottom
                 bottomMargin = R.dimen.content_margin_top_n_bottom
@@ -231,6 +237,14 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
                 viewModel.imageList.add(0, UserActionImage(it.path))
             }
         }
+
+        if (requestCode == Constants.REQUEST_CODE_SELECT_LOCATION && resultCode == Activity.RESULT_OK) {
+            val extra = data?.getParcelableExtra<LatLng>(Constants.EXTRA_LAT_LNG)
+            extra?.run {
+                viewModel.setAddress(latitude, longitude)
+            }
+        }
+
         super.onActivityResult(requestCode, resultCode, data)
     }
 

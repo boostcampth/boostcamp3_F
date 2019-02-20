@@ -1,10 +1,11 @@
 package com.boostcamp.travery
 
 import android.app.Application
-import com.facebook.stetho.Stetho
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.os.Build
+import com.facebook.stetho.Stetho
+import com.google.android.libraries.places.api.Places
 
 class MyApplication : Application() {
     override fun onCreate() {
@@ -12,6 +13,8 @@ class MyApplication : Application() {
         Stetho.initializeWithDefaults(this)
 
         createNotificationChannel()
+
+        Places.initialize(this, resources.getString(R.string.google_maps_key))
     }
 
     private fun createNotificationChannel() {

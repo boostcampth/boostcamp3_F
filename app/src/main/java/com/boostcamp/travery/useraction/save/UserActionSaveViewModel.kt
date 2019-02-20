@@ -12,6 +12,8 @@ import com.boostcamp.travery.data.NewsFeedRepository
 import com.boostcamp.travery.data.model.UserAction
 import com.boostcamp.travery.eventbus.EventBus
 import com.boostcamp.travery.utils.ImageUtils
+import com.boostcamp.travery.utils.toLatLng
+import com.google.android.gms.maps.model.LatLng
 import io.reactivex.Observable.just
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -31,6 +33,9 @@ class UserActionSaveViewModel(application: Application) : BaseViewModel(applicat
 
     private val geoCoder = Geocoder(application)
     private val address = MutableLiveData<String>()
+    private var location = getLastKnownLocation()?.toLatLng()
+
+    fun getLocation() = location
 
     val userAction = ObservableField<UserAction>()
 
@@ -55,6 +60,8 @@ class UserActionSaveViewModel(application: Application) : BaseViewModel(applicat
     }
 
     fun setAddress(latitude: Double, longitude: Double) {
+        location = LatLng(latitude, longitude)
+
         // Geocode 변환
         addDisposable(just(
                 try {

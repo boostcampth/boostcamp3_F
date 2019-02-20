@@ -1,7 +1,6 @@
 package com.boostcamp.travery.useraction.list
 
 
-import android.location.Location
 import android.os.Bundle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -10,6 +9,7 @@ import com.boostcamp.travery.base.BaseActivity
 import com.boostcamp.travery.databinding.ActivityUserActionListBinding
 import com.boostcamp.travery.useraction.list.cluster.ClusterItemUserAction
 import com.boostcamp.travery.useraction.list.cluster.ClusterRenderer
+import com.boostcamp.travery.utils.toLatLng
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -155,9 +155,5 @@ class UserActionListActivity : BaseActivity<ActivityUserActionListBinding>(),
 
     override fun onClusterItemInfoWindowClick(cluster: ClusterItemUserAction?) {
 
-    }
-
-    private fun Location.toLatLng(): LatLng {
-        return LatLng(this.latitude, this.longitude)
     }
 }

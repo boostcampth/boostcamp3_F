@@ -12,6 +12,8 @@ object Constants {
     const val EXTRA_LONGITUDE = "LONGITUDE"
     const val EXTRA_COURSE_CODE = "COURSE_CODE"
 
+    const val EXTRA_LAT_LNG = "Lat_Lng"
+
     const val EXTRA_USER_ID="USER_ID"
     const val EXTRA_USER_ACTION = "USER_ACTION"
     const val EXTRA_USER_ACTION_DATE = "USER_ACTION_DATE"
@@ -26,6 +28,7 @@ object Constants {
     const val REQUEST_CODE_USERACTION = 1004
     const val REQUEST_CODE_LOGIN = 701
     const val REQUEST_CODE_USERACTION_EDIT = 1234
+    const val REQUEST_CODE_SELECT_LOCATION = 9999
 
     const val EDIT_MODE = "edit"
 
