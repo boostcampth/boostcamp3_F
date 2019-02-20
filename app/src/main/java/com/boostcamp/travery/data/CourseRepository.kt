@@ -1,6 +1,5 @@
 package com.boostcamp.travery.data
 
-import android.util.Log
 import com.boostcamp.travery.data.local.CourseLocalDataSource
 import com.boostcamp.travery.data.local.db.dao.CourseDao
 import com.boostcamp.travery.data.local.db.dao.UserActionDao
@@ -47,12 +46,12 @@ class CourseRepository private constructor(private val courseDataSource: CourseD
                     userAction.seq = it.toInt()
                 }
                 .doOnComplete {
-                    if (userAction.courseCode != null) {
-                        //코스가 있는 활동 정보이라면 코스의 userActionList에 넣는다.
-                        if (mCachedCourse[userAction.courseCode ?: 0]?.userActionList == null) {
-                            mCachedCourse[userAction.courseCode ?: 0]?.userActionList = ArrayList()
+                    userAction.courseCode?.let{
+                        courseCode->
+                        if (mCachedCourse[courseCode]?.userActionList == null) {
+                            mCachedCourse[courseCode]?.userActionList = ArrayList()
                         }
-                        mCachedCourse[userAction.courseCode ?: 0]?.userActionList?.add(userAction)
+                        mCachedCourse[courseCode]?.userActionList?.add(userAction)
                     }
                 }
     }
