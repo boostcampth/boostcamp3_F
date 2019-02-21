@@ -4,6 +4,7 @@ import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.boostcamp.travery.Constants
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
@@ -17,4 +18,8 @@ data class Course(
     @ColumnInfo(name = "distance") var distance: Long=0L,
     @ColumnInfo(name = "coordinate") var coordinate: String="",
     @ColumnInfo(name = "map_image") var mapImage: String=""
-) : Parcelable
+) : Parcelable,BaseItem{
+    override fun getType(): Int {
+        return Constants.TYPE_COURSE
+    }
+}

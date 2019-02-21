@@ -1,5 +1,7 @@
 package com.boostcamp.travery.data.remote.model
 
+import com.boostcamp.travery.Constants
+import com.boostcamp.travery.data.model.BaseItem
 import com.boostcamp.travery.data.model.User
 
 data class NewsFeed(
@@ -12,4 +14,8 @@ data class NewsFeed(
         var latitude: Double,
         var longitude: Double,
         var user: User
-)
+) : BaseItem {
+    override fun getType(): Int {
+        return Constants.TYPE_NEWSFEED
+    }
+}

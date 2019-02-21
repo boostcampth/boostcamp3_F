@@ -22,6 +22,9 @@ import com.boostcamp.travery.R
 import com.boostcamp.travery.base.BaseActivity
 import com.boostcamp.travery.community.SettingActivity
 import com.boostcamp.travery.course.list.CourseListActivity
+import com.boostcamp.travery.coursedetail.CourseDetailActivity
+import com.boostcamp.travery.data.model.BaseItem
+import com.boostcamp.travery.data.model.Course
 import com.boostcamp.travery.databinding.MainFeedBinding
 import com.boostcamp.travery.databinding.NavHeaderMainBinding
 import com.boostcamp.travery.mapservice.TrackingActivity
@@ -82,8 +85,7 @@ class NewsFeedActivity : BaseActivity<MainFeedBinding>(), NavigationView.OnNavig
         sl_feed.setOnRefreshListener {
             viewModel.refreshList()
         }
-
-        viewModel.isLoding.observe(this, Observer {
+        viewModel.isLoading.observe(this, Observer {
             sl_feed.isRefreshing = it
         })
 
@@ -171,6 +173,7 @@ class NewsFeedActivity : BaseActivity<MainFeedBinding>(), NavigationView.OnNavig
         }
     }
 
+
     private fun initView() {
 
         //코스 기록을 위한 버튼
@@ -185,7 +188,7 @@ class NewsFeedActivity : BaseActivity<MainFeedBinding>(), NavigationView.OnNavig
                 super.onScrollStateChanged(recyclerView, newState)
 
                 val totalItemCount = recyclerView.layoutManager?.itemCount
-                if (totalItemCount == (recyclerView.layoutManager as LinearLayoutManager).findLastVisibleItemPosition()) {
+                if (viewModel.isLoading.value != true && (recyclerView.layoutManager as LinearLayoutManager).findLastVisibleItemPosition() > totalItemCount?.minus(3) ?: 0 && !viewModel.isLast) {
                     viewModel.loadFeedList()
                 }
 
@@ -203,7 +206,10 @@ class NewsFeedActivity : BaseActivity<MainFeedBinding>(), NavigationView.OnNavig
                 }
             }
         })
+        (rv_newsfeed_list.adapter as NewsFeedListAdapter).onItemClickListener =
+                { item: Any -> onItemClick(item as BaseItem) }
     }
+
 
     private fun showDialogForLocationServiceSetting() {
         AlertDialog.Builder(this@NewsFeedActivity, R.style.dialogTheme).apply {
@@ -259,6 +265,21 @@ class NewsFeedActivity : BaseActivity<MainFeedBinding>(), NavigationView.OnNavig
     override fun onDestroy() {
         super.onDestroy()
         disposable.clear()
+    }
+
+    private fun onItemClick(item: BaseItem) {
+        when (item.getType()) {
+            Constants.TYPE_GIUDELINE -> {
+                viewModel.setInvisibleGuideLine()
+            }
+            Constants.TYPE_MIDDLE_BAR -> startActivity(Intent(this, TrackingActivity::class.java))
+            Constants.TYPE_COURSE -> startActivity(Intent(this, CourseDetailActivity::class.java).apply {
+                putExtra(
+                        Constants.EXTRA_COURSE,
+                        item as Course
+                )
+            })
+        }
     }
 
     override fun onStop() {

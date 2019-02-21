@@ -131,4 +131,10 @@ class CourseLocalDataSource private constructor(
     override fun deleteCourseFile(fileName: String) {
         NewFileUtils.deleteCourseFile(file, fileName)
     }
+
+    override fun getTodayCourse(today: Long): Flowable<List<Course>> {
+        return Flowable.fromCallable {
+            courseDao.loadTodayCourse(today)
+        }
+    }
 }

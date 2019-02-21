@@ -1,59 +1,132 @@
 package com.boostcamp.travery.feed
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.ObservableList
-import androidx.recyclerview.widget.RecyclerView
+import com.boostcamp.travery.Constants
 import com.boostcamp.travery.base.BaseViewHolder
 import com.boostcamp.travery.base.ObservableRecyclerViewAdapter
+import com.boostcamp.travery.data.model.Bar
+import com.boostcamp.travery.data.model.BaseItem
+import com.boostcamp.travery.data.model.Course
+import com.boostcamp.travery.data.model.Guide
 import com.boostcamp.travery.data.remote.model.NewsFeed
-import com.boostcamp.travery.databinding.ItemNewsfeedBinding
-import org.json.JSONArray
+import com.boostcamp.travery.databinding.*
 
-class NewsFeedListAdapter(newsFeedList: ObservableList<NewsFeed>) :
-        ObservableRecyclerViewAdapter<NewsFeed, RecyclerView.ViewHolder>(newsFeedList) {
+class NewsFeedListAdapter(itemList: ObservableList<BaseItem>) :
+        ObservableRecyclerViewAdapter<BaseItem, BaseViewHolder>(itemList) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return FeedViewHolder(ItemNewsfeedBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
+        return when (viewType) {
+            Constants.TYPE_GIUDELINE -> GuideViewHolder(
+                    ItemGuideBinding.inflate(
+                            LayoutInflater.from(parent.context),
+                            parent,
+                            false
+                    ), onItemClickListener
+            )
+            Constants.TYPE_TOP_BAR -> BarTopViewHolder(
+                    ItemTopBarBinding.inflate(
+                            LayoutInflater.from(parent.context),
+                            parent,
+                            false
+                    )
+            )
+            Constants.TYPE_COURSE -> CourseViewHolder(
+                    ItemFeedCourseBinding.inflate(
+                            LayoutInflater.from(parent.context),
+                            parent,
+                            false
+                    ), onItemClickListener
+            )
+            Constants.TYPE_MIDDLE_BAR -> BarMiddleViewHolder(
+                    ItemMiddleBarBinding.inflate(
+                            LayoutInflater.from(parent.context),
+                            parent,
+                            false
+                    ), onItemClickListener
+            )
+            Constants.TYPE_BOTTOM_BAR -> BarBottomViewHolder(
+                    ItemBottomBarBinding.inflate(
+                            LayoutInflater.from(parent.context),
+                            parent,
+                            false
+                    )
+            )
+            else -> {
+                FeedViewHolder(ItemNewsfeedBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+            }
+        }
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        (holder as FeedViewHolder).binding.vpActionImage.id = position
-        holder.binding.pivActionImage.setViewPager(holder.binding.vpActionImage)
-        holder.binding.item = getItem(position)
-        holder.binding.executePendingBindings()
+    override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
+        holder.bind(getItem(position))
 
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return getItem(position).getType()
+    }
+
+
+    /**
+     * 가이드 뷰
+     */
+    class GuideViewHolder(var binding: ItemGuideBinding, private val listener: ((item: Any) -> Unit)?) :
+            BaseViewHolder(binding) {
+        override fun bind(item: Any) {
+            binding.item = item as Guide
+            binding.ivCancle.setOnClickListener { listener?.invoke(item) }
+            binding.executePendingBindings()
+        }
+    }
+
+    /**
+     * 코스 목록의 상단 타이틀 뷰
+     */
+    class BarTopViewHolder(var binding: ItemTopBarBinding) : BaseViewHolder(binding) {
+        override fun bind(item: Any) {
+            binding.item = item as Bar
+            binding.executePendingBindings()
+        }
+    }
+
+    /**
+     * 코스 목록
+     */
+    class BarMiddleViewHolder(var binding: ItemMiddleBarBinding, private val listener: ((item: Any) -> Unit)?) :
+            BaseViewHolder(binding) {
+        override fun bind(item: Any) {
+            binding.item = item as Bar
+            binding.root.setOnClickListener { listener?.invoke(item) }
+        }
+    }
+
+    /**
+     * 코스 목록 하단 뷰
+     */
+    class BarBottomViewHolder(var binding: ItemBottomBarBinding) : BaseViewHolder(binding) {
+        override fun bind(item: Any) {
+            binding.item = item as Bar
+        }
+    }
+
+    class CourseViewHolder(var binding: ItemFeedCourseBinding, private val listener: ((item: Any) -> Unit)?) :
+            BaseViewHolder(binding) {
+        override fun bind(item: Any) {
+            binding.item = item as Course
+            binding.root.setOnClickListener { listener?.invoke(item) }
+            binding.executePendingBindings()
+        }
     }
 
     class FeedViewHolder(var binding: ItemNewsfeedBinding) : BaseViewHolder(binding) {
         override fun bind(item: Any) {
 
-            if (item is NewsFeed) {
-                binding.item = item
-
-
-                if (item.image.isEmpty()) {
-                    binding.vpActionImage.visibility = View.GONE
-
-                    //계속되는 viewPager adapter 생성을 막기 위한 조건
-                    (binding.vpActionImage.adapter as? ViewPagerAdapter)?.clear()
-                } else {
-                    binding.vpActionImage.visibility = View.VISIBLE
-                    val jsonArray = JSONArray(item.image)
-                    val imageList = ArrayList<String>()
-                    for (i in 0 until jsonArray.length()) {
-                        imageList.add(jsonArray[i] as String)
-                    }
-
-                    if (binding.vpActionImage.adapter == null) {
-                        binding.vpActionImage.adapter = ViewPagerAdapter(imageList)
-                    } else {
-                        (binding.vpActionImage.adapter as ViewPagerAdapter).itemChange(imageList)
-                    }
-
-                }
-            }
+            binding.vpActionImage.id = adapterPosition
+            binding.pivActionImage.setViewPager(binding.vpActionImage)
+            binding.item = item as NewsFeed
+            binding.executePendingBindings()
 
         }
     }

@@ -41,4 +41,12 @@ object DateUtils {
         }
         return stringTime
     }
+
+    fun getToday(): Long {
+        val calendar = Calendar.getInstance()
+        val date = calendar.time
+        val today = parseDateAsString(date, "yyyyMMdd")
+        val dates = parseStringToDate(today, "yyyyMMdd")
+        return dates.time
+    }
 }
