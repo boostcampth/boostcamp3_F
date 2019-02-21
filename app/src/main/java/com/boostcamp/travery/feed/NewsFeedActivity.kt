@@ -26,13 +26,11 @@ import com.boostcamp.travery.databinding.MainFeedBinding
 import com.boostcamp.travery.databinding.NavHeaderMainBinding
 import com.boostcamp.travery.mapservice.TrackingActivity
 import com.boostcamp.travery.search.SearchResultActivity
-import com.boostcamp.travery.search.SearchResultActivity
 import com.boostcamp.travery.useraction.list.UserActionListActivity
 import com.boostcamp.travery.useraction.save.UserActionSaveActivity
 import com.google.android.material.navigation.NavigationView
 import com.tedpark.tedpermission.rx2.TedRx2Permission
 import io.reactivex.disposables.CompositeDisposable
-import kotlinx.android.synthetic.main.activity_find_location.*
 import kotlinx.android.synthetic.main.main_feed.*
 import kotlinx.android.synthetic.main.main_layout_newsfeed.*
 
