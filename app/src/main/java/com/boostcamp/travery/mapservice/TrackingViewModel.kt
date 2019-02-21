@@ -39,7 +39,7 @@ class TrackingViewModel(application: Application) : BaseViewModel(application) {
     val isService = ObservableBoolean(false)
     val curLocation = MutableLiveData<Location>()
     var suggestCountString = ObservableField<String>("0")
-    var startTime: Long = 0L
+    var startTime: Long = mapTrackingRepository.getStartTime()
     val userActionList by lazy { mapTrackingRepository.getUserActionList() }
     private var suggestAdapter: BaseAdapter? = null
     var talkString = ObservableField<String>()
@@ -166,9 +166,6 @@ class TrackingViewModel(application: Application) : BaseViewModel(application) {
     fun getSuggestAdapter(): BaseAdapter {
         suggestAdapter = SuggestListAdapter(mapTrackingRepository.getSuggestList())
         return suggestAdapter!!
-    }
-
-    fun onClickInfo(view: View) {
     }
 
 }
