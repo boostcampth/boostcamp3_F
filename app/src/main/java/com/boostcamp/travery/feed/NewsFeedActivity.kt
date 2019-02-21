@@ -1,8 +1,6 @@
 package com.boostcamp.travery.feed
 
 import android.Manifest
-import android.app.Application
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
@@ -12,7 +10,6 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
-import androidx.databinding.DataBinderMapper
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -39,12 +36,14 @@ class NewsFeedActivity : BaseActivity<MainFeedBinding>(), NavigationView.OnNavig
     private val viewModel by lazy {
         ViewModelProviders.of(this).get(NewsFeedViewModel::class.java)
     }
+    lateinit var navHeaderMainBinding: NavHeaderMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(viewDataBinding.root)
         viewDataBinding.viewmodel = viewModel
-        DataBindingUtil.bind<NavHeaderMainBinding>(viewDataBinding.navView.getHeaderView(0))?.user=viewModel.getPreferences()
+        navHeaderMainBinding = DataBindingUtil.bind(viewDataBinding.navView.getHeaderView(0))!!
+        navHeaderMainBinding.user = viewModel.getPreferences()
         setSupportActionBar(toolBar as Toolbar)
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
@@ -71,6 +70,10 @@ class NewsFeedActivity : BaseActivity<MainFeedBinding>(), NavigationView.OnNavig
             sl_feed.isRefreshing = it
         })
 
+        nav_view.getHeaderView(0).setOnClickListener {
+            startActivityForResult(Intent(this, SettingActivity::class.java), Constants.REQUEST_CODE_LOGIN)
+        }
+
         initView()
 
     }
@@ -89,7 +92,7 @@ class NewsFeedActivity : BaseActivity<MainFeedBinding>(), NavigationView.OnNavig
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.nav_recode_course->{
+            R.id.nav_recode_course -> {
                 permissionCheck()
             }
 
@@ -104,12 +107,12 @@ class NewsFeedActivity : BaseActivity<MainFeedBinding>(), NavigationView.OnNavig
                 startActivity(Intent(this, UserActionSaveActivity::class.java))
             }
 
-            R.id.nav_search->{
-                startActivity(Intent(this,SearchResultActivity::class.java))
+            R.id.nav_search -> {
+                startActivity(Intent(this, SearchResultActivity::class.java))
             }
 
             R.id.nav_setting -> {
-                startActivity(Intent(this, SettingActivity::class.java))
+                startActivityForResult(Intent(this, SettingActivity::class.java), Constants.REQUEST_CODE_LOGIN)
             }
         }
 
@@ -183,33 +186,34 @@ class NewsFeedActivity : BaseActivity<MainFeedBinding>(), NavigationView.OnNavig
                 //사용자가 GPS 활성 시켰는지 검사
                 if (checkLocationServicesStatus()) {
                 }
+            Constants.REQUEST_CODE_LOGIN -> {
+
+                if (resultCode == RESULT_OK) {
+                    navHeaderMainBinding.user = viewModel.getPreferences()
+                }
+            }
         }
     }
 
-    private fun permissionCheck(){
+    private fun permissionCheck() {
         TedRx2Permission.with(this)
-            .setRationaleTitle(getString(R.string.permission_title))
-            .setRationaleMessage(getString(R.string.permission_message)) // "we need permission for read contact and find your location"
-            .setPermissions(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
-            .request()
-            .subscribe({ tedPermissionResult ->
-                if (tedPermissionResult.isGranted) {
-                    if (!checkLocationServicesStatus()) {
-                        showDialogForLocationServiceSetting()
+                .setRationaleTitle(getString(R.string.permission_title))
+                .setRationaleMessage(getString(R.string.permission_message)) // "we need permission for read contact and find your location"
+                .setPermissions(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
+                .request()
+                .subscribe({ tedPermissionResult ->
+                    if (tedPermissionResult.isGranted) {
+                        if (!checkLocationServicesStatus()) {
+                            showDialogForLocationServiceSetting()
+                        } else {
+                            val intent = Intent(this@NewsFeedActivity, TrackingActivity::class.java)
+                            startActivity(intent)
+                        }
                     } else {
-                        val intent = Intent(this@NewsFeedActivity, TrackingActivity::class.java)
-                        startActivity(intent)
+                        //"Permission Denied\n" + tedPermissionResult.deniedPermissions.toString().toast()
                     }
-                } else {
-                    //"Permission Denied\n" + tedPermissionResult.deniedPermissions.toString().toast()
-                }
-            }, { })
+                }, { })
     }
-
-
-
-
-
 
     override fun onStop() {
         super.onStop()

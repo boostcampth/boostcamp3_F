@@ -70,7 +70,8 @@
             android:paddingBottom="10dp"
             android:text="@string/all_setting"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_user"/>
+            app:layout_constraintTop_toBottomOf="@+id/tv_user"
+            app:visibility="@{viewModel.isLogin()}"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_auto"
@@ -82,7 +83,8 @@
             android:text="@string/string_setting_auto_upload"
             android:textColor="@color/normal_black"
             android:textSize="16sp"
-            app:layout_constraintTop_toBottomOf="@+id/setting_user"/>
+            app:layout_constraintTop_toBottomOf="@+id/setting_user"
+            app:visibility="@{viewModel.isLogin()}"/>
 
         <Switch
             android:layout_width="wrap_content"
@@ -92,7 +94,8 @@
             android:onCheckedChanged="@{(switch, checked) -> viewModel.onCheckedChanged(checked)}"
             app:layout_constraintBottom_toBottomOf="@id/tv_auto"
             app:layout_constraintEnd_toEndOf="@id/tv_auto"
-            app:layout_constraintTop_toTopOf="@+id/tv_auto"/>
+            app:layout_constraintTop_toTopOf="@+id/tv_auto"
+            app:visibility="@{viewModel.isLogin()}"/>
 
 
         <androidx.appcompat.widget.AppCompatTextView

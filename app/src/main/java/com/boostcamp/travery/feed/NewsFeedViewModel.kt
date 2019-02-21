@@ -2,6 +2,7 @@ package com.boostcamp.travery.feed
 
 import android.app.Application
 import android.content.Context
+import android.util.Log
 import androidx.databinding.ObservableArrayList
 import androidx.lifecycle.MutableLiveData
 import com.boostcamp.travery.Constants
@@ -56,9 +57,7 @@ class NewsFeedViewModel(application: Application) : BaseViewModel(application) {
 
     fun getPreferences(): User {
         val pref = getApplication<Application>().getSharedPreferences(Constants.PREF_NAME_LOGIN, Context.MODE_PRIVATE)
-        val user=User()
-        user.nickname=pref.getString(Constants.PREF_USER_NAME, getApplication<android.app.Application>().getString(R.string.string_setting_request_login))
-        user.image=pref.getString(Constants.PREF_USER_IMAGE,"")
-        return user
+        return User(nickname = pref.getString(Constants.PREF_USER_NAME, getApplication<android.app.Application>().getString(R.string.string_setting_request_login))!!,
+                image = pref.getString(Constants.PREF_USER_IMAGE, "")!!)
     }
 }
