@@ -55,7 +55,7 @@
     <string name="string_tv_image">사진</string>
 
 
-
+    <string name="string_sign_nick_name">닉네임(최대 20자)</string>
     <string name="string_setting_user">계정</string>
     <string name="string_setting_login">로그인</string>
     <string name="string_setting_logout">로그아웃</string>
