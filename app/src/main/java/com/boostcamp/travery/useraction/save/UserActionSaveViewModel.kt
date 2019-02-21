@@ -1,10 +1,14 @@
 package com.boostcamp.travery.useraction.save
 
 import android.app.Application
+import android.content.Context
 import android.location.Geocoder
+import android.util.Log
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableField
+import com.boostcamp.travery.Constants
 import com.boostcamp.travery.Injection
+import com.boostcamp.travery.MyApplication
 import com.boostcamp.travery.base.BaseViewModel
 import com.boostcamp.travery.data.NewsFeedRepository
 import com.boostcamp.travery.data.model.UserAction
@@ -97,6 +101,12 @@ class UserActionSaveViewModel(application: Application) : BaseViewModel(applicat
     }
 
     fun saveUserAction() {
+
+        val pref = getApplication<MyApplication>()
+                .getSharedPreferences(Constants.PREF_USER_NAME, Context.MODE_PRIVATE)
+        val id = pref.getString(Constants.PREF_USER_ID, null)
+        val autoUpload = pref.getBoolean(Constants.PREF_AUTO_UPLOAD, false)
+
         addDisposable(Flowable.fromCallable { parseImagesToJsonArray() }.subscribeOn(Schedulers.io()).map {
             val user = this.userAction.get()?.apply {
                 title = this@UserActionSaveViewModel.title
@@ -113,13 +123,11 @@ class UserActionSaveViewModel(application: Application) : BaseViewModel(applicat
             view?.onSaveUserAction(user)
             user
         }.flatMap {
+            if (id != null && autoUpload) {
+                newsFeedRepository.uploadFeed(it, id)
+            }
             userActionRepository.saveUserAction(it).toFlowable(BackpressureStrategy.BUFFER)
         }.subscribe())
-
-        //TODO 서버로 전송하는 부분 주석처리 해놈 설정시에만 보낼수 있도록 추후 변경
-//        addDisposable(newsFeedRepository.uploadFeed(userAction, "temp").subscribe({
-//            Log.e("TEST", it.message)
-//        }, { Log.e("TEST", it.message) }))
     }
 
     fun updateUserAction() {
