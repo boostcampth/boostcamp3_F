@@ -3,13 +3,14 @@ package com.boostcamp.travery.useraction.detail
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableList
 import androidx.viewpager.widget.PagerAdapter
 import com.boostcamp.travery.GlideApp
 import com.boostcamp.travery.R
 import kotlinx.android.synthetic.main.item_viewpager_image.view.*
 
-class ImagesViewPagerAdapter(private val images: ObservableList<String>) : PagerAdapter() {
+class ImagesViewPagerAdapter(private val images: ObservableArrayList<String>) : PagerAdapter() {
 
     init {
         images.addOnListChangedCallback(object: ObservableList.OnListChangedCallback<ObservableList<String>?>() {

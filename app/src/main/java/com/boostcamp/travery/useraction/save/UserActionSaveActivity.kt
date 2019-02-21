@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -26,7 +27,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_save_user_action.*
 
-class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>() {
+class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), UserActionSaveViewModel.View {
     override val layoutResourceId: Int
         get() = R.layout.activity_save_user_action
 
@@ -39,6 +40,8 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>() {
     private lateinit var receivedData: UserAction
 
     private var location: LatLng? = null
+
+    private val handler = Handler()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,6 +75,8 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>() {
                     createChip(it)
                     et_hashtag.setText("")
                 })
+
+        viewModel.setView(this)
     }
 
     private fun setMode() {
@@ -165,22 +170,11 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>() {
         R.id.menu_course_save -> {
             onProgress()
 
-            // 수정 모드
             if (editMode) {
-                setResult(Activity.RESULT_OK, Intent().apply {
-                    putExtra(Constants.EXTRA_USER_ACTION, viewModel.updateUserAction())
-                })
+                viewModel.updateUserAction()
             } else {
-                // 활동 추가 모드
-                val resultData = viewModel.saveUserAction()
-                resultData?.let {
-                    setResult(Activity.RESULT_OK, Intent().apply {
-                        putExtra(Constants.EXTRA_USER_ACTION, resultData)
-                    })
-                    getString(R.string.string_activity_user_action_save_success).toast(this)
-                } ?: getString(R.string.string_toast_error_message_useraction_save).toast(this)
+                viewModel.saveUserAction()
             }
-            finish()
             true
         }
 
@@ -229,5 +223,17 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>() {
                 dialog.cancel()
             }
         }.create().show()
+    }
+
+    override fun onSaveUserAction(userAction: UserAction?) {
+        userAction?.let {
+            setResult(Activity.RESULT_OK, Intent().apply {
+                putExtra(Constants.EXTRA_USER_ACTION, it)
+            })
+        }
+        handler.post {
+            getString(R.string.string_activity_user_action_save_success).toast(this)
+        }
+        finish()
     }
 }

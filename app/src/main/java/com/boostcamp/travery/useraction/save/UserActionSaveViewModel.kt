@@ -4,11 +4,7 @@ import android.app.Application
 import android.location.Geocoder
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableField
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.boostcamp.travery.Injection
-import com.boostcamp.travery.MyApplication
-import com.boostcamp.travery.R
 import com.boostcamp.travery.base.BaseViewModel
 import com.boostcamp.travery.data.NewsFeedRepository
 import com.boostcamp.travery.data.model.UserAction
@@ -16,7 +12,8 @@ import com.boostcamp.travery.eventbus.EventBus
 import com.boostcamp.travery.utils.ImageUtils
 import com.boostcamp.travery.utils.toLatLng
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.libraries.places.internal.it
+import io.reactivex.BackpressureStrategy
+import io.reactivex.Flowable
 import io.reactivex.Observable.just
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -46,6 +43,16 @@ class UserActionSaveViewModel(application: Application) : BaseViewModel(applicat
         get() = if (field.isEmpty()) "empty" else field
     private var content = ""
         get() = if (field.isEmpty()) "empty" else field
+
+    private var view: View? = null
+
+    interface View {
+        fun onSaveUserAction(userAction: UserAction?)
+    }
+
+    fun setView(view: View) {
+        this.view = view
+    }
 
     fun setUserAction(userAction: UserAction) {
         this.userAction.set(userAction)
@@ -89,56 +96,48 @@ class UserActionSaveViewModel(application: Application) : BaseViewModel(applicat
 
     }
 
-    fun saveUserAction(): UserAction? {
-        val result = parseImagesToJsonArray()
-
-        val userAction = this.userAction.get()?.apply {
-            title = this@UserActionSaveViewModel.title
-            body = this@UserActionSaveViewModel.content
-            date = Date(System.currentTimeMillis())
-            hashTag = listToString(hashTagList, ' ')
-            mainImage = if (result.length() > 0) result.getString(0) else ""
-            subImage = result.toString()
-            latitude = location?.latitude ?: 0.0
-            longitude = location?.longitude ?: 0.0
-            courseCode = if (this.courseCode == 0L) null else this.courseCode
-            address = this@UserActionSaveViewModel.address.get() ?: " "
-        }
-
-        userAction?.run {
-            addDisposable(
-                    userActionRepository.saveUserAction(userAction).subscribeOn(Schedulers.io()).subscribe()
-            )
-        }
+    fun saveUserAction() {
+        addDisposable(Flowable.fromCallable { parseImagesToJsonArray() }.subscribeOn(Schedulers.io()).map {
+            val user = this.userAction.get()?.apply {
+                title = this@UserActionSaveViewModel.title
+                body = this@UserActionSaveViewModel.content
+                date = Date(System.currentTimeMillis())
+                hashTag = listToString(hashTagList, ' ')
+                mainImage = if (it.length() > 0) it.getString(0) else ""
+                subImage = it.toString()
+                latitude = location?.latitude ?: 0.0
+                longitude = location?.longitude ?: 0.0
+                courseCode = if (this.courseCode == 0L) null else this.courseCode
+                address = this@UserActionSaveViewModel.address.get() ?: " "
+            }
+            view?.onSaveUserAction(user)
+            user
+        }.flatMap {
+            userActionRepository.saveUserAction(it).toFlowable(BackpressureStrategy.BUFFER)
+        }.subscribe())
 
         //TODO 서버로 전송하는 부분 주석처리 해놈 설정시에만 보낼수 있도록 추후 변경
 //        addDisposable(newsFeedRepository.uploadFeed(userAction, "temp").subscribe({
 //            Log.e("TEST", it.message)
 //        }, { Log.e("TEST", it.message) }))
-
-        return userAction
     }
 
-    fun updateUserAction(): UserAction? {
-        val result = parseImagesToJsonArray()
-        val userAction = this.userAction.get()?.apply {
-            title = this@UserActionSaveViewModel.title
-            body = this@UserActionSaveViewModel.content
-            hashTag = listToString(hashTagList, ' ')
-            mainImage = if (result.length() > 0) result.getString(0) else ""
-            subImage = result.toString()
-            address = this@UserActionSaveViewModel.address.get() ?: " "
-        }
-
-        userAction?.let { user ->
-            addDisposable(userActionRepository.updateUserAction(user)
-                    .subscribeOn(Schedulers.io())
-                    .subscribe {
-                        EventBus.sendEvent(UserActionUpdateEvent(user))
-                    })
-        }
-
-        return userAction
+    fun updateUserAction() {
+        addDisposable(Flowable.fromCallable { parseImagesToJsonArray() }.subscribeOn(Schedulers.io()).map {
+            val user = this.userAction.get()?.apply {
+                title = this@UserActionSaveViewModel.title
+                body = this@UserActionSaveViewModel.content
+                hashTag = listToString(hashTagList, ' ')
+                mainImage = if (it.length() > 0) it.getString(0) else ""
+                subImage = it.toString()
+                address = this@UserActionSaveViewModel.address.get() ?: " "
+            }
+            view?.onSaveUserAction(user)
+            user
+        }.flatMap {
+            EventBus.sendEvent(UserActionUpdateEvent(it))
+            userActionRepository.updateUserAction(it).toFlowable(BackpressureStrategy.BUFFER)
+        }.subscribe())
     }
 
     fun onRemoveItemClick(item: UserActionImage) {
