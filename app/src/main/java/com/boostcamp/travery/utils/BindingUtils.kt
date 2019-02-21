@@ -11,6 +11,7 @@ import android.widget.TextView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
+import androidx.databinding.ObservableArrayList
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
@@ -257,10 +258,9 @@ object BindingUtils {
     @JvmStatic
     @BindingAdapter("hashTag")
     fun setHashTag(chipGroup: ChipGroup, hashTagList: List<String>) {
-        if (hashTagList.isNotEmpty()) {
-            if (chipGroup.childCount > 0) {
-                chipGroup.removeAllViews()
-            }
+        if (hashTagList.isEmpty() || chipGroup.childCount > 0) {
+            chipGroup.removeAllViews()
+        } else {
             hashTagList.forEach { hashTag ->
                 Chip(chipGroup.context).apply {
                     text = hashTag
@@ -338,11 +338,17 @@ object BindingUtils {
 
     @JvmStatic
     @BindingAdapter("viewPagerAdapter")
-    fun setViewPagerAdapter(viewPager: ViewPager, viewModel: UserActionDetailViewModel) {
-        if (viewModel.imageList.isEmpty()) {
+    fun setViewPagerAdapter(viewPager: ViewPager, imageList: ObservableArrayList<String>) {
+        if (imageList.isEmpty()) {
             viewPager.visibility = View.GONE
         } else {
-            viewPager.adapter = ImagesViewPagerAdapter(viewModel.imageList)
+            viewPager.adapter = ImagesViewPagerAdapter(imageList)
         }
+    }
+
+    @JvmStatic
+    @BindingAdapter("selected")
+    fun isSelected(view: View, selected: Boolean) {
+        view.isSelected = selected
     }
 }

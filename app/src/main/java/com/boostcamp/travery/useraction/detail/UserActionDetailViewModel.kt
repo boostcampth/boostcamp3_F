@@ -8,6 +8,7 @@ import com.boostcamp.travery.base.BaseViewModel
 import com.boostcamp.travery.data.model.UserAction
 import com.boostcamp.travery.eventbus.EventBus
 import com.boostcamp.travery.utils.DateUtils
+import com.google.android.libraries.places.internal.it
 import io.reactivex.schedulers.Schedulers
 import org.json.JSONArray
 
@@ -17,9 +18,8 @@ class UserActionDetailViewModel(application: Application) : BaseViewModel(applic
 
     var userAction = ObservableField<UserAction>()
     val hashTagList = ObservableArrayList<String>()
-    val today = ObservableField<String>()
-
     val imageList = ObservableArrayList<String>()
+    val today = ObservableField<String>()
 
     private var contract: Contract? = null
 
@@ -32,7 +32,7 @@ class UserActionDetailViewModel(application: Application) : BaseViewModel(applic
     }
 
     fun init(userAction: UserAction) {
-        this.userAction.set(userAction.also { today.set(DateUtils.parseDateAsString(it.date, "yyyy.MM.dd aa HH:mm")) })
+        this.userAction.set(userAction)
 
         imageList.clear()
         val jsonList = JSONArray(userAction.subImage)
@@ -50,13 +50,16 @@ class UserActionDetailViewModel(application: Application) : BaseViewModel(applic
         return list.split(" ").map { if (it.startsWith('#')) it else "#$it" }
     }
 
-    fun deleteUserAction(userAction: UserAction) {
-        addDisposable(repository.deleteUserAction(userAction)
-                .subscribeOn(Schedulers.io())
-                .subscribe {
-                    EventBus.sendEvent(UserActionDeleteEvent(userAction))
-                })
-        contract?.deletedUserAction(userAction)
+    fun deleteUserAction() {
+        userAction.get()?.let { user ->
+            addDisposable(repository.deleteUserAction(user)
+                    .subscribeOn(Schedulers.io())
+                    .subscribe {
+                        EventBus.sendEvent(UserActionDeleteEvent(user))
+                    })
+            contract?.deletedUserAction(user)
+        }
+        userAction.set(null)
     }
 }
 
