@@ -31,7 +31,7 @@
 
         <View android:layout_width="match_parent" android:layout_height="6dp"
               android:background="@drawable/shadow_reverse"
-              app:layout_constraintBottom_toBottomOf="@+id/fragment_map"
+              app:layout_constraintBottom_toBottomOf="@id/fragment_map"
               />
 
         <com.warkiz.widget.IndicatorSeekBar
@@ -60,6 +60,18 @@
             app:layout_constraintStart_toStartOf="parent"
             app:onSeekChanged="@{viewModel.seekListener}"
             app:onTouch="@{viewModel.seekTouchListener}"/>
+
+        <View android:layout_width="0dp"
+              android:layout_height="4dp"
+              android:layout_marginTop="6dp"
+              android:layout_marginStart="20dp"
+              android:layout_marginEnd="20dp"
+              android:background="@drawable/shadow_bottom"
+              app:layout_constraintStart_toStartOf="@id/detail_seekbar"
+              app:layout_constraintEnd_toEndOf="@id/detail_seekbar"
+              app:layout_constraintTop_toTopOf="@id/detail_seekbar"
+              app:layout_constraintBottom_toBottomOf="@id/detail_seekbar"
+        />
 
         <TextView
             android:id="@+id/tv_endDistance"
