@@ -21,8 +21,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
-        <activity android:name=".community.SignInActivity"
-                  android:windowSoftInputMode="adjustResize"/>
+        <activity android:name=".useraction.save.FindLocationActivity"/>
+        <activity
+            android:name=".community.SignInActivity"
+            android:windowSoftInputMode="adjustResize"/>
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key"/>

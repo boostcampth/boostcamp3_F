@@ -74,10 +74,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
                 android:layout_marginTop="10dp"
-                app:viewPagerAdapter="@{viewmodel}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_user_action_detail_date"/>
+                app:layout_constraintTop_toBottomOf="@id/tv_user_action_detail_date"
+                app:viewPagerAdapter="@{viewmodel.imageList}"
+                app:visibility="@{viewmodel.imageList.size > 0}"/>
 
             <com.rd.PageIndicatorView
                 android:id="@+id/piv_action_image"
@@ -94,6 +95,7 @@
                 app:piv_selectedColor="@color/colorPrimaryDark"
                 app:piv_unselectedColor="#E0E0E0"
                 app:piv_viewPager="@id/vp_image_list"
+                app:visibility="@{viewmodel.imageList.size > 0}"
                 attrs:piv_padding="10dp"
                 attrs:piv_radius="5dp"/>
 
@@ -116,6 +118,7 @@
                 app:chipSpacing="@dimen/chip_group_child_spacing"
                 app:chipSpacingVertical="@dimen/chip_group_child_spacing_vertical"
                 app:hashTag="@{viewmodel.hashTagList}"
+                app:visibility="@{viewmodel.hashTagList.size > 0}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

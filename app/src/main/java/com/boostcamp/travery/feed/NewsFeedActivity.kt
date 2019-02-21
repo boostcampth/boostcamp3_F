@@ -104,7 +104,10 @@ class NewsFeedActivity : BaseActivity<MainFeedBinding>(), NavigationView.OnNavig
                 startActivity(Intent(this, CourseListActivity::class.java))
             }
             R.id.nav_useraction_add -> {
-                startActivity(Intent(this, UserActionSaveActivity::class.java))
+                val intent = Intent(this, UserActionSaveActivity::class.java).apply {
+                    putExtra(Constants.SINGLE_ADD_USER_ACTION_MODE, true)
+                }
+                startActivity(intent)
             }
 
             R.id.nav_search -> {

@@ -3,9 +3,8 @@ package com.boostcamp.travery.useraction.save
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.location.Location
 import android.os.Bundle
-import android.util.Log
+import android.os.Handler
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -14,7 +13,6 @@ import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.appcompat.widget.Toolbar
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.boostcamp.travery.Constants
 import com.boostcamp.travery.R
@@ -23,6 +21,7 @@ import com.boostcamp.travery.data.model.UserAction
 import com.boostcamp.travery.databinding.ActivitySaveUserActionBinding
 import com.boostcamp.travery.utils.toast
 import com.esafirm.imagepicker.features.ImagePicker
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.chip.Chip
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -33,21 +32,29 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
         get() = R.layout.activity_save_user_action
 
     private lateinit var viewModel: UserActionSaveViewModel
-
-    private var hashTagSwitch = false
+    private val disposable = CompositeDisposable()
 
     private var editMode = false
+    private var singleMode = false
 
-    private var location: Location? = null
+    private lateinit var receivedData: UserAction
 
-    private val disposable = CompositeDisposable()
+    private var location: LatLng? = null
+
+    private val handler = Handler()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(viewDataBinding.root)
 
-        editMode = intent.extras?.getBoolean(Constants.EDIT_MODE, false) ?: false
+        setToolbar()
+        initViewModel()
+        setMode()
+        initUserAction()
+        initAddButtonList()
+    }
 
+    private fun setToolbar() {
         setSupportActionBar(toolbar as Toolbar)
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
@@ -55,40 +62,13 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
             title = if (editMode) resources.getString(R.string.string_activity_edit_useraction_toolbar)
             else resources.getString(R.string.string_activity_save_useraction_toolbar)
         }
-
-        viewModel = ViewModelProviders.of(this).get(UserActionSaveViewModel::class.java).apply {
-            viewDataBinding.viewmodel = this
-            setView(this@UserActionSaveActivity)
-        }
-
-        initViewModel()
-        initAddButtonList()
-
-        if (editMode) {
-            // editMode 일 경우, detail 액티비티로부터 받은 데이터 세팅
-            viewModel.setUserAction(intent.getParcelableExtra(Constants.EXTRA_USER_ACTION))
-
-            if (viewModel.imageList.isNotEmpty()) {
-                buttonSwitch(rv_save_useraction_image_list, btn_image_add, true)
-            }
-
-            if (viewModel.getHashTagCount() > 0) {
-                buttonSwitch(chip_group, btn_hash_tag_add, true)
-            }
-        }
-    }
-
-    private fun buttonSwitch(view: View, button: View, on: Boolean) {
-        if (on) {
-            view.visibility = View.VISIBLE
-            button.isSelected = true
-        } else {
-            view.visibility = View.GONE
-            button.isSelected = false
-        }
     }
 
     private fun initViewModel() {
+        viewModel = ViewModelProviders.of(this).get(UserActionSaveViewModel::class.java).apply {
+            viewDataBinding.viewmodel = this
+        }
+
         // Chip 생성 후 그룹에 추가
         disposable.add(viewModel.psHashTag.observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
@@ -96,31 +76,38 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
                     et_hashtag.setText("")
                 })
 
-        if (!editMode) {
-            // 주소 세팅 및 observe
-            // 전달 된 위치가 없을 경우(트래킹중이 아닐 경우 현재위치 로딩안되므로)
-            location = viewModel.getLastKnownLocation()
-            viewModel.setAddress(
-                    intent.getDoubleExtra(
-                            Constants.EXTRA_LATITUDE, location?.latitude
-                            ?: 0.0
-                    ),
-                    intent.getDoubleExtra(
-                            Constants.EXTRA_LONGITUDE, location?.longitude
-                            ?: 0.0
-                    )
-            )
-            viewModel.getAddress().observe(this@UserActionSaveActivity, Observer { tv_location_cur.text = it })
-        } else {
-            val data = intent.extras?.getParcelable<UserAction>(Constants.EXTRA_USER_ACTION)
-            viewModel.setAddress(data?.latitude ?: 0.0, data?.longitude ?: 0.0)
-        }
+        viewModel.setView(this)
+    }
+
+    private fun setMode() {
+        editMode = intent.extras?.getBoolean(Constants.EDIT_MODE, false) ?: false
+        singleMode = intent.extras?.getBoolean(Constants.SINGLE_ADD_USER_ACTION_MODE, false)
+                ?: false
+    }
+
+    private fun initUserAction() {
+        val location = viewModel.getLocation() ?: LatLng(0.0, 0.0)
+        val latitude = intent.getDoubleExtra(Constants.EXTRA_LATITUDE, location.latitude)
+        val longitude = intent.getDoubleExtra(Constants.EXTRA_LONGITUDE, location.longitude)
+        val courseCode = intent.getLongExtra(Constants.EXTRA_COURSE_CODE, 0)
+
+        receivedData = intent.getParcelableExtra(Constants.EXTRA_USER_ACTION) ?: UserAction(
+                latitude = latitude,
+                longitude = longitude,
+                courseCode = courseCode
+        )
+        viewModel.setUserAction(receivedData)
     }
 
     private fun initAddButtonList() {
         btn_location_add.isSelected = true
         btn_location_add.setOnClickListener {
-            "위치 검색 추가 예정".toast(this)
+            selectLocation()
+        }
+
+        // 현재 주소를 클릭했을 경우에도 위치를 선택할 수 있도록 추가
+        tv_location_cur.setOnClickListener {
+            selectLocation()
         }
 
         btn_image_add.setOnClickListener {
@@ -133,21 +120,12 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
         }
 
         btn_hash_tag_add.setOnClickListener {
+            chip_group.visibility = if (chip_group.visibility == View.VISIBLE && chip_group.childCount < 1) View.GONE else View.VISIBLE
             et_hashtag.requestFocus()
-
             val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-
-            if (hashTagSwitch) {
-                if (viewModel.getHashTagCount() == 0) {
-                    buttonSwitch(chip_group, btn_hash_tag_add, false)
-                }
-            } else {
-                buttonSwitch(chip_group, btn_hash_tag_add, true)
-                currentFocus?.let {
-                    imm.showSoftInput(it, 0)
-                }
+            currentFocus?.let {
+                imm.showSoftInput(it, 0)
             }
-            hashTagSwitch = !hashTagSwitch
         }
     }
 
@@ -166,14 +144,20 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
             setOnCloseIconClickListener {
                 chip_group.removeView(this)
                 viewModel.removeHashTag((it as Chip).text as String)
-                // 해시태그가 모두 사라졌을 때 처리
-                if (chip_group.childCount == 1) {
-                    hashTagSwitch = false
-                    buttonSwitch(chip_group, btn_hash_tag_add, false)
-                }
             }
         }.also {
             chip_group.addView(it, chip_group.childCount - 1)
+        }
+    }
+
+    private fun selectLocation() {
+        if (singleMode) {
+            val intent = Intent(this, FindLocationActivity::class.java).apply {
+                putExtra(Constants.EXTRA_LAT_LNG, location)
+            }
+            startActivityForResult(intent, Constants.REQUEST_CODE_SELECT_LOCATION)
+        } else {
+            getString(R.string.string_toast_warning_message_location_select).toast(this)
         }
     }
 
@@ -188,35 +172,13 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
 
             if (editMode) {
                 viewModel.updateUserAction()
-
-                setResult(Activity.RESULT_OK, Intent().apply {
-                    putExtra(Constants.EXTRA_USER_ACTION, viewModel.userAction.get())
-                })
             } else {
-                setResult(Activity.RESULT_OK, Intent().apply {
-                    putExtra(Constants.EXTRA_USER_ACTION, viewModel.saveUserAction(
-                            intent.getDoubleExtra(Constants.EXTRA_LATITUDE, 0.0),
-                            intent.getDoubleExtra(Constants.EXTRA_LONGITUDE, 0.0),
-                            intent.getLongExtra(Constants.EXTRA_COURSE_CODE, 0)
-                    ))
-                })
+                viewModel.saveUserAction()
             }
-
-            getString(R.string.string_activity_user_action_save_success).toast(this)
-
-            finish()
             true
         }
 
         else -> super.onOptionsItemSelected(item)
-    }
-
-    override fun saveSelectedImage() {
-        // nothing
-    }
-
-    override fun imageListEmpty() {
-        buttonSwitch(rv_save_useraction_image_list, btn_image_add, false)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -227,10 +189,17 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
                     visibility = View.VISIBLE
                     scrollToPosition(0)
                 }
-
                 viewModel.imageList.add(0, UserActionImage(it.path))
             }
         }
+
+        if (requestCode == Constants.REQUEST_CODE_SELECT_LOCATION && resultCode == Activity.RESULT_OK) {
+            val extra = data?.getParcelableExtra<LatLng>(Constants.EXTRA_LAT_LNG)
+            extra?.run {
+                viewModel.setAddress(latitude, longitude)
+            }
+        }
+
         super.onActivityResult(requestCode, resultCode, data)
     }
 
@@ -254,5 +223,17 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
                 dialog.cancel()
             }
         }.create().show()
+    }
+
+    override fun onSaveUserAction(userAction: UserAction?) {
+        userAction?.let {
+            setResult(Activity.RESULT_OK, Intent().apply {
+                putExtra(Constants.EXTRA_USER_ACTION, it)
+            })
+        }
+        handler.post {
+            getString(R.string.string_activity_user_action_save_success).toast(this)
+        }
+        finish()
     }
 }

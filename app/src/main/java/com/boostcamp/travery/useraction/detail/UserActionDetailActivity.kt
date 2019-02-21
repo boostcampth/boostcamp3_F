@@ -3,7 +3,6 @@ package com.boostcamp.travery.useraction.detail
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AlertDialog
@@ -27,19 +26,25 @@ class UserActionDetailActivity : BaseActivity<ActivityUserActionDetailBinding>()
         super.onCreate(savedInstanceState)
         setContentView(viewDataBinding.root)
 
+        setToolbar()
+        initViewModel()
+    }
+
+    private fun setToolbar() {
         setSupportActionBar(toolbar as Toolbar)
         supportActionBar?.apply {
             title = getString(R.string.string_activity_title_action_detail)
             setDisplayHomeAsUpEnabled(true)
             setDisplayShowHomeEnabled(true)
         }
+    }
 
+    private fun initViewModel() {
         viewModel = ViewModelProviders.of(this).get(UserActionDetailViewModel::class.java)
         viewDataBinding.viewmodel = viewModel
 
         viewModel.init(intent.getParcelableExtra(Constants.EXTRA_USER_ACTION))
         viewModel.setContract(this)
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -61,7 +66,7 @@ class UserActionDetailActivity : BaseActivity<ActivityUserActionDetailBinding>()
                     setMessage(resources.getString(R.string.dialog_message_delete))
                     setPositiveButton(resources.getString(R.string.dialog_positive)) { _, _ ->
                         viewModel.userAction.get()?.let {
-                            viewModel.deleteUserAction(it)
+                            viewModel.deleteUserAction()
                         }
                     }
                     setNegativeButton(resources.getString(R.string.dialog_negative)) { dialog, _ ->
@@ -79,7 +84,10 @@ class UserActionDetailActivity : BaseActivity<ActivityUserActionDetailBinding>()
                 data?.let {
                     val userAction = it.getParcelableExtra<UserAction>(Constants.EXTRA_USER_ACTION)
                     viewModel.init(userAction)
-                    piv_action_image.setSelected(0)
+
+                    if (viewModel.imageList.isNotEmpty()) {
+                        piv_action_image.setSelected(0)
+                    }
 
                     setResult(Activity.RESULT_OK, Intent().apply {
                         putExtra(Constants.EXTRA_USER_ACTION, userAction)
