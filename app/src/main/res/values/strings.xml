@@ -54,8 +54,12 @@
     <string name="string_tv_location">위치</string>
     <string name="string_tv_image">사진</string>
 
-
     <string name="string_sign_nick_name">닉네임(최대 20자)</string>
+
+    <string name="string_mapservice_gps">GPS 신호를 받는 중입니다...</string>
+    <string name="string_mapservice_start">버튼을 눌러 기록을 시작하세요!</string>
+    <string name="string_mapservice_gps_error">GPS 신호를 수신할 때까지 기다려 주세요!</string>
+
     <string name="string_setting_user">계정</string>
     <string name="string_setting_login">로그인</string>
     <string name="string_setting_logout">로그아웃</string>
@@ -72,14 +76,7 @@
         <item>관광지</item>
         <item>직접 입력</item>
     </string-array>
-
-    <string-array name="talk_array">
-        <item>오늘의 기록을 남겨볼까요?</item>
-        <item>고고씽~!</item>
-        <item>즐거운 하루 보내고 계신가요?</item>
-        <item>오늘은 무엇을 해볼까요?</item>
-    </string-array>
-
+    
     <string name="string_place_holder_date">%s ~ %s</string>
 
     <string name="progress_bar_message">잠시만 기다려주세요</string>

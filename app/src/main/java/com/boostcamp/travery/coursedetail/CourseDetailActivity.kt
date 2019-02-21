@@ -95,9 +95,21 @@ class CourseDetailActivity : BaseActivity<ActivityCourseDetailBinding>(), OnMapR
 
         viewModel.latLngList.observe(this, Observer {
             // 경로의 폴리라인과 시작점 끝점 마크를 맵위에 표시.
-            map.addPolyline(PolylineOptions().color(ContextCompat.getColor(this, R.color.gray_alpha50))
-                    .geodesic(true)
-                    .width(10f).addAll(it)).also { polyline -> polyline.pattern = Arrays.asList(Gap(20f), Dash(20f)) }
+            val polylineOptions =
+                    PolylineOptions().color(ContextCompat.getColor(this, R.color.gray_alpha50))
+                            .geodesic(true)
+                            .width(10f)
+
+            val boundsBuilder = LatLngBounds.Builder()
+            val routePadding = 220
+
+            it.forEach { latlng ->
+                polylineOptions.add(latlng)
+                boundsBuilder.include(latlng)
+            }
+            val latLngBounds = boundsBuilder.build()
+
+            map.addPolyline(polylineOptions).also { polyline -> polyline.pattern = Arrays.asList(Gap(20f), Dash(20f)) }
 
             //seekbar max 설정
             detail_seekbar.max = viewModel.timeCodeListSize.get().toFloat()
@@ -105,9 +117,7 @@ class CourseDetailActivity : BaseActivity<ActivityCourseDetailBinding>(), OnMapR
             //지도가 완전히 뜨고나서 카메라가 지정한 위치로 이동하기 위해 post를 사용.
             fragment_map.view?.post {
                 map.moveCamera(
-                        CameraUpdateFactory.newLatLngBounds(
-                                LatLngBounds.builder().include(it[0]).include(it[it.size - 1]).build()
-                                , 110.toPx())
+                        CameraUpdateFactory.newLatLngBounds(latLngBounds, routePadding)
                 )
                 seekerMarker = map.addMarker(
                         MarkerOptions()
@@ -151,7 +161,7 @@ class CourseDetailActivity : BaseActivity<ActivityCourseDetailBinding>(), OnMapR
                             markersHashMap[this.date.time]?.tag = this
                         }
                     }
-                    Log.d("testlog",this.courseCode.toString())
+                    Log.d("testlog", this.courseCode.toString())
                 }
             }
         })

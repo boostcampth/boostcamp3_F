@@ -85,9 +85,8 @@ class MapTrackingService : Service() {
                     //야외에서는 3m~11m정도의 오차 발생
                     if (location.distanceTo(exLocation) >= 2 && location.accuracy < 9.5) {
 
-                        val locate = LatLng(location.latitude, location.longitude)
                         mapTrackingRepository.addTotalDistance(location.distanceTo(exLocation))
-                        mapTrackingRepository.addTimeCode(TimeCode(locate, location.time))
+                        mapTrackingRepository.addTimeCode(location)
 
                         exLocation = location
 
@@ -111,13 +110,17 @@ class MapTrackingService : Service() {
                     } else {
                         if (isRunning)
                             lostLocationCnt++
+                        else {
+                            exLocation = location
+                            standardLocation = location
+                            mapTrackingRepository.addTimeCode(location)
+                        }
                     }
 
                 } else {
                     exLocation = location
                     standardLocation = location
-                    val locate = LatLng(location.latitude, location.longitude)
-                    mapTrackingRepository.addTimeCode(TimeCode(locate, location.time))
+                    mapTrackingRepository.addTimeCode(location)
                 }
 
             }
@@ -153,8 +156,8 @@ class MapTrackingService : Service() {
         mapTrackingRepository.setSecond(second)
         secondTimer.schedule(SecondTimer(), 1000, 1000)
 
-        exLocation?.let{
-            mapTrackingRepository.addTimeCode(TimeCode(LatLng(it.latitude, it.longitude), it.time))
+        exLocation?.let {
+            mapTrackingRepository.addTimeCode(it)
             standardLocation = it
         }
 
@@ -199,7 +202,7 @@ class MapTrackingService : Service() {
         getLastKnownLocation()?.let {
             exLocation = it
             standardLocation = it
-            mapTrackingRepository.addTimeCode(TimeCode(LatLng(it.latitude, it.longitude), it.time))
+            mapTrackingRepository.addTimeCode(it)
         }
 
         return mBinder

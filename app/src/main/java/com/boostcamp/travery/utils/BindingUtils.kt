@@ -1,6 +1,8 @@
 package com.boostcamp.travery.utils
 
 import android.animation.ObjectAnimator
+import android.animation.ValueAnimator.INFINITE
+import android.animation.ValueAnimator.REVERSE
 import android.graphics.drawable.AnimationDrawable
 import android.graphics.drawable.Drawable
 import android.view.View
@@ -158,6 +160,24 @@ object BindingUtils {
     }
 
     @JvmStatic
+    @BindingAdapter("bind:textAnimation")
+    fun setTextAnimation(view: View, value: Boolean) {
+        val textAnim = ObjectAnimator.ofFloat(view, "alpha", 0f, 1f).apply {
+            duration = 700
+            repeatMode = REVERSE
+            repeatCount = INFINITE
+        }
+
+        if (value) {
+            view.tag = textAnim
+            textAnim.start()
+        } else {
+            (view.tag as ObjectAnimator).cancel()
+            view.alpha = 1f
+        }
+    }
+
+    @JvmStatic
     @BindingAdapter("bind:visibility")
     fun setVisibility(view: View, value: Boolean) {
         if (value) {
@@ -175,14 +195,6 @@ object BindingUtils {
         } else {
             (view.background as AnimationDrawable).stop()
         }
-    }
-
-    @JvmStatic
-    @BindingAdapter("bind:talk")
-    fun setRandomText(view: View, value: Boolean) {
-        val array = view.resources.getStringArray(R.array.talk_array)
-        val randomStr = array[Random().nextInt(array.size)]
-        (view as TextView).text = randomStr
     }
 
     @JvmStatic
