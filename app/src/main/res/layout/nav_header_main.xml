@@ -2,8 +2,8 @@
 
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
->
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <data>
         <variable
             name="user"
@@ -21,7 +21,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="22dp"
             android:contentDescription="@string/nav_header_desc"
-            app:circleImage="@{user.image}"
+            app:circleImage="@{@string/base_image_url + user.image}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"

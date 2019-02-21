@@ -1,5 +1,6 @@
 package com.boostcamp.travery.community
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.widget.Toolbar
@@ -29,14 +30,20 @@ class SettingActivity : BaseActivity<ActivitySettingBinding>() {
         }
 
         viewDataBinding.viewModel?.openLogin?.observe(this, Observer {
-            startActivityForResult(Intent(this, LoginActivity::class.java), REQUEST_CODE_LOGIN)
+            if(it)
+                startActivityForResult(Intent(this, LoginActivity::class.java), REQUEST_CODE_LOGIN)
+            else
+                setResult(Activity.RESULT_OK)
         })
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == RESULT_OK) {
             when (requestCode) {
-                Constants.REQUEST_CODE_LOGIN -> viewDataBinding.viewModel?.getPreferences()
+                Constants.REQUEST_CODE_LOGIN -> {
+                    viewDataBinding.viewModel?.getPreferences()
+                    setResult(Activity.RESULT_OK)
+                }
             }
         }
     }

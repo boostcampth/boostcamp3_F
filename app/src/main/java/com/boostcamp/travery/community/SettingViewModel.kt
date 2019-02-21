@@ -16,6 +16,7 @@ class SettingViewModel(application: Application) : BaseViewModel(application) {
     val userName = ObservableField<String>()
     val autoUploadState = ObservableBoolean(false)
     val loginBtnString = ObservableField<String>()
+    val isLogin = ObservableBoolean(false)
 
     val openLogin = MutableLiveData<Boolean>()
 
@@ -31,6 +32,8 @@ class SettingViewModel(application: Application) : BaseViewModel(application) {
             removePreferences()
             userName.set(getApplication<Application>().getString(R.string.string_setting_request_login))
             loginBtnString.set(getApplication<Application>().getString(R.string.string_setting_login))
+            openLogin.value = false
+            isLogin.set(false)
         }
     }
 
@@ -44,8 +47,10 @@ class SettingViewModel(application: Application) : BaseViewModel(application) {
         userName.set(pref.getString(Constants.PREF_USER_NAME, getApplication<Application>().getString(R.string.string_setting_request_login)))
         if (userName.get() == getApplication<Application>().getString(R.string.string_setting_request_login)) {
             loginBtnString.set(getApplication<Application>().getString(R.string.string_setting_login))
+            isLogin.set(false)
         } else {
             loginBtnString.set(getApplication<Application>().getString(R.string.string_setting_logout))
+            isLogin.set(true)
         }
         autoUploadState.set(pref.getBoolean(Constants.PREF_AUTO_UPLOAD, false))
     }
