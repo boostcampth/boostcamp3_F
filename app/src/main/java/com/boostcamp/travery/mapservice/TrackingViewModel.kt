@@ -1,6 +1,7 @@
 package com.boostcamp.travery.mapservice
 
 import android.app.Application
+import android.location.Location
 import android.util.Log
 import android.view.View
 import android.widget.BaseAdapter
@@ -8,6 +9,7 @@ import androidx.databinding.ObservableBoolean
 import com.boostcamp.travery.base.BaseViewModel
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
+import com.boostcamp.travery.R
 import com.boostcamp.travery.data.CourseRepository
 import com.boostcamp.travery.data.local.db.AppDatabase
 import com.boostcamp.travery.data.model.Course
@@ -35,18 +37,26 @@ class TrackingViewModel(application: Application) : BaseViewModel(application) {
 
     var secondString = ObservableField<String>("")
     val isService = ObservableBoolean(false)
-    val curLocation = MutableLiveData<LatLng>()
+    val curLocation = MutableLiveData<Location>()
     var suggestCountString = ObservableField<String>("0")
-    val totalDistance by lazy { mapTrackingRepository.getTotalDistance() }
     var startTime: Long = 0L
     val userActionList by lazy { mapTrackingRepository.getUserActionList() }
     private var suggestAdapter: BaseAdapter? = null
+    var talkString = ObservableField<String>()
+    private var talkCnt = 0
+    var isFindGPS = ObservableBoolean(false)
 
     init {
+        talkString.set(application.getString(R.string.string_mapservice_gps))
 
         addDisposable(
                 mapTrackingRepository.getTimeCode().subscribe {
-                    curLocation.value = it.coordinate
+                    curLocation.value = it
+                    talkCnt++
+                    if (talkCnt > 1) {
+                        talkString.set(application.getString(R.string.string_mapservice_start))
+                        isFindGPS.set(true)
+                    }
                 }
         )
 
@@ -92,7 +102,6 @@ class TrackingViewModel(application: Application) : BaseViewModel(application) {
 
         addDisposable(
                 EventBus.getEvents().ofType(ServiceStartEvent::class.java).subscribe {
-                    Log.d("lolotest2", it.startTime.toString())
                     startTime = it.startTime
 
                     if (it.startTime != 0L) {
@@ -106,6 +115,10 @@ class TrackingViewModel(application: Application) : BaseViewModel(application) {
         )
         if (mapTrackingRepository.getStartTime() != 0L)
             isService.set(true)
+    }
+
+    fun getTotalDistance(): Long{
+        return mapTrackingRepository.getTotalDistance()
     }
 
     private fun setIntToTime(timeInt: Int): String {

@@ -26,6 +26,7 @@ import com.boostcamp.travery.mapservice.savecourse.CourseSaveActivity
 import com.boostcamp.travery.useraction.detail.UserActionDetailActivity
 import com.boostcamp.travery.useraction.save.UserActionSaveActivity
 import com.boostcamp.travery.utils.CustomMarker
+import com.boostcamp.travery.utils.toast
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -45,10 +46,12 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
     private lateinit var mMap: GoogleMap
     private lateinit var myLocationMarker: Marker
     private var suggestionMarker: Marker? = null
+    private var locationCircle: Circle? = null
     private var polyline: Polyline? = null
     private var polylineOptions: PolylineOptions = PolylineOptions()
     private var isBound = false
     private val userActionMarkers = HashMap<Long, Marker>()
+
 
     private val viewModel by lazy {
         ViewModelProviders.of(this).get(TrackingViewModel::class.java)
@@ -74,13 +77,28 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
         doBindService()
 
         viewModel.curLocation.observe(this, Observer {
-            myLocationMarker.position = it
+            val latLng = LatLng(it.latitude, it.longitude)
+            myLocationMarker.position = latLng
+
+            if (locationCircle == null) {
+                locationCircle = mMap.addCircle(CircleOptions()
+                        .center(LatLng(it.latitude, it.longitude))
+                        .radius(it.accuracy.toDouble())
+                        .strokeWidth(1f)
+                        .strokeColor(Color.parseColor("#884169e1"))
+                        .fillColor(Color.parseColor("#5587cefa")))
+            } else {
+                locationCircle?.apply {
+                    center = latLng
+                    radius = it.accuracy.toDouble()
+                }
+            }
 
             if (viewModel.getIsServiceState()) {
-                polylineOptions.add(it)
+                polylineOptions.add(latLng)
                 polyline?.remove()
                 polyline = mMap.addPolyline(polylineOptions)
-                mMap.animateCamera(CameraUpdateFactory.newLatLng(it))
+                mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng))
             }
         })
     }
@@ -103,13 +121,17 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
     }
 
     fun startService(v: View) {
-        val serviceIntent = Intent(this, MapTrackingService::class.java)
-        ContextCompat.startForegroundService(this, serviceIntent)
-        polylineOptions = PolylineOptions()
-                .color(Color.BLUE)
-                .geodesic(true)
-                .width(10f)
-        polylineOptions.add(myLocationMarker.position)
+        if (viewModel.isFindGPS.get()) {
+            val serviceIntent = Intent(this, MapTrackingService::class.java)
+            ContextCompat.startForegroundService(this, serviceIntent)
+            polylineOptions = PolylineOptions()
+                    .color(Color.BLUE)
+                    .geodesic(true)
+                    .width(10f)
+            polylineOptions.add(myLocationMarker.position)
+        } else {
+            getString(R.string.string_mapservice_gps_error).toast(this)
+        }
     }
 
     fun stopService(v: View) {
@@ -133,7 +155,7 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
     }
 
     private fun startCourseSaveActivity() {
-        if (viewModel.totalDistance >= 5) {
+        if (viewModel.getTotalDistance() >= 5) {
             val saveIntent = Intent(this@TrackingActivity, CourseSaveActivity::class.java)
                     .apply {
                         putParcelableArrayListExtra(Constants.EXTRA_COURSE_LOCATION_LIST, viewModel.getTimeCodeList())
@@ -145,7 +167,7 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
                                         "",
                                         viewModel.startTime,
                                         System.currentTimeMillis(),
-                                        viewModel.totalDistance,
+                                        viewModel.getTotalDistance(),
                                         viewModel.startTime.toString(),
                                         viewModel.startTime.toString()
                                 )
@@ -308,7 +330,7 @@ class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCall
         }
     }
 
-    private fun addCustomMarker(userAction: UserAction){
+    private fun addCustomMarker(userAction: UserAction) {
         userActionMarkers[userAction.date.time] = mMap.addMarker(MarkerOptions().position(
                 LatLng(userAction.latitude, userAction.longitude))
                 .icon(BitmapDescriptorFactory.fromBitmap(CustomMarker.create(this@TrackingActivity, userAction.mainImage)))).apply { tag = userAction.date.time }

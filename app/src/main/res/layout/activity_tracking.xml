@@ -42,11 +42,12 @@
             android:layout_marginStart="50dp"
             android:textColor="@color/ef_white"
             android:textSize="@dimen/font_tracking_counter"
+            android:text="@{viewmodel.talkString}"
+            app:textAnimation="@{!viewmodel.isFindGPS}"
             app:layout_constraintBottom_toBottomOf="@id/info_bar"
             app:layout_constraintEnd_toEndOf="@id/info_bar"
             app:layout_constraintStart_toStartOf="@id/info_bar"
             app:layout_constraintTop_toTopOf="@id/info_bar"
-            app:talk="@{true}"
             app:visibility="@{!viewmodel.isService}"/>
 
         <androidx.appcompat.widget.AppCompatImageView
