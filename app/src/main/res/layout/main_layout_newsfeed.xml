@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
         <variable
             name="viewModel"
-            type="com.boostcamp.travery.feed.NewsFeedViewModel"/>
+            type="com.boostcamp.travery.feed.NewsFeedViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -26,20 +26,81 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_newsfeed_list"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent" />
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
+        <View
+            android:id="@+id/main_background"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="invisible"
+            android:background="#80000000"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_floating_user_action"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:text="@string/string_activity_save_useraction_toolbar"
+            android:textColor="#fff"
+            android:textSize="@dimen/floating_button"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="@id/fab_userAction"
+            app:layout_constraintEnd_toStartOf="@id/fab_userAction"
+            app:layout_constraintTop_toTopOf="@id/fab_userAction" />
+
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab"
+            android:id="@+id/fab_userAction"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/fab_margin"
+            android:layout_marginBottom="160dp"
+            android:visibility="invisible"
+            app:backgroundTint="@color/colorPrimary"
+            app:elevation="6dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:pressedTranslationZ="12dp"
+            app:srcCompat="@drawable/ic_calendar"
+            app:tint="@color/ef_white" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_floating_course"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:text="@string/string_activity_save_course_toolbar"
+            android:textColor="#fff"
+            android:textSize="@dimen/floating_button"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="@id/fab_course"
+            app:layout_constraintEnd_toStartOf="@id/fab_course"
+            app:layout_constraintTop_toTopOf="@id/fab_course" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_course"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/fab_margin"
+            android:layout_marginBottom="90dp"
+            android:visibility="invisible"
+            app:elevation="6dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:pressedTranslationZ="12dp"
+            app:srcCompat="@drawable/ic_add_course_white_24dp"
+            app:tint="@color/ef_white" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_menu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/fab_margin"
-            android:src="@drawable/ic_add_course_white_24dp"
             app:backgroundTint="@color/colorPrimary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:tint="@color/ef_white"/>
-
+            app:srcCompat="@drawable/ic_add_black"
+            app:tint="@color/ef_white" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

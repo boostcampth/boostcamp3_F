@@ -72,7 +72,7 @@ class CourseListViewModel(application: Application) : BaseViewModel(application)
                         when (termDay) {
                             0 -> getResources().getString(R.string.string_group_title_today)
                             1 -> getResources().getString(R.string.string_group_title_yesterday)
-                            else -> DateUtils.parseDateAsString(curTime)
+                            else -> DateUtils.parseDateAsString(curTime, "yyyy.MM.dd EEE")
                         }
                     )
                 )

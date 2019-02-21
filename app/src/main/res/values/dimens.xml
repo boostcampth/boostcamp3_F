@@ -36,4 +36,7 @@
     <dimen name="font_feed_date">12sp</dimen>
     <dimen name="font_feed_title">15sp</dimen>
     <dimen name="font_tracking_counter">14sp</dimen>
+
+    <!-- 버튼 font size -->
+    <dimen name="floating_button">17sp</dimen>
 </resources>
