@@ -40,4 +40,15 @@ object Constants {
     const val PREF_USER_NAME = "userName"
     const val PREF_USER_IMAGE = "userImage"
     const val PREF_AUTO_UPLOAD = "autoUpload"
+    const val PREF_NAME_GUIDE = "guidePref"
+    const val PREF_GUIDE_SHOW = "guideCheck"
+
+
+    const val TYPE_GIUDELINE = 0
+    const val TYPE_NEWSFEED = 1
+    const val TYPE_COURSE = 2
+    const val TYPE_TOP_BAR = 3
+    const val TYPE_MIDDLE_BAR = 4
+    const val TYPE_BOTTOM_BAR = 5
+
 }

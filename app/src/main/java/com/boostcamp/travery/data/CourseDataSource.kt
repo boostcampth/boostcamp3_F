@@ -41,5 +41,7 @@ interface CourseDataSource {
     fun loadCoordinateListFromJsonFile(fileName: String): Flowable<List<TimeCode>>
 
     fun deleteCourseFile(fileName: String)
+
+    fun getTodayCourse(today: Long):Flowable<List<Course>>
 }
 

@@ -16,7 +16,8 @@ interface CourseDao {
     fun delete(courseList: List<Course>)
 
     @Update
-    fun update(course:Course)
+    fun update(course: Course)
+
     /**
      * 저장된 모든 경로 리스트 반환
      */
@@ -27,11 +28,14 @@ interface CourseDao {
      * title 또는 theme 에 해당 키워드가 포함된 경로검색
      *
      * @param keyword 검색단어
-     * @param index 시작 인덱스
+     * @param index 시작 인덱스4
      * @param count 가져올 course 갯수
      *
      * @return 해당 키워드로 검색된 row 중 지정 인덱스부터 count 만큼  반환
      */
     @Query("SELECT * FROM course WHERE title LIKE '%'||:keyword||'%' OR theme LIKE '%'||:keyword||'%'")
     fun searchCourseForKeyword(keyword: String): List<Course>
+
+    @Query("SELECT * FROM course  WHERE start_time >=:today ")
+    fun loadTodayCourse(today: Long): List<Course>
 }

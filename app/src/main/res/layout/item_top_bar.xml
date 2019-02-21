@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+
+        <variable
+            name="item"
+            type="com.boostcamp.travery.data.model.Bar"/>
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/bg_top_roundline"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <TextView
+            android:id="@+id/tv_bar_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/footprints"
+            android:drawablePadding="@dimen/chip_group_child_spacing"
+            android:text="@{item.title}"
+            android:textSize="@dimen/font_title"/>
+    </LinearLayout>
+</layout>

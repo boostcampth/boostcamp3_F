@@ -179,4 +179,8 @@ class CourseRepository private constructor(private val courseDataSource: CourseD
     override fun deleteCourseFile(fileName: String) {
         courseDataSource.deleteCourseFile(fileName)
     }
+
+    override fun getTodayCourse(today: Long): Flowable<List<Course>> {
+        return courseDataSource.getTodayCourse(today)
+    }
 }

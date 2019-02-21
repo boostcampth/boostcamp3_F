@@ -16,11 +16,20 @@ class ViewPagerAdapter(private val images: ArrayList<String>) : PagerAdapter() {
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val view = LayoutInflater.from(container.context).inflate(R.layout.item_viewpager_image, container, false)
-        GlideApp.with(container.context)
-                .load(container.context.getString(R.string.base_image_url) + images[position])
-                .centerCrop()
-                .error(R.mipmap.ic_launcher)
-                .into(view.iv_image)
+        if (images[position].contains("android", false)) {
+            GlideApp.with(container.context)
+                    .load(images[position])
+                    .centerCrop()
+                    .error(R.mipmap.ic_launcher)
+                    .into(view.iv_image)
+        } else {
+            GlideApp.with(container.context)
+                    .load(container.context.getString(R.string.base_image_url) + images[position])
+                    .centerCrop()
+                    .error(R.mipmap.ic_launcher)
+                    .into(view.iv_image)
+        }
+
         container.addView(view)
         return view
     }
