@@ -43,9 +43,7 @@ class CourseListViewModel(application: Application) : BaseViewModel(application)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .map {
-                createGroup(it.filter { item ->
-                    item.endTime != 0L
-                })
+                createGroup(it)
             }.subscribe(
                 {
                     data.addAll(it)

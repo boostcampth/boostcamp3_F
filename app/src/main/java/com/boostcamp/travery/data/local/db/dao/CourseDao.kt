@@ -21,7 +21,7 @@ interface CourseDao {
     /**
      * 저장된 모든 경로 리스트 반환
      */
-    @Query("SELECT * FROM course ORDER BY start_time DESC")
+    @Query("SELECT * FROM course WHERE end_time != 0 ORDER BY start_time DESC")
     fun loadAll(): List<Course>
 
     /**
@@ -36,6 +36,6 @@ interface CourseDao {
     @Query("SELECT * FROM course WHERE title LIKE '%'||:keyword||'%' OR theme LIKE '%'||:keyword||'%'")
     fun searchCourseForKeyword(keyword: String): List<Course>
 
-    @Query("SELECT * FROM course  WHERE start_time >=:today ")
+    @Query("SELECT * FROM course  WHERE start_time >=:today and end_time != 0 ORDER BY start_time DESC limit 3")
     fun loadTodayCourse(today: Long): List<Course>
 }

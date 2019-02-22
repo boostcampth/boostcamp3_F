@@ -14,6 +14,8 @@ import com.boostcamp.travery.data.model.Bar
 import com.boostcamp.travery.data.model.BaseItem
 import com.boostcamp.travery.data.model.Guide
 import com.boostcamp.travery.data.model.User
+import com.boostcamp.travery.eventbus.EventBus
+import com.boostcamp.travery.mapservice.savecourse.CourseSaveEvent
 import com.boostcamp.travery.utils.DateUtils
 import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -29,8 +31,19 @@ class NewsFeedViewModel(application: Application) : BaseViewModel(application) {
     val isLoading = MutableLiveData<Boolean>()
     var isLast = false
 
+    private var itemCount = 0
+
     init {
         refreshList()
+
+        // 새로 추가된 코스 업데이트
+        addDisposable(EventBus.getEvents().ofType(CourseSaveEvent::class.java).subscribe {
+            val index = if (showGuideLine()) 2 else 1
+            feedList.add(index, it.course)
+            if (itemCount == 3) {
+                feedList.remove(feedList[index + itemCount])
+            }
+        })
     }
 
     fun loadFeedList() {
@@ -65,6 +78,7 @@ class NewsFeedViewModel(application: Application) : BaseViewModel(application) {
         addDisposable(Flowable.merge(Flowable.just(Bar(Constants.TYPE_TOP_BAR, "오늘의 흔적")),
                 courseRepository.getTodayCourse(DateUtils.getToday()).flatMap { list ->
                     if (list.isNotEmpty()) {
+                        itemCount = list.size
                         Flowable.fromIterable(list)
                     } else {
                         Flowable.just(Bar(Constants.TYPE_MIDDLE_BAR, "아직 오늘의 기록이 없습니다."))
