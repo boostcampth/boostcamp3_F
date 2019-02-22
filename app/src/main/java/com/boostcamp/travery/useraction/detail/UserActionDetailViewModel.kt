@@ -34,14 +34,16 @@ class UserActionDetailViewModel(application: Application) : BaseViewModel(applic
     fun init(userAction: UserAction) {
         this.userAction.set(userAction)
 
+        today.set(DateUtils.parseDateAsString(userAction.date, "yyyy.MM.dd aaa HH:mm"))
+
         imageList.clear()
         val jsonList = JSONArray(userAction.subImage)
         for (i in 0 until jsonList.length()) {
             imageList.add(jsonList[i].toString())
         }
 
-        hashTagList.clear()
-        if (!userAction.hashTag.isEmpty()) {
+        if (userAction.hashTag.isNotEmpty()) {
+            hashTagList.clear()
             hashTagList.addAll(parseHashTag(userAction.hashTag))
         }
     }

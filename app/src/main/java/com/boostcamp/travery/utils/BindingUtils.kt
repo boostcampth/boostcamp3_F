@@ -260,16 +260,15 @@ object BindingUtils {
     fun setHashTag(chipGroup: ChipGroup, hashTagList: List<String>) {
         if (hashTagList.isEmpty() || chipGroup.childCount > 0) {
             chipGroup.removeAllViews()
-        } else {
-            hashTagList.forEach { hashTag ->
-                Chip(chipGroup.context).apply {
-                    text = hashTag
-                    isClickable = true
-                    isChipIconVisible = false
-                    isCheckedIconVisible = false
-                }.also {
-                    chipGroup.addView(it)
-                }
+        }
+        hashTagList.forEach { hashTag ->
+            Chip(chipGroup.context).apply {
+                text = hashTag
+                isClickable = true
+                isChipIconVisible = false
+                isCheckedIconVisible = false
+            }.also {
+                chipGroup.addView(it)
             }
         }
     }
