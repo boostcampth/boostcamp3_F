@@ -9,6 +9,7 @@ import androidx.databinding.ObservableField
 import com.boostcamp.travery.Constants
 import com.boostcamp.travery.Injection
 import com.boostcamp.travery.MyApplication
+import com.boostcamp.travery.R
 import com.boostcamp.travery.base.BaseViewModel
 import com.boostcamp.travery.data.NewsFeedRepository
 import com.boostcamp.travery.data.model.UserAction
@@ -16,6 +17,7 @@ import com.boostcamp.travery.eventbus.EventBus
 import com.boostcamp.travery.utils.ImageUtils
 import com.boostcamp.travery.utils.toLatLng
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.libraries.places.internal.it
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.Observable.just
@@ -60,18 +62,24 @@ class UserActionSaveViewModel(application: Application) : BaseViewModel(applicat
 
     fun setUserAction(userAction: UserAction) {
         this.userAction.set(userAction)
-        setAddress(userAction.latitude, userAction.longitude)
 
-        imageList.clear()
+        if (userAction.latitude + userAction.longitude == 0.0) {
+            // 위치를 로드할 수 없을 경우
+            address.set(getApplication<MyApplication>().resources.getString(R.string.string_activity_user_action_save))
+        } else {
+            setAddress(userAction.latitude, userAction.longitude)
+        }
+
         if (userAction.subImage.isNotEmpty()) {
+            imageList.clear()
             val jsonList = JSONArray(userAction.subImage)
             for (i in 0 until jsonList.length()) {
                 imageList.add(UserActionImage(jsonList[i].toString()))
             }
         }
 
-        hashTagList.clear()
         if (userAction.hashTag.isNotEmpty()) {
+            hashTagList.clear()
             parseHashTag(userAction.hashTag).forEach {
                 psHashTag.onNext(it)
                 hashTagList.add(it)
