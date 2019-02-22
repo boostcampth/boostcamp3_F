@@ -10,6 +10,7 @@ import com.boostcamp.travery.databinding.ActivityUserActionListBinding
 import com.boostcamp.travery.useraction.list.cluster.ClusterItemUserAction
 import com.boostcamp.travery.useraction.list.cluster.ClusterRenderer
 import com.boostcamp.travery.utils.toLatLng
+import com.boostcamp.travery.utils.toast
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -42,7 +43,7 @@ class UserActionListActivity : BaseActivity<ActivityUserActionListBinding>(),
         (map as SupportMapFragment).getMapAsync(this)
 
         viewModel = ViewModelProviders.of(this).get(UserActionListViewModel::class.java)
-        
+
         observeCurrentLocation()
         observeDataList()
 
@@ -90,6 +91,7 @@ class UserActionListActivity : BaseActivity<ActivityUserActionListBinding>(),
                 clusterManager?.cluster()
             } else {
                 curLocation?.let { moveCamera(it) }
+                        ?: resources.getString(R.string.string_activity_user_action_save).toast(this)
             }
         })
     }
