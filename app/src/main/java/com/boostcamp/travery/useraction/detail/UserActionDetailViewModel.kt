@@ -8,7 +8,6 @@ import com.boostcamp.travery.base.BaseViewModel
 import com.boostcamp.travery.data.model.UserAction
 import com.boostcamp.travery.eventbus.EventBus
 import com.boostcamp.travery.utils.DateUtils
-import com.google.android.libraries.places.internal.it
 import io.reactivex.schedulers.Schedulers
 import org.json.JSONArray
 
@@ -42,9 +41,11 @@ class UserActionDetailViewModel(application: Application) : BaseViewModel(applic
             imageList.add(jsonList[i].toString())
         }
 
-        if (userAction.hashTag.isNotEmpty()) {
-            hashTagList.clear()
-            hashTagList.addAll(parseHashTag(userAction.hashTag))
+        hashTagList.run {
+            clear()
+            if (userAction.hashTag.isNotEmpty()) {
+                addAll(parseHashTag(userAction.hashTag))
+            }
         }
     }
 

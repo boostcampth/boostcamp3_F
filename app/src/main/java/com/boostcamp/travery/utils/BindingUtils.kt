@@ -21,7 +21,6 @@ import com.boostcamp.travery.course.list.CourseListViewModel
 import com.boostcamp.travery.course.list.adapter.CourseListAdapter
 import com.boostcamp.travery.feed.ViewPagerAdapter
 import com.boostcamp.travery.useraction.detail.ImagesViewPagerAdapter
-import com.boostcamp.travery.useraction.detail.UserActionDetailViewModel
 import com.boostcamp.travery.useraction.save.UserActionImageListAdapter
 import com.boostcamp.travery.useraction.save.UserActionSaveViewModel
 import com.bumptech.glide.load.DataSource
