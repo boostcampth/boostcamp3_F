@@ -109,7 +109,10 @@ class NewsFeedActivity : BaseActivity<MainFeedBinding>(), NavigationView.OnNavig
 
         fab_userAction.setOnClickListener {
             startAnim()
-            startActivity(Intent(this, UserActionSaveActivity::class.java))
+            val intent = Intent(this, UserActionSaveActivity::class.java).apply {
+                putExtra(Constants.SINGLE_ADD_USER_ACTION_MODE, true)
+            }
+            startActivity(intent)
         }
 
         main_background.setOnClickListener {
