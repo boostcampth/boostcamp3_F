@@ -38,6 +38,7 @@ class ViewPagerAdapter(private val images: ArrayList<String>) : PagerAdapter() {
         return images.size
     }
 
+
     override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
         container.invalidate()
     }
@@ -46,6 +47,10 @@ class ViewPagerAdapter(private val images: ArrayList<String>) : PagerAdapter() {
         this.images.clear()
         this.images.addAll(images)
         notifyDataSetChanged()
+    }
+
+    override fun getItemPosition(`object`: Any): Int {
+        return POSITION_NONE
     }
 
     fun clear() {

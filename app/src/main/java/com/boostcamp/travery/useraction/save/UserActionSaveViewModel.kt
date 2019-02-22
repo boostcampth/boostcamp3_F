@@ -3,7 +3,6 @@ package com.boostcamp.travery.useraction.save
 import android.app.Application
 import android.content.Context
 import android.location.Geocoder
-import android.util.Log
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableField
 import com.boostcamp.travery.Constants
@@ -12,6 +11,7 @@ import com.boostcamp.travery.MyApplication
 import com.boostcamp.travery.R
 import com.boostcamp.travery.base.BaseViewModel
 import com.boostcamp.travery.data.NewsFeedRepository
+import com.boostcamp.travery.data.model.User
 import com.boostcamp.travery.data.model.UserAction
 import com.boostcamp.travery.eventbus.EventBus
 import com.boostcamp.travery.utils.ImageUtils
@@ -131,10 +131,11 @@ class UserActionSaveViewModel(application: Application) : BaseViewModel(applicat
             view?.onSaveUserAction(user)
             user
         }.flatMap {
-            if (id != null && autoUpload) {
-                newsFeedRepository.uploadFeed(it, id)
+            if(checkUpload()){
+                Flowable.merge(newsFeedRepository.uploadFeed(it, "temp").toFlowable(), userActionRepository.saveUserAction(it).toFlowable(BackpressureStrategy.BUFFER))
+            }else{
+                userActionRepository.saveUserAction(it).toFlowable(BackpressureStrategy.BUFFER)
             }
-            userActionRepository.saveUserAction(it).toFlowable(BackpressureStrategy.BUFFER)
         }.subscribe())
     }
 
@@ -215,6 +216,15 @@ class UserActionSaveViewModel(application: Application) : BaseViewModel(applicat
             }
         }
     }
+
+
+    private fun checkUpload(): Boolean {
+        val pref = getApplication<Application>().getSharedPreferences(Constants.PREF_NAME_LOGIN, Context.MODE_PRIVATE)
+        val id=pref.getString(Constants.PREF_USER_ID,"")
+        val upload=pref.getBoolean(Constants.PREF_AUTO_UPLOAD,false)
+        return !id.isEmpty()&&upload
+    }
+
 }
 
 data class UserActionUpdateEvent(val userAction: UserAction)
