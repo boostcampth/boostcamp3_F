@@ -58,9 +58,17 @@ class CourseSaveViewModel(application: Application) : BaseViewModel(application)
         val urlPath =
                 StringBuilder("https://maps.googleapis.com/maps/api/staticmap?size=200x200$marker&scale=2&path=weight:5%7Ccolor:0x02d864ff")
 
-        for (timeCode in timeCodeList) {
-            urlPath.append("|${timeCode.coordinate.latitude},${timeCode.coordinate.longitude}")
+        var listSize = timeCodeList.size
+        var forStep = 0
+        while (listSize > 7800) {
+            listSize /= 2
+            forStep++
         }
+
+        for (i in 0 until timeCodeList.size - 1 step forStep) {
+            urlPath.append("|${timeCodeList[i].coordinate.latitude},${timeCodeList[i].coordinate.longitude}")
+        }
+        urlPath.append("|${timeCodeList.last().coordinate.latitude},${timeCodeList.last().coordinate.longitude}")
 
         urlPath.append("&key=${getApplication<Application>().getString(R.string.google_maps_key)}")
 
@@ -115,7 +123,8 @@ class CourseSaveViewModel(application: Application) : BaseViewModel(application)
             Completable.fromAction {
                 FileUtils.saveJsonFile(
                         getApplication(), mCourse.startTime.toString(), makeCoordinateJson(
-                        it.getParcelableArrayList<TimeCode>(Constants.EXTRA_COURSE_LOCATION_LIST)!!)
+                        it.getParcelableArrayList<TimeCode>(Constants.EXTRA_COURSE_LOCATION_LIST)!!
+                )
                 )
             }.doOnComplete {
                 val course = Course(
