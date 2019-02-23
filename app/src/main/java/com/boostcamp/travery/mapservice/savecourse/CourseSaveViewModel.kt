@@ -58,8 +58,9 @@ class CourseSaveViewModel(application: Application) : BaseViewModel(application)
         val urlPath =
                 StringBuilder("https://maps.googleapis.com/maps/api/staticmap?size=200x200$marker&scale=2&path=weight:5%7Ccolor:0x02d864ff")
 
-        var listSize = timeCodeList.size
-        var forStep = 0
+        var listSize = timeCodeList.size * timeCodeList.first().coordinate.latitude.toString().length * 2
+        //안드로이드 최대 url 길이 8,192자
+        var forStep = 1
         while (listSize > 7800) {
             listSize /= 2
             forStep++
