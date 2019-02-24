@@ -2,7 +2,7 @@
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_gravity="center_vertical">
+        xmlns:tools="http://schemas.android.com/tools">
     <data>
         <variable
             name="item"
@@ -19,17 +19,18 @@
             android:id="@+id/iv_useraction_mainimg"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:layout_marginStart="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:roundedImage="@{item.mainImage}"/>
+            app:roundedImage="@{item.mainImage}"
+            tools:src="@mipmap/ic_launcher_round"/>
+
         <TextView
             android:id="@+id/tv_useraction_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginStart="6dp"
+            android:layout_marginTop="4dp"
             android:ellipsize="end"
             android:singleLine="true"
             android:text="@{item.title}"
@@ -38,34 +39,36 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/iv_useraction_mainimg"
-            app:layout_constraintTop_toTopOf="@+id/iv_useraction_mainimg"/>
+            app:layout_constraintTop_toTopOf="@+id/iv_useraction_mainimg"
+            tools:text="활동 타이틀입니다."/>
+
         <TextView
             android:id="@+id/tv_useraction_body"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:layout_marginTop="4dp"
-            android:layout_marginEnd="8dp"
             android:ellipsize="end"
-            android:maxLines="2"
+            android:singleLine="true"
             android:text="@{item.body}"
             android:textColor="#6F6F6F"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/iv_useraction_mainimg"
+            app:layout_constraintStart_toStartOf="@id/tv_useraction_title"
             app:layout_constraintTop_toBottomOf="@id/tv_useraction_title"
-        />
+            tools:text="내용물입니다."/>
+
         <TextView
             android:id="@+id/tv_useraction_hashtag"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:layout_marginTop="4dp"
-            android:layout_marginEnd="8dp"
+            android:ellipsize="end"
+            android:singleLine="true"
             android:text="@{item.hashTag}"
             android:textColor="#B2B2B2"
             app:layout_constraintBottom_toBottomOf="@+id/iv_useraction_mainimg"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/iv_useraction_mainimg"
-            app:layout_constraintTop_toBottomOf="@+id/tv_useraction_body"/>
+            app:layout_constraintStart_toStartOf="@id/tv_useraction_title"
+            app:layout_constraintTop_toBottomOf="@+id/tv_useraction_body"
+            tools:text="#해시태그 #입니다"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

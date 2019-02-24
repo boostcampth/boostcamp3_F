@@ -1,5 +1,6 @@
 package com.boostcamp.travery.search
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.widget.SearchView
@@ -7,10 +8,12 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.boostcamp.travery.Constants
 import com.boostcamp.travery.R
 import com.boostcamp.travery.base.BaseActivity
 import com.boostcamp.travery.data.model.UserAction
 import com.boostcamp.travery.databinding.ActivitySearchResultBinding
+import com.boostcamp.travery.useraction.detail.UserActionDetailActivity
 
 class SearchResultActivity : BaseActivity<ActivitySearchResultBinding>() {
 
@@ -34,7 +37,12 @@ class SearchResultActivity : BaseActivity<ActivitySearchResultBinding>() {
 
     private fun initView() {
         viewDataBinding.rvSearchList.layoutManager = LinearLayoutManager(this)
-        viewDataBinding.rvSearchList.adapter = SearchResultListAdapter()
+        viewDataBinding.rvSearchList.adapter = SearchResultListAdapter { user ->
+            val intent = Intent(this, UserActionDetailActivity::class.java).apply {
+                putExtra(Constants.EXTRA_USER_ACTION, user)
+            }
+            startActivity(intent)
+        }
         viewDataBinding.rvSearchList.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
         setSupportActionBar(viewDataBinding.toolbar2)
         supportActionBar?.apply {

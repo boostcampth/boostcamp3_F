@@ -19,6 +19,7 @@ import com.boostcamp.travery.R
 import com.boostcamp.travery.base.BaseActivity
 import com.boostcamp.travery.data.model.UserAction
 import com.boostcamp.travery.databinding.ActivitySaveUserActionBinding
+import com.boostcamp.travery.useraction.detail.UserActionDetailActivity
 import com.boostcamp.travery.utils.toast
 import com.esafirm.imagepicker.features.ImagePicker
 import com.google.android.gms.maps.model.LatLng
@@ -231,8 +232,17 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
                 putExtra(Constants.EXTRA_USER_ACTION, it)
             })
         }
+
         handler.post {
             getString(R.string.string_activity_user_action_save_success).toast(this)
+        }
+
+        // 단일 추가 모드일 경우 상세화면으로 이동
+        if (singleMode) {
+            val intent = Intent(this, UserActionDetailActivity::class.java).apply {
+                putExtra(Constants.EXTRA_USER_ACTION, userAction)
+            }
+            startActivity(intent)
         }
         finish()
     }

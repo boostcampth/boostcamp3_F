@@ -39,12 +39,13 @@
             app:layout_constraintTop_toTopOf="parent">
             <androidx.appcompat.widget.SearchView
                 android:id="@+id/searchView"
+                style="@style/SearchView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/colorPrimary"
                 android:focusable="true"
                 android:iconifiedByDefault="false"
-                android:queryHint="검색어를 입력하세요."
+                app:queryHint="@string/string_search_hint"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>

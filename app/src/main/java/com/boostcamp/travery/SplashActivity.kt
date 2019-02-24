@@ -7,8 +7,8 @@ import com.viksaa.sssplash.lib.activity.AwesomeSplash
 import com.viksaa.sssplash.lib.model.ConfigSplash
 
 class SplashActivity : AwesomeSplash() {
-    override fun initSplash(configSplash: ConfigSplash?) {
 
+    override fun initSplash(configSplash: ConfigSplash?) {
         configSplash?.apply {
             backgroundColor = R.color.colorApp
             logoSplash = R.drawable.splash_icon_150
@@ -26,5 +26,9 @@ class SplashActivity : AwesomeSplash() {
     override fun animationsFinished() {
         startActivity(Intent(this, NewsFeedActivity::class.java))
         finish()
+    }
+
+    override fun onBackPressed() {
+        // 백버튼 막기
     }
 }

@@ -11,6 +11,7 @@ import android.view.animation.AnimationUtils
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
+import androidx.core.app.ActivityCompat.startActivityForResult
 import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -109,7 +110,10 @@ class NewsFeedActivity : BaseActivity<MainFeedBinding>(), NavigationView.OnNavig
 
         fab_userAction.setOnClickListener {
             startAnim()
-            startActivity(Intent(this, UserActionSaveActivity::class.java))
+            val intent = Intent(this, UserActionSaveActivity::class.java).apply {
+                putExtra(Constants.SINGLE_ADD_USER_ACTION_MODE, true)
+            }
+            startActivity(intent)
         }
 
         main_background.setOnClickListener {
@@ -122,12 +126,14 @@ class NewsFeedActivity : BaseActivity<MainFeedBinding>(), NavigationView.OnNavig
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.action_settings -> true
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+        when (item.itemId) {
+            R.id.action_search -> {
+                startActivity(Intent(this, SearchResultActivity::class.java))
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
-    }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
@@ -149,10 +155,6 @@ class NewsFeedActivity : BaseActivity<MainFeedBinding>(), NavigationView.OnNavig
                     putExtra(Constants.SINGLE_ADD_USER_ACTION_MODE, true)
                 }
                 startActivity(intent)
-            }
-
-            R.id.nav_search -> {
-                startActivity(Intent(this, SearchResultActivity::class.java))
             }
 
             R.id.nav_setting -> {
