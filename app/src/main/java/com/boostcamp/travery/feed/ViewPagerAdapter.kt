@@ -20,13 +20,11 @@ class ViewPagerAdapter(private val images: ArrayList<String>) : PagerAdapter() {
             GlideApp.with(container.context)
                     .load(images[position])
                     .centerCrop()
-                    .error(R.mipmap.ic_launcher)
                     .into(view.iv_image)
         } else {
             GlideApp.with(container.context)
                     .load(container.context.getString(R.string.base_image_url) + images[position])
                     .centerCrop()
-                    .error(R.mipmap.ic_launcher)
                     .into(view.iv_image)
         }
 

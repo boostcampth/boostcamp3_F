@@ -21,13 +21,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <androidx.appcompat.widget.AppCompatImageView
+            <ImageView
                 android:id="@+id/iv_feed_userimage"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginStart="@dimen/activity_content_padding"
                 android:layout_marginTop="@dimen/activity_content_padding"
-                app:circleImage="@{String.format(@string/base_image_url, item.user.image)}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
