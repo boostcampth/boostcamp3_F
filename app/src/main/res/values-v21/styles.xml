@@ -4,9 +4,9 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="colorControlNormal">#fff</item>
+        <item name="colorControlNormal">@android:color/white</item>
         <item name="android:statusBarColor">@color/colorPrimary</item>
-        <item name="android:actionMenuTextColor">#fff</item>
+        <item name="android:actionMenuTextColor">@android:color/white</item>
         <item name="android:windowBackground">@color/colorBackground</item>
         <item name="android:colorBackground">@color/colorBackground</item>
     </style>
@@ -16,5 +16,14 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/ef_colorAccent</item>
+    </style>
+
+    <!-- 서치뷰 테마 -->
+    <style name="SearchView" parent="Theme.MaterialComponents.Light.DarkActionBar">
+        <item name="editTextColor">@android:color/white</item>
+        <item name="android:textColorHint">@android:color/white</item>
+        <item name="textColorSearchUrl">@android:color/white</item>
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="android:textColor">@android:color/white</item>
     </style>
 </resources>
