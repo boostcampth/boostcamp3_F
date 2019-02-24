@@ -131,9 +131,9 @@ class UserActionSaveViewModel(application: Application) : BaseViewModel(applicat
             view?.onSaveUserAction(user)
             user
         }.flatMap {
-            if(checkUpload()){
-                Flowable.merge(newsFeedRepository.uploadFeed(it, "temp").toFlowable(), userActionRepository.saveUserAction(it).toFlowable(BackpressureStrategy.BUFFER))
-            }else{
+            if (checkUpload()) {
+                Flowable.merge(newsFeedRepository.uploadFeed(it, getUserId()).toFlowable(), userActionRepository.saveUserAction(it).toFlowable(BackpressureStrategy.BUFFER))
+            } else {
                 userActionRepository.saveUserAction(it).toFlowable(BackpressureStrategy.BUFFER)
             }
         }.subscribe())
@@ -220,9 +220,15 @@ class UserActionSaveViewModel(application: Application) : BaseViewModel(applicat
 
     private fun checkUpload(): Boolean {
         val pref = getApplication<Application>().getSharedPreferences(Constants.PREF_NAME_LOGIN, Context.MODE_PRIVATE)
-        val id=pref.getString(Constants.PREF_USER_ID,"")
-        val upload=pref.getBoolean(Constants.PREF_AUTO_UPLOAD,false)
-        return !id.isEmpty()&&upload
+        val id = pref.getString(Constants.PREF_USER_ID, "")
+        val upload = pref.getBoolean(Constants.PREF_AUTO_UPLOAD, false)
+        return !id.isEmpty() && upload
+    }
+
+    private fun getUserId(): String {
+        val pref = getApplication<Application>().getSharedPreferences(Constants.PREF_NAME_LOGIN, Context.MODE_PRIVATE)
+        return pref.getString(Constants.PREF_USER_ID, "")
+
     }
 
 }

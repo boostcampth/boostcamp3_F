@@ -26,7 +26,7 @@ object ImageUtils {
             val options = BitmapFactory.Options()
             val bitmap = rotateImage(BitmapFactory.decodeFile(path, options), path)
             val bos = ByteArrayOutputStream()
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 60 /*ignored for PNG*/, bos)
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 30 /*ignored for PNG*/, bos)
             val bitmapData = bos.toByteArray()
             val fos = FileOutputStream(file)
             fos.write(bitmapData)

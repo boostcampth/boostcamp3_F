@@ -1,6 +1,7 @@
 package com.boostcamp.travery.search
 
 import android.app.Application
+import android.text.Html
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
 import com.boostcamp.travery.Injection
