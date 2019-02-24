@@ -114,29 +114,33 @@ class UserActionSaveViewModel(application: Application) : BaseViewModel(applicat
                 .getSharedPreferences(Constants.PREF_USER_NAME, Context.MODE_PRIVATE)
         val id = pref.getString(Constants.PREF_USER_ID, null)
         val autoUpload = pref.getBoolean(Constants.PREF_AUTO_UPLOAD, false)
+        var user: UserAction? = UserAction(latitude = .0, longitude = .0)
+        addDisposable(Flowable.fromCallable { parseImagesToJsonArray() }.subscribeOn(Schedulers.io())
+                .map {
+                    user = this.userAction.get()?.apply {
+                        title = this@UserActionSaveViewModel.title
+                        body = this@UserActionSaveViewModel.content
+                        date = Date(System.currentTimeMillis())
+                        hashTag = listToString(hashTagList, ' ')
+                        mainImage = if (it.length() > 0) it.getString(0) else ""
+                        subImage = it.toString()
+                        latitude = location?.latitude ?: 0.0
+                        longitude = location?.longitude ?: 0.0
+                        courseCode = if (this.courseCode == 0L) null else this.courseCode
+                        address = this@UserActionSaveViewModel.address.get() ?: " "
+                    }
+                    user
+                }.flatMap {
+                    if (checkUpload()) {
+                        Flowable.merge(newsFeedRepository.uploadFeed(it, getUserId()).toFlowable(), userActionRepository.saveUserAction(it).toFlowable(BackpressureStrategy.BUFFER))
+                    } else {
+                        userActionRepository.saveUserAction(it).toFlowable(BackpressureStrategy.BUFFER)
+                    }
+                }.subscribe({
+                    view?.onSaveUserAction(user)
+                }, {
 
-        addDisposable(Flowable.fromCallable { parseImagesToJsonArray() }.subscribeOn(Schedulers.io()).map {
-            val user = this.userAction.get()?.apply {
-                title = this@UserActionSaveViewModel.title
-                body = this@UserActionSaveViewModel.content
-                date = Date(System.currentTimeMillis())
-                hashTag = listToString(hashTagList, ' ')
-                mainImage = if (it.length() > 0) it.getString(0) else ""
-                subImage = it.toString()
-                latitude = location?.latitude ?: 0.0
-                longitude = location?.longitude ?: 0.0
-                courseCode = if (this.courseCode == 0L) null else this.courseCode
-                address = this@UserActionSaveViewModel.address.get() ?: " "
-            }
-            view?.onSaveUserAction(user)
-            user
-        }.flatMap {
-            if (checkUpload()) {
-                Flowable.merge(newsFeedRepository.uploadFeed(it, getUserId()).toFlowable(), userActionRepository.saveUserAction(it).toFlowable(BackpressureStrategy.BUFFER))
-            } else {
-                userActionRepository.saveUserAction(it).toFlowable(BackpressureStrategy.BUFFER)
-            }
-        }.subscribe())
+                }))
     }
 
     fun updateUserAction() {
