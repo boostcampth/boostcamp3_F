@@ -4,6 +4,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.ObservableList
 import com.boostcamp.travery.Constants
+import com.boostcamp.travery.GlideApp
+import com.boostcamp.travery.R
 import com.boostcamp.travery.base.BaseViewHolder
 import com.boostcamp.travery.base.ObservableRecyclerViewAdapter
 import com.boostcamp.travery.data.model.Bar
@@ -12,6 +14,7 @@ import com.boostcamp.travery.data.model.Course
 import com.boostcamp.travery.data.model.Guide
 import com.boostcamp.travery.data.remote.model.NewsFeed
 import com.boostcamp.travery.databinding.*
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 
 class NewsFeedListAdapter(itemList: ObservableList<BaseItem>) :
         ObservableRecyclerViewAdapter<BaseItem, BaseViewHolder>(itemList) {
@@ -125,7 +128,16 @@ class NewsFeedListAdapter(itemList: ObservableList<BaseItem>) :
 
             binding.vpActionImage.id = adapterPosition
             binding.pivActionImage.setViewPager(binding.vpActionImage)
-            binding.item = item as NewsFeed
+
+            GlideApp.with(binding.ivFeedUserimage.context)
+                    .load(binding.ivFeedUserimage.context.resources.getString(R.string.base_image_url) + (item as NewsFeed).user.image)
+                    .circleCrop()
+                    .error(R.mipmap.ic_launcher)
+                    .skipMemoryCache(false)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(binding.ivFeedUserimage)
+
+            binding.item = item
             binding.executePendingBindings()
 
         }

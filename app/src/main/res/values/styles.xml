@@ -8,6 +8,7 @@
         <item name="android:actionMenuTextColor">#fff</item>
         <item name="android:windowBackground">@color/colorBackground</item>
         <item name="android:colorBackground">@color/colorBackground</item>
+        <item name="autoCompleteTextViewStyle">@style/SearchAutoCompleteTextView</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -40,8 +41,8 @@
     </style>
 
     <!-- 서치뷰 테마 -->
-    <style name="SearchView" parent="Theme.MaterialComponents.DayNight">
-        <item name="editTextColor">@android:color/white</item>
-        <item name="android:textColorHint">@android:color/white</item>
+    <style name="SearchAutoCompleteTextView" parent="Widget.AppCompat.Light.AutoCompleteTextView">
+        <item name="android:textColor">@color/ef_white</item>
+        <item name="android:textColorHint">@color/ef_white</item>
     </style>
 </resources>

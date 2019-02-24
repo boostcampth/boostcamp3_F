@@ -44,7 +44,7 @@ class NewsFeedRemoteDataSource : NewsFeedDataSource {
         data["hashTag"] = userAction.hashTag
         data["latitude"] = userAction.latitude
         data["longitude"] = userAction.longitude
-        data["userId"] = "temp" //TODO 임시 유저
+        data["userId"] = userId
 
         val item = RequestBody.create(MediaType.parse("text/plain"), JSONObject(data).toString())
 

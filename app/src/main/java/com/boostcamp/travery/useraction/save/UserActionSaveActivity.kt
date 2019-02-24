@@ -47,7 +47,6 @@ class UserActionSaveActivity : BaseActivity<ActivitySaveUserActionBinding>(), Us
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(viewDataBinding.root)
-
         setToolbar()
         initViewModel()
         setMode()
