@@ -9,13 +9,13 @@
 
         <variable
             name="viewmodel"
-            type="com.boostcamp.travery.mapservice.TrackingViewModel"/>
+            type="com.boostcamp.travery.presentation.mapservice.TrackingViewModel"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".mapservice.TrackingActivity">
+        tools:context=".presentation.mapservice.TrackingActivity">
 
         <fragment
             android:id="@+id/map_trackingActivity"

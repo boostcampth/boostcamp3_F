@@ -7,7 +7,7 @@
 
         <variable
             name="viewmodel"
-            type="com.boostcamp.travery.useraction.save.UserActionSaveViewModel" />
+            type="com.boostcamp.travery.presentation.useraction.save.UserActionSaveViewModel" />
     </data>
 
     <androidx.appcompat.widget.LinearLayoutCompat

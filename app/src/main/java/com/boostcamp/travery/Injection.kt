@@ -1,7 +1,7 @@
 package com.boostcamp.travery
 
 import android.content.Context
-import com.boostcamp.travery.data.CourseRepository
+import com.boostcamp.travery.data.repository.CourseRepository
 import com.boostcamp.travery.data.local.db.AppDatabase
 
 class Injection {

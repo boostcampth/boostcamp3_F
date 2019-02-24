@@ -6,14 +6,14 @@
         <import type="android.view.View"/>
         <variable
             name="viewModel"
-            type="com.boostcamp.travery.community.SettingViewModel"/>
+            type="com.boostcamp.travery.presentation.community.SettingViewModel"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/setting_background"
-        tools:context=".community.SettingActivity">
+        tools:context=".presentation.community.SettingActivity">
 
         <include
             android:id="@+id/toolBar_setting"

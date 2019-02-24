@@ -8,7 +8,7 @@
 
         <variable
             name="viewmodel"
-            type="com.boostcamp.travery.useraction.detail.UserActionDetailViewModel"/>
+            type="com.boostcamp.travery.presentation.useraction.detail.UserActionDetailViewModel"/>
     </data>
 
     <androidx.appcompat.widget.LinearLayoutCompat

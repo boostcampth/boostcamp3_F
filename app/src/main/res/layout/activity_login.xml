@@ -6,14 +6,14 @@
         <import type="android.view.View"/>
         <variable
             name="viewmodel"
-            type="com.boostcamp.travery.community.LoginViewModel"/>
+            type="com.boostcamp.travery.presentation.community.LoginViewModel"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/login_background"
-        tools:context=".community.LoginActivity">
+        tools:context=".presentation.community.LoginActivity">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/btn_close"

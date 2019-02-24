@@ -6,7 +6,7 @@
 
         <variable
             name="viewmodel"
-            type="com.boostcamp.travery.course.list.CourseListViewModel"/>
+            type="com.boostcamp.travery.presentation.course.list.CourseListViewModel"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

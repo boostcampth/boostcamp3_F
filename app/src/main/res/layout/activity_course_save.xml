@@ -10,7 +10,7 @@
 
         <variable
             name="savevm"
-            type="com.boostcamp.travery.mapservice.savecourse.CourseSaveViewModel"/>
+            type="com.boostcamp.travery.presentation.course.save.CourseSaveViewModel"/>
     </data>
 
     <androidx.appcompat.widget.LinearLayoutCompat

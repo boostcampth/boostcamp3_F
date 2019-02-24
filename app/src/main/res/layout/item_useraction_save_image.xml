@@ -7,7 +7,7 @@
 
         <variable
             name="item"
-            type="com.boostcamp.travery.useraction.save.UserActionImage" />
+            type="com.boostcamp.travery.presentation.useraction.save.UserActionImage" />
     </data>
 
     <com.google.android.material.card.MaterialCardView
