@@ -9,9 +9,9 @@ import androidx.lifecycle.ViewModelProviders
 import com.boostcamp.travery.Constants
 import com.boostcamp.travery.R
 import com.boostcamp.travery.base.BaseActivity
-import com.boostcamp.travery.presentation.course.detail.CourseDetailActivity
 import com.boostcamp.travery.data.model.Course
 import com.boostcamp.travery.databinding.ActivityCourseListBinding
+import com.boostcamp.travery.presentation.course.detail.CourseDetailActivity
 import kotlinx.android.synthetic.main.activity_main_feed.*
 
 class CourseListActivity : BaseActivity<ActivityCourseListBinding>(),

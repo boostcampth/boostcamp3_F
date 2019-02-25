@@ -2,15 +2,15 @@ package com.boostcamp.travery.presentation.community
 
 import android.app.Application
 import android.content.Context
-import com.boostcamp.travery.base.BaseViewModel
-import com.google.firebase.auth.FirebaseAuth
 import androidx.lifecycle.MutableLiveData
 import com.boostcamp.travery.Constants
-import com.boostcamp.travery.data.repository.UserRepository
+import com.boostcamp.travery.base.BaseViewModel
 import com.boostcamp.travery.data.model.User
-import com.google.firebase.auth.GoogleAuthProvider
+import com.boostcamp.travery.data.repository.UserRepository
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.GoogleAuthProvider
 
 
 class LoginViewModel(application: Application) : BaseViewModel(application) {

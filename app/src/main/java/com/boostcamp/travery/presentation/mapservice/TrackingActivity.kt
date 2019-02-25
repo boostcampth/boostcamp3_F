@@ -35,7 +35,6 @@ import com.orhanobut.dialogplus.DialogPlus
 import io.reactivex.Completable
 import kotlinx.android.synthetic.main.activity_tracking.*
 import kotlinx.android.synthetic.main.item_dialog_footer.*
-import java.lang.Exception
 
 class TrackingActivity : BaseActivity<ActivityTrackingBinding>(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     override val layoutResourceId: Int

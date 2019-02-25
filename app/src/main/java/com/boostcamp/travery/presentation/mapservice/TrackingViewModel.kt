@@ -4,15 +4,15 @@ import android.app.Application
 import android.location.Location
 import android.widget.BaseAdapter
 import androidx.databinding.ObservableBoolean
-import com.boostcamp.travery.base.BaseViewModel
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
 import com.boostcamp.travery.R
-import com.boostcamp.travery.data.repository.CourseRepository
+import com.boostcamp.travery.base.BaseViewModel
 import com.boostcamp.travery.data.local.db.AppDatabase
 import com.boostcamp.travery.data.model.Course
 import com.boostcamp.travery.data.model.TimeCode
 import com.boostcamp.travery.data.model.UserAction
+import com.boostcamp.travery.data.repository.CourseRepository
 import com.boostcamp.travery.data.repository.MapTrackingRepository
 import com.boostcamp.travery.data.repository.ServiceStartEvent
 import com.boostcamp.travery.eventbus.EventBus

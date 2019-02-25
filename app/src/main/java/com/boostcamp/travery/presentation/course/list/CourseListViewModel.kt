@@ -8,9 +8,9 @@ import com.boostcamp.travery.Injection
 import com.boostcamp.travery.MyApplication
 import com.boostcamp.travery.R
 import com.boostcamp.travery.base.BaseViewModel
-import com.boostcamp.travery.presentation.course.list.adapter.viewholder.GroupItem
 import com.boostcamp.travery.data.model.Course
 import com.boostcamp.travery.eventbus.EventBus
+import com.boostcamp.travery.presentation.course.list.adapter.viewholder.GroupItem
 import com.boostcamp.travery.presentation.course.save.CourseSaveEvent
 import com.boostcamp.travery.utils.DateUtils
 import io.reactivex.android.schedulers.AndroidSchedulers

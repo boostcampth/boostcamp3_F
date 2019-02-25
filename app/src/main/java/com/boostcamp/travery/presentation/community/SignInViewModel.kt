@@ -4,9 +4,9 @@ import android.app.Application
 import android.content.Context
 import com.boostcamp.travery.Constants
 import com.boostcamp.travery.base.BaseViewModel
-import com.boostcamp.travery.data.repository.UserRepository
 import com.boostcamp.travery.data.model.User
 import com.boostcamp.travery.data.remote.model.MyResponse
+import com.boostcamp.travery.data.repository.UserRepository
 import com.boostcamp.travery.utils.ImageUtils
 import io.reactivex.Single
 

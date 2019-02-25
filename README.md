@@ -21,9 +21,9 @@ strava, 오픈라이더 같은 경로 저장 어플리케이션은 주로 운동
 
 ### # 경로(Course)
 
-#### 경로 기록하기
+![Course](./readme_data/main1.png)
 
-[스크린샷 추가 예정]
+#### 경로 기록하기
 
 - 실시간으로 위치를 추적하며 폴리라인으로 지나온 길을 그려줍니다.
 - 오랫동안 한 곳에 머물러 있다면 앱이 자동으로 인식하여 활동 저장을 제안합니다.
@@ -31,8 +31,6 @@ strava, 오픈라이더 같은 경로 저장 어플리케이션은 주로 운동
   - 경로 기록 중에는 언제든 자신의 위치에서 활동을 저장할 수 있습니다.
 
 #### 경로 상세보기
-
-[스크린샷 추가 예정]
 
 - 해당 경로와 경로 위의 활동들을 지도에 표시합니다.
 - 경로 위에 활동 정보를 마커로 표시합니다.
@@ -44,12 +42,14 @@ strava, 오픈라이더 같은 경로 저장 어플리케이션은 주로 운동
 
 ### # 활동(UserAction)
 
-[스크린샷 추가 예정]
+![User Action](./readme_data/main2.png)
 
 - 코스 기록 중 해당 위치(좌표) 위에 활동을 추가할 수 있습니다.
   - 제목, 내용, 해시태그, 사진 등을 저장할 수 있습니다.
+  - 코스 기록 중이 아니라면, 주소를 검색하여 위치를 지정할 수 있습니다.
 - 저장한 활동은 지도 위에 마커 형식, 피드 형식으로 한눈에 볼 수 있습니다.
   - 검색 기능을 통해 찾고자 하는 활동만을 필터링하여 볼 수 있습니다.
+  - 구글 계정 로그인 후 설정 옵션을 변경하면, 활동 추가 시 서버에 공유할 수 있습니다.
 
 <br>
 
@@ -60,6 +60,8 @@ strava, 오픈라이더 같은 경로 저장 어플리케이션은 주로 운동
 - 여러 활동마커를 지도위에 Clustering
 - Rx를 통한 데이터 관련 비동기 처리
 - Glide를 이용해 이미지 Cashing
+- Room을 이용한 Local DB 관리
+- Retrofit을 이용한 서버 통신
 
 <br>
 
@@ -73,7 +75,7 @@ Android studio, Adobe XD, Kotlin, Github, SourseTree, Jenkins, with Google :D
 
 ## Architecture
 
-우리는 앱 아키텍처를 고민할 때 [앱 아키텍처 가이드](https://developer.android.com/jetpack/docs/guide)에 제시된 권장 사항을 따르고자 했습니다. MVVM 패턴을 적용하기 위해 Activity에서 로직을 구현하지 않고, ViewModel로 옮겼습니다. 그리고 LiveData와 RxJava를 사용하여 데이터를 관찰하고 DataBinding을 사용하여 레이아웃의 UI 구성 요소를 앱의 데이터 소스에 바인딩했습니다.
+MVVM 패턴을 적용하기 위해 Activity에서 로직을 구현하지 않고, ViewModel로 옮겼습니다. 그리고 LiveData와 RxJava를 사용하여 데이터 변화를 구독하고 DataBinding을 사용하여 레이아웃의 UI를 앱의 데이터 소스에 바인딩했습니다.
 
 ### Libraries
 
@@ -85,6 +87,11 @@ Android studio, Adobe XD, Kotlin, Github, SourseTree, Jenkins, with Google :D
 - [Room](https://developer.android.com/topic/libraries/architecture/room)
 - [Glide](https://github.com/bumptech/glide)
 - [Ted Permission](https://github.com/ParkSangGwon/TedPermission)
+- [Google map](https://developers.google.com/maps/documentation/android-sdk/intro)
+  - Static map
+  - Auto complete
+  - Fused location
+- [Retrofit](https://square.github.io/retrofit/)
 
 <br>
 

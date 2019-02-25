@@ -3,22 +3,22 @@ package com.boostcamp.travery.presentation.mapservice
 import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.app.Service
+import android.content.Context
 import android.content.Intent
 import android.location.Location
-import androidx.core.app.NotificationCompat
-
 import android.location.LocationManager
+import android.os.Binder
+import android.os.IBinder
 import android.util.Log
-import android.content.Context
-import com.google.android.gms.location.*
-import com.google.android.gms.maps.model.LatLng
-import com.boostcamp.travery.R
-import java.util.*
-import android.os.*
+import androidx.core.app.NotificationCompat
 import androidx.core.app.TaskStackBuilder
 import com.boostcamp.travery.Constants
+import com.boostcamp.travery.R
 import com.boostcamp.travery.data.model.Suggestion
 import com.boostcamp.travery.data.repository.MapTrackingRepository
+import com.google.android.gms.location.*
+import com.google.android.gms.maps.model.LatLng
+import java.util.*
 
 class MapTrackingService : Service() {
 

@@ -10,8 +10,8 @@ import com.boostcamp.travery.Injection
 import com.boostcamp.travery.MyApplication
 import com.boostcamp.travery.R
 import com.boostcamp.travery.base.BaseViewModel
-import com.boostcamp.travery.data.repository.NewsFeedRepository
 import com.boostcamp.travery.data.model.UserAction
+import com.boostcamp.travery.data.repository.NewsFeedRepository
 import com.boostcamp.travery.eventbus.EventBus
 import com.boostcamp.travery.utils.ImageUtils
 import com.boostcamp.travery.utils.toLatLng

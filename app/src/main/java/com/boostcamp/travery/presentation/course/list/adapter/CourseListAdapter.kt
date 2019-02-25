@@ -7,11 +7,11 @@ import androidx.databinding.ObservableArrayList
 import com.boostcamp.travery.R
 import com.boostcamp.travery.base.BaseViewHolder
 import com.boostcamp.travery.base.ObservableRecyclerViewAdapter
+import com.boostcamp.travery.databinding.ItemCourseListBinding
+import com.boostcamp.travery.databinding.ItemCourseListGroupBinding
 import com.boostcamp.travery.presentation.course.list.adapter.viewholder.CourseViewHolder
 import com.boostcamp.travery.presentation.course.list.adapter.viewholder.GroupItem
 import com.boostcamp.travery.presentation.course.list.adapter.viewholder.GroupViewHolder
-import com.boostcamp.travery.databinding.ItemCourseListBinding
-import com.boostcamp.travery.databinding.ItemCourseListGroupBinding
 
 class CourseListAdapter(private val data: ObservableArrayList<Any>) : ObservableRecyclerViewAdapter<Any, BaseViewHolder>(data) {
 

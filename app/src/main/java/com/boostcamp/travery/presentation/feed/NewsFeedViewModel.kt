@@ -9,11 +9,11 @@ import com.boostcamp.travery.Constants
 import com.boostcamp.travery.Injection
 import com.boostcamp.travery.R
 import com.boostcamp.travery.base.BaseViewModel
-import com.boostcamp.travery.data.repository.NewsFeedRepository
 import com.boostcamp.travery.data.model.Bar
 import com.boostcamp.travery.data.model.BaseItem
 import com.boostcamp.travery.data.model.Guide
 import com.boostcamp.travery.data.model.User
+import com.boostcamp.travery.data.repository.NewsFeedRepository
 import com.boostcamp.travery.eventbus.EventBus
 import com.boostcamp.travery.presentation.course.save.CourseSaveEvent
 import com.boostcamp.travery.utils.DateUtils

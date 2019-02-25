@@ -9,10 +9,10 @@ import com.boostcamp.travery.Constants
 import com.boostcamp.travery.MyApplication
 import com.boostcamp.travery.R
 import com.boostcamp.travery.base.BaseViewModel
-import com.boostcamp.travery.data.repository.CourseRepository
 import com.boostcamp.travery.data.local.db.AppDatabase
 import com.boostcamp.travery.data.model.Course
 import com.boostcamp.travery.data.model.TimeCode
+import com.boostcamp.travery.data.repository.CourseRepository
 import com.boostcamp.travery.eventbus.EventBus
 import com.boostcamp.travery.utils.DateUtils
 import com.boostcamp.travery.utils.FileUtils

@@ -20,13 +20,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.boostcamp.travery.Constants
 import com.boostcamp.travery.R
 import com.boostcamp.travery.base.BaseActivity
-import com.boostcamp.travery.presentation.community.SettingActivity
-import com.boostcamp.travery.presentation.course.list.CourseListActivity
-import com.boostcamp.travery.presentation.course.detail.CourseDetailActivity
 import com.boostcamp.travery.data.model.BaseItem
 import com.boostcamp.travery.data.model.Course
 import com.boostcamp.travery.databinding.ActivityMainFeedBinding
 import com.boostcamp.travery.databinding.NavHeaderMainBinding
+import com.boostcamp.travery.presentation.community.SettingActivity
+import com.boostcamp.travery.presentation.course.detail.CourseDetailActivity
+import com.boostcamp.travery.presentation.course.list.CourseListActivity
 import com.boostcamp.travery.presentation.mapservice.TrackingActivity
 import com.boostcamp.travery.presentation.search.SearchResultActivity
 import com.boostcamp.travery.presentation.useraction.list.UserActionListActivity

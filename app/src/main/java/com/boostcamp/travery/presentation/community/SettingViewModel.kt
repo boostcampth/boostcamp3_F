@@ -1,13 +1,13 @@
 package com.boostcamp.travery.presentation.community
 
 import android.app.Application
-import com.boostcamp.travery.base.BaseViewModel
-import androidx.lifecycle.MutableLiveData
 import android.content.Context.MODE_PRIVATE
 import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
+import androidx.lifecycle.MutableLiveData
 import com.boostcamp.travery.Constants
 import com.boostcamp.travery.R
+import com.boostcamp.travery.base.BaseViewModel
 
 
 class SettingViewModel(application: Application) : BaseViewModel(application) {
