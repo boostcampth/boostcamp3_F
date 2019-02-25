@@ -21,38 +21,38 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
-        <activity android:name=".useraction.save.FindLocationActivity"/>
+        <activity android:name="com.boostcamp.travery.presentation.useraction.save.FindLocationActivity"/>
         <activity
-            android:name=".community.SignInActivity"
+            android:name="com.boostcamp.travery.presentation.community.SignInActivity"
             android:windowSoftInputMode="adjustResize"/>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key"/>
 
-        <activity android:name=".community.SettingActivity"/>
-        <activity android:name=".community.LoginActivity"/>
-        <activity android:name=".useraction.list.UserActionListActivity"/>
-        <activity android:name=".useraction.detail.UserActionDetailActivity"
+        <activity android:name="com.boostcamp.travery.presentation.community.SettingActivity"/>
+        <activity android:name="com.boostcamp.travery.presentation.community.LoginActivity"/>
+        <activity android:name="com.boostcamp.travery.presentation.useraction.list.UserActionListActivity"/>
+        <activity android:name="com.boostcamp.travery.presentation.useraction.detail.UserActionDetailActivity"
                   android:launchMode="singleTask"/>
         <activity
-            android:name=".useraction.save.UserActionSaveActivity"
+            android:name="com.boostcamp.travery.presentation.useraction.save.UserActionSaveActivity"
             android:launchMode="singleTask"
             android:windowSoftInputMode="adjustResize"/>
-        <activity android:name=".mapservice.savecourse.CourseSaveActivity"
+        <activity android:name="com.boostcamp.travery.presentation.course.save.CourseSaveActivity"
                   android:launchMode="singleTask"/>
         <activity
-            android:name=".mapservice.TrackingActivity"
+            android:name="com.boostcamp.travery.presentation.mapservice.TrackingActivity"
             android:launchMode="singleTask"
-            android:parentActivityName=".feed.NewsFeedActivity"
+            android:parentActivityName="com.boostcamp.travery.presentation.feed.NewsFeedActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".search.SearchResultActivity"/>
-        <activity android:name=".course.list.CourseListActivity"/>
-        <activity android:name=".coursedetail.CourseDetailActivity"
+        <activity android:name="com.boostcamp.travery.presentation.search.SearchResultActivity"/>
+        <activity android:name="com.boostcamp.travery.presentation.course.list.CourseListActivity"/>
+        <activity android:name="com.boostcamp.travery.presentation.course.detail.CourseDetailActivity"
                   android:launchMode="singleTask"/>
-        <activity android:name=".feed.NewsFeedActivity"/>
+        <activity android:name="com.boostcamp.travery.presentation.feed.NewsFeedActivity"/>
         <activity
-            android:name=".SplashActivity"
+            android:name=".presentation.SplashActivity"
             android:theme="@style/AppTheme.NoActionBar.Fullscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -62,7 +62,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".mapservice.MapTrackingService"/>
+        <service android:name="com.boostcamp.travery.presentation.mapservice.MapTrackingService"/>
     </application>
 
 </manifest>

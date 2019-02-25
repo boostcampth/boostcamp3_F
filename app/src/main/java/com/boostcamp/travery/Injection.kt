@@ -1,8 +1,8 @@
 package com.boostcamp.travery
 
 import android.content.Context
-import com.boostcamp.travery.data.CourseRepository
 import com.boostcamp.travery.data.local.db.AppDatabase
+import com.boostcamp.travery.data.repository.CourseRepository
 
 class Injection {
     companion object {

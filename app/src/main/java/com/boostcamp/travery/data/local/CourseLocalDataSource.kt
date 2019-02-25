@@ -6,7 +6,7 @@ import com.boostcamp.travery.data.local.db.dao.UserActionDao
 import com.boostcamp.travery.data.model.Course
 import com.boostcamp.travery.data.model.TimeCode
 import com.boostcamp.travery.data.model.UserAction
-import com.boostcamp.travery.utils.NewFileUtils
+import com.boostcamp.travery.utils.FileUtils
 import io.reactivex.Flowable
 import io.reactivex.Observable
 import org.json.JSONObject
@@ -121,15 +121,15 @@ class CourseLocalDataSource private constructor(
     }
 
     override fun saveJsonFile(fileName: String, jsonObj: JSONObject) {
-        NewFileUtils.saveJsonFile(file, fileName, jsonObj)
+        FileUtils.saveJsonFile(file, fileName, jsonObj)
     }
 
     override fun loadCoordinateListFromJsonFile(fileName: String): Flowable<List<TimeCode>> {
-        return Flowable.fromCallable { NewFileUtils.loadCoordinateListFromJsonFile(file, fileName) }
+        return Flowable.fromCallable { FileUtils.loadCoordinateListFromJsonFile(file, fileName) }
     }
 
     override fun deleteCourseFile(fileName: String) {
-        NewFileUtils.deleteCourseFile(file, fileName)
+        FileUtils.deleteCourseFile(file, fileName)
     }
 
     override fun getTodayCourse(today: Long): Flowable<List<Course>> {

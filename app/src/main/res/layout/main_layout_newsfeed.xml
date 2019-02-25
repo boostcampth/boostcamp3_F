@@ -6,7 +6,7 @@
 
         <variable
             name="viewModel"
-            type="com.boostcamp.travery.feed.NewsFeedViewModel" />
+            type="com.boostcamp.travery.presentation.feed.NewsFeedViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

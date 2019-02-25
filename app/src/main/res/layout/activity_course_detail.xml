@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
     <data>
-        <variable name="viewModel" type="com.boostcamp.travery.coursedetail.CourseDetailViewModel"/>
+        <variable name="viewModel" type="com.boostcamp.travery.presentation.course.detail.CourseDetailViewModel"/>
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
